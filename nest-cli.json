@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/citi-api/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/citi-api/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/citi-api",
+  "projects": {
+    "citi-api": {
+      "type": "application",
+      "root": "apps/citi-api",
+      "entryFile": "main",
+      "sourceRoot": "apps/citi-api/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/citi-api/tsconfig.app.json"
+      }
+    },
+    "citi-back": {
+      "type": "application",
+      "root": "apps/citi-back",
+      "entryFile": "main",
+      "sourceRoot": "apps/citi-back/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/citi-back/tsconfig.app.json"
+      }
+    }
+  }
+}
