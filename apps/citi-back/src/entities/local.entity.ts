@@ -7,6 +7,7 @@ import { User } from './user.entity';
 import { Ciudad } from './ciudad.entity';
 import { Interacion } from './interacion.entity';
 import { FotosLocal } from './fotoslocal.entity';
+import { EtiquetasLocal } from './etiquetasLocal.entity';
 
 
 
@@ -54,6 +55,10 @@ export class Local extends BaseEntity {
 
     @OneToMany(() => FotosLocal, FotosLocal => FotosLocal.local)
     fotos: FotosLocal[];
+
+
+    @OneToMany(() => EtiquetasLocal, EtiquetasLocal => EtiquetasLocal.id)
+    EtiquetasLocal: EtiquetasLocal[];
 
     // @ManyToOne(() => Local, {nullable :true})
     // @JoinColumn()
