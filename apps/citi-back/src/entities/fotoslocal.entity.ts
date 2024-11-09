@@ -9,22 +9,18 @@ import { Local } from './local.entity';
 
 
 @Entity()
-export class Ciudad extends BaseEntity {
+export class FotosLocal extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({nullable:false})
-    nombre:string;
+    path:string;
 
-    @ManyToOne(type => Region, Region => Region.id)
-    region:Region
 
-    @OneToMany(() => User, user => user.ciudad)
-    user: User[];
 
-    @OneToMany(() => Local, Local => Local.ciudad)
-    local: Local[];
+    @ManyToOne(() => Local, Local => Local.id)
+    local: Local;
 
 
     @DeleteDateColumn()

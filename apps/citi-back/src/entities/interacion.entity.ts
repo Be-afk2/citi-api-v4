@@ -2,30 +2,35 @@
 import { Entity, Column, PrimaryGeneratedColumn,CreateDateColumn,UpdateDateColumn,DeleteDateColumn, Timestamp, Table, OneToMany, ManyToOne} from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
 import { v4 as uuidv4 } from 'uuid';
-import { Region } from './region.entity';
+import { Pais } from './pais.entity';
+import { Ciudad } from './ciudad.entity';
 import { User } from './user.entity';
 import { Local } from './local.entity';
 
 
 
 @Entity()
-export class Ciudad extends BaseEntity {
+export class Interacion extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({nullable:false})
-    nombre:string;
+    @Column({default:false})
+    like :boolean;
 
-    @ManyToOne(type => Region, Region => Region.id)
-    region:Region
+    @Column({default:false})
+    compartido :boolean;
 
-    @OneToMany(() => User, user => user.ciudad)
-    user: User[];
+    @Column({default:false})
+    visto :boolean;
 
-    @OneToMany(() => Local, Local => Local.ciudad)
-    local: Local[];
 
+    @ManyToOne(() => User, user => user.id)
+    user: User
+
+
+    @ManyToOne(() => Local, Local => Local.id)
+    local: Local
 
     @DeleteDateColumn()
     deleted_at:Date;

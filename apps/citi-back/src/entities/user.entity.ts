@@ -2,10 +2,10 @@
 import { Entity, Column, PrimaryGeneratedColumn,CreateDateColumn,UpdateDateColumn,DeleteDateColumn, Timestamp, Table, OneToMany, ManyToOne, JoinColumn, OneToOne} from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
 import { v4 as uuidv4 } from 'uuid';
-import { Ciudad } from '../ciudad/ciudad.entity';
-import { Tipo_User } from '../tipo_users/tipo_user.entity';
-import { Local } from '../Local/Local.entity';
-import { Interacion } from '../Interaciones/Interacion.entity';
+
+import { Interacion } from './interacion.entity';
+import { Ciudad } from './ciudad.entity';
+import { Local } from './local.entity';
 
 
 @Entity()
@@ -30,31 +30,31 @@ export class User extends BaseEntity {
     password:string;
 
     @Column({default :false})
-    valid_mail :boolean
+    validMail :boolean
     
 
     @Column({nullable :false})
-    fecha_nacimiento :Date
+    fechaNacimiento :Date
 
     @Column({nullable :false})
-    mayor_edad :boolean
+    mayorEdad :boolean
 
     @Column({nullable :false})
-    mostrar_contenido_18 :boolean
+    mostrarContenidoMayor :boolean
 
     
     @ManyToOne(() => Ciudad, Ciudad => Ciudad.id)
-    Ciudad: Ciudad
+    ciudad: Ciudad
 
-    @ManyToOne(() => Tipo_User, Tipo_User => Tipo_User.id)
-    Tipo_User: Tipo_User
+    // @ManyToOne(() => Tipo_User, Tipo_User => Tipo_User.id)
+    // tipoUser: Tipo_User
 
-    @OneToOne(() => Local)
+    @ManyToOne(() => Local, {nullable :true})
     @JoinColumn()
-    Local: Local
+    local: Local
 
-    @OneToMany(() => Interacion, Interacion => Interacion.User)
-    Interacion: Interacion[];
+    @OneToMany(() => Interacion, Interacion => Interacion.user)
+    interacion: Interacion[];
     
     @DeleteDateColumn()
     deleted_at:Date;
