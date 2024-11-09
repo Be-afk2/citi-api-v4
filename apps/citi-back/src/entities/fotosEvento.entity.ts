@@ -10,25 +10,19 @@ import { Evento } from './evento.entity';
 
 
 @Entity()
-export class Ciudad extends BaseEntity {
+export class FotosEvento extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({nullable:false})
-    nombre:string;
+    path:string;
 
-    @ManyToOne(type => Region, Region => Region.id)
-    region:Region
 
-    @OneToMany(() => User, user => user.ciudad)
-    user: User[];
 
-    @OneToMany(() => Local, Local => Local.ciudad)
-    local: Local[];
-    
-    @OneToMany(() => Evento, Evento => Evento.ciudad)
-    evento: Local[];
+    @ManyToOne(() => Evento, Evento => Evento.id)
+    evento: Evento;
+
 
     @DeleteDateColumn()
     deleted_at:Date;

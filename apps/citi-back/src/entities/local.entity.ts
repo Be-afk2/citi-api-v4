@@ -43,6 +43,10 @@ export class Local extends BaseEntity {
 
     @Column({default:0})
     vistos:string;
+    
+    
+    @Column({default:0})
+    reportes:string;
 
     @Column({default:0})
     tipo:string;
@@ -50,7 +54,7 @@ export class Local extends BaseEntity {
     @OneToMany(() => User, user => user.id, { nullable: true })
     user: User[];
     
-    @OneToMany(() => Interacion, Interacion => Interacion.id)
+    @OneToMany(() => Interacion, Interacion => Interacion.local)
     interacion: Interacion[];
 
     @OneToMany(() => FotosLocal, FotosLocal => FotosLocal.local)
