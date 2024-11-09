@@ -45,7 +45,7 @@ export class Local extends BaseEntity {
 
     @Column({default:0})
     tipo:string;
-
+ 
     @OneToMany(() => User, user => user.id, { nullable: true })
     user: User[];
     
