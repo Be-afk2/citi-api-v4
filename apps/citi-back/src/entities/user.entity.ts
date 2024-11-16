@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Interacion } from './interacion.entity';
 import { Ciudad } from './ciudad.entity';
 import { Local } from './local.entity';
+import { TipoUser } from './TipoUser.entity';
 
 
 @Entity()
@@ -46,8 +47,8 @@ export class User extends BaseEntity {
     @ManyToOne(() => Ciudad, Ciudad => Ciudad.id)
     ciudad: Ciudad
 
-    // @ManyToOne(() => Tipo_User, Tipo_User => Tipo_User.id)
-    // tipoUser: Tipo_User
+    @ManyToOne(() => TipoUser, Tipo_User => Tipo_User.id)
+    tipoUser: TipoUser
 
     @ManyToOne(() => Local, {nullable :true})
     @JoinColumn()
