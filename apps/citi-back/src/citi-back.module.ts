@@ -3,6 +3,19 @@ import { CitiBackController } from './citi-back.controller';
 import { CitiBackService } from './citi-back.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { Ciudad } from './entities/ciudad.entity';
+import { Etiquetas } from './entities/etiquetas.entiy';
+import { EtiquetasEvento } from './entities/etiquetasEvento.entity';
+import { EtiquetasLocal } from './entities/etiquetasLocal.entity';
+import { Evento } from './entities/evento.entity';
+import { FotosEvento } from './entities/fotosEvento.entity';
+import { FotosLocal } from './entities/fotoslocal.entity';
+import { Interacion } from './entities/interacion.entity';
+import { Local } from './entities/local.entity';
+import { Pais } from './entities/pais.entity';
+import { Region } from './entities/region.entity';
+import { TipoUser } from './entities/TipoUser.entity';
+import { User } from './entities/user.entity';
 
 @Module({
   imports: [
@@ -17,7 +30,19 @@ import { ConfigModule } from '@nestjs/config';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [
-
+        Ciudad,
+        Etiquetas,
+        EtiquetasEvento,
+        EtiquetasLocal,
+        Evento,
+        FotosEvento,
+        FotosLocal,
+        Interacion,
+        Local,
+        Pais,
+        Region,
+        TipoUser,
+        User
       ],
       synchronize: true,
     }),

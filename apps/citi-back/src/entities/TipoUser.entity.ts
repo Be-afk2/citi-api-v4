@@ -12,8 +12,8 @@ import { Evento } from './evento.entity';
 @Entity()
 export class TipoUser extends BaseEntity {
 
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Column({nullable:false})
     tipo:string;

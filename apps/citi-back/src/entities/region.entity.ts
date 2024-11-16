@@ -1,5 +1,5 @@
 
-import { Entity, Column, PrimaryGeneratedColumn,CreateDateColumn,UpdateDateColumn,DeleteDateColumn, Timestamp, Table, OneToMany, ManyToOne} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Timestamp, Table, OneToMany, ManyToOne } from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
 import { v4 as uuidv4 } from 'uuid';
 import { Pais } from './pais.entity';
@@ -13,22 +13,22 @@ export class Region extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({nullable:false})
-    nombre:string;
+    @Column({ nullable: false })
+    nombre: string;
 
 
-    
+
     @OneToMany(type => Ciudad, Ciudad => Ciudad.region)
-    Ciudad:Ciudad[]
+    Ciudad: Ciudad[];
 
-        @ManyToOne(type => Pais, Pais => Pais.id)
-        Pais:Pais
+    @ManyToOne(type => Pais, Pais => Pais.id)
+    Pais: Pais;
 
     @DeleteDateColumn()
-    deleted_at:Date;
+    deleted_at: Date;
     @CreateDateColumn()
-    created_at:Date;
+    created_at: Date;
     @UpdateDateColumn()
-    updated_at:Date;
+    updated_at: Date;
 
 }
