@@ -4,18 +4,19 @@ import { BaseEntity } from 'typeorm/repository/BaseEntity';
 
 import { Local } from './local.entity';
 import { Etiquetas } from './etiquetas.entiy';
+import { Evento } from './evento.entity';
 
 
 
 @Entity()
-export class EtiquetasLocal extends BaseEntity {
+export class EtiquetasEvento extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
 
 
-    @ManyToOne(type => Local, Local => Local.id)
-    Local:Local
+    @ManyToOne(type => Evento, Evento => Evento.id)
+    evento:Evento
 
     @OneToMany(() => Etiquetas, Etiquetas => Etiquetas.id)
     Etiquetas: Etiquetas[];

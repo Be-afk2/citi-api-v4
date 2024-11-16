@@ -6,6 +6,7 @@ import { Pais } from './pais.entity';
 import { Ciudad } from './ciudad.entity';
 import { User } from './user.entity';
 import { Local } from './local.entity';
+import { Evento } from './evento.entity';
 
 
 
@@ -32,6 +33,12 @@ export class Interacion extends BaseEntity {
     @ManyToOne(() => Local, Local => Local.id)
     local: Local
 
+
+    @ManyToOne(() => Evento, Evento => Evento.id)
+    evento: Evento
+
+
+    
     @DeleteDateColumn()
     deleted_at:Date;
     @CreateDateColumn()

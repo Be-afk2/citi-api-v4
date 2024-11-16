@@ -1,27 +1,31 @@
 
 import { Entity, Column, PrimaryGeneratedColumn,CreateDateColumn,UpdateDateColumn,DeleteDateColumn, Timestamp, Table, OneToMany, ManyToOne} from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
-
+import { v4 as uuidv4 } from 'uuid';
+import { Region } from './region.entity';
+import { User } from './user.entity';
 import { Local } from './local.entity';
-import { Etiquetas } from './etiquetas.entiy';
+import { Evento } from './evento.entity';
 
 
 
 @Entity()
-export class EtiquetasLocal extends BaseEntity {
+export class Admin extends BaseEntity {
 
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    @Column({nullable:false})
+    pass:string;
 
 
-    @ManyToOne(type => Local, Local => Local.id)
-    Local:Local
+    @Column({nullable:false})
+    nombre:string;
 
-    @OneToMany(() => Etiquetas, Etiquetas => Etiquetas.id)
-    Etiquetas: Etiquetas[];
+    @Column({nullable:false})
+    correo:string;
 
-    // @OneToMany(() => Local, Local => Local.ciudad)
-    // local: Local[];
+
 
 
     @DeleteDateColumn()

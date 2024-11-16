@@ -7,6 +7,7 @@ import { User } from './user.entity';
 import { Local } from './local.entity';
 import { Ciudad } from './ciudad.entity';
 import { FotosEvento } from './fotosEvento.entity';
+import { Interacion } from './interacion.entity';
 
 
 
@@ -48,6 +49,9 @@ export class Evento extends BaseEntity {
 
     @OneToMany(() => FotosEvento, FotosEvento => FotosEvento.evento)
     fotos: FotosEvento[];
+
+    @OneToMany(() => Interacion, Interacion => Interacion.evento)
+    interacion: Interacion[];
 
     @DeleteDateColumn()
     deleted_at:Date;
