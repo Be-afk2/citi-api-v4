@@ -47,8 +47,10 @@ export class User extends BaseEntity {
     @ManyToOne(() => Ciudad, Ciudad => Ciudad.id)
     ciudad: Ciudad
 
-    @ManyToOne(() => TipoUser, Tipo_User => Tipo_User.id)
-    tipoUser: TipoUser
+
+
+    @ManyToOne(type => TipoUser, TipoUser => TipoUser.id)
+    tipoUser:TipoUser
 
     @ManyToOne(() => Local, {nullable :true})
     @JoinColumn()

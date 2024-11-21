@@ -1,3 +1,5 @@
+import { LocalModule } from './local/local.module';
+import { GeoModule } from './geolocalizacion/geo.module';
 import { AuthModule } from './auth/auth.module';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -20,6 +22,7 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
 
 @Module({
   imports: [
+        LocalModule, 
     ConfigModule.forRoot({ envFilePath: '.env' }),
 
     TypeOrmModule.forRoot({
@@ -46,9 +49,12 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
       ],
       synchronize: false,
     }),
-    
-    
-    AuthModule,],
+
+
+    AuthModule,
+    GeoModule,
+
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

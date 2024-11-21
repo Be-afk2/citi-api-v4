@@ -18,9 +18,10 @@ export class TipoUser extends BaseEntity {
     @Column({nullable:false})
     tipo:string;
 
-    @OneToMany(() => User, user => user.tipoUser)
-    User: User
 
+
+    @OneToMany(type => User, User => User.tipoUser)
+    User: User[];
 
 
     @DeleteDateColumn()

@@ -28,6 +28,7 @@ import { JwtModule } from '@nestjs/jwt';
       }),
       TypeOrmModule.forFeature([
         User,
+        TipoUser
       ]),
     ],
     controllers: [AuthController,],
