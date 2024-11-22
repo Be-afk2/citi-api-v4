@@ -20,8 +20,8 @@ export class TipoUser extends BaseEntity {
 
 
 
-    @OneToMany(type => User, User => User.tipoUser)
-    User: User[];
+    @OneToMany(type => User, user => user.tipoUser)
+    users: User[];
 
 
     @DeleteDateColumn()

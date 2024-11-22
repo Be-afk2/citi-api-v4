@@ -46,11 +46,34 @@ export class AuthService {
 
     async findUserById(id, bool) {
 
-        const user = await this.UsersRepository.findOne({
-            where: { id: id },
-            relations: ['tipoUser'] 
-        });
-        return user
+        // const user = await this.UsersRepository.findOne({
+        //     where: { id: id },
+        //     relations: ['tipoUser'] 
+        //     .
+        // });
+
+        console.log("-------antes-----------")
+
+        const user = await this.UsersRepository.createQueryBuilder("User")
+        .leftJoinAndSelect('User.tipoUser', 'TipoUser')
+        .where("User.id = :id", { id }) 
+        .select([
+            "User.id",
+            "User.nombre",
+            "User.apellido",
+            "User.apodo",
+            "User.correo",
+            "User.fechaNacimiento",
+            "User.mayorEdad",
+            "User.mostrarContenidoMayor",
+            "TipoUser.id",
+            "TipoUser.tipo",
+        ])
+        .getOne();
+
+
+        console.log("-------despies-----------")
+        return user 
     }
 
 
@@ -78,7 +101,7 @@ export class AuthService {
         if (! await compare(data.Pass, this_user.password)) { throw new UnauthorizedException("Contraseña No Coincide"); }
         const token = await this.get_token(this_user)
         return {
-            user: this_user,
+            user: await this.findUserById(this_user.id,false),
             token,
         }
 
