@@ -4,12 +4,12 @@ https://docs.nestjs.com/providers#services
 
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { GeoData } from './dto/geoData.dto';
 import { Pais } from 'apps/citi-back/src/entities/pais.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Ciudad } from 'apps/citi-back/src/entities/ciudad.entity';
 import { Region } from 'apps/citi-back/src/entities/region.entity';
+import { GeoDataDto } from './dto/geoData.dto';
 
 @Injectable()
 export class GeoService {
@@ -26,7 +26,7 @@ export class GeoService {
     ) {}
 
 
-    async GetGeoData(data: GeoData) {
+    async GetGeoData(data: GeoDataDto) {
         const OPEN_CAGE_API_KEY = process.env.GEOKEY
         const url = `https://api.opencagedata.com/geocode/v1/json?key=${OPEN_CAGE_API_KEY}&q=${data.Latitud}+${data.Longitud}&pretty=1&no_annotations=1`;
         const response = await axios.get(url);
@@ -42,7 +42,7 @@ export class GeoService {
 
     }
 
-    async GetData(data: GeoData) {
+    async GetData(data: GeoDataDto) {
             const geodata = await this.GetGeoData(data);
             const pais = await this.crearPais(geodata.pais);
             const region = await this.crearRegion(geodata.Region, pais);

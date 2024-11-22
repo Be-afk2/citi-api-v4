@@ -17,14 +17,11 @@ export class CreateLocalDto {
 
     @IsString()
     @IsNotEmpty()
-     longitud: string;
+    longitud: string;
 
     @IsString()
     @IsNotEmpty()
-     latitud: string;
+    latitud: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    readonly ciudad: number;
 
 }

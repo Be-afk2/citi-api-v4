@@ -25,13 +25,13 @@ export class LocalService {
 
     async CreateLocal(data: CreateLocalDto) {
         
+        console.log(data)
         const comprobacion = await this.ComprobarCrearLocal(data);
 
         const local = await this.LocalRepository.create();
         const GeoData = new GeoDataDto
         GeoData.Longitud = data.longitud;
         GeoData.Latitud = data.latitud;
-
 
         const geodata = await this.geoService.GetData(GeoData);
         local.nombre = data.nombre;
@@ -64,4 +64,9 @@ export class LocalService {
 
         return ciudad
     }	
+
+
+    async SubirFoto(files){
+
+    }
  }
