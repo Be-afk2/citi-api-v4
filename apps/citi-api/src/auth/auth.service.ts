@@ -109,4 +109,12 @@ export class AuthService {
 
 
 
+    async logintoken(userid){
+        return {
+            user: await this.findUserById(userid,false),
+        }
+    }
+
+
+
 }

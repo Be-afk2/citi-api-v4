@@ -34,13 +34,13 @@ export class User extends BaseEntity {
     validMail :boolean
     
 
-    @Column({nullable :false})
+    @Column({nullable :true})
     fechaNacimiento :Date
 
-    @Column({nullable :false})
+    @Column({default :false})
     mayorEdad :boolean
 
-    @Column({nullable :false})
+    @Column({default :false})
     mostrarContenidoMayor :boolean
 
     
