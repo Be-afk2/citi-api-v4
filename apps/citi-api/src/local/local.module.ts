@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { diskStorage } from 'multer';
 import { MulterModule } from '@nestjs/platform-express';
 import { extname } from 'path';
+import { FotosLocal } from 'apps/citi-back/src/entities/fotoslocal.entity';
 
 @Module({
     imports: [
@@ -16,7 +17,7 @@ import { extname } from 'path';
         MulterModule.registerAsync({
             useFactory: () => ({
                 storage: diskStorage({
-                    destination: 'public/docsEmpresa',
+                    destination: 'public/fotosLocal',
                     filename: (req, file, cb) => {
                         const fileName = file.originalname
                             .normalize('NFD')
@@ -31,7 +32,8 @@ import { extname } from 'path';
         }),
 
         TypeOrmModule.forFeature([
-            Local
+            Local,
+            FotosLocal
         ]),
 
         GeoModule
