@@ -2,7 +2,7 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'apps/citi-back/src/entities/user.entity';
@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { hash, compare } from 'bcrypt';
 import { TipoUser } from 'apps/citi-back/src/entities/TipoUser.entity';
+import { LoginDto } from './dto/LoginDto.dto';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +41,7 @@ export class AuthService {
         await user.save();
 
         
-        return {user : await this.findUserById(user.id, false), token : await this.createToken(user)}
+        return {user : await this.findUserById(user.id, false), token : await this.get_token(user)}
     }
 
     async findUserById(id, bool) {
@@ -53,8 +54,36 @@ export class AuthService {
     }
 
 
-    async createToken(user: User) {
-        const payload = { id: user.id };	
-        return this.jwtService.sign(payload);
+    async get_token(user: User) {
+        console.log(user)
+        const payload = {
+            id: user.id,
+            nombre: user.nombre,
+            tipo: user.tipoUser.id
+        };
+        const token = this.jwtService.sign(payload);
+        return token;
     }
+
+
+    async login(data : LoginDto){
+
+        const this_user = await this.UsersRepository.findOne({
+            where: { correo: data.Correo },
+            relations: ['tipoUser'],
+        });
+        if(!this_user){
+            throw new NotFoundException('Contraseña o correo no validos');
+        }
+        if (! await compare(data.Pass, this_user.password)) { throw new UnauthorizedException("Contraseña No Coincide"); }
+        const token = await this.get_token(this_user)
+        return {
+            user: this_user,
+            token,
+        }
+
+    }
+
+
+
 }
