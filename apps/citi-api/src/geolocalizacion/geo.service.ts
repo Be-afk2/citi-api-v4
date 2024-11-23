@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { Ciudad } from 'apps/citi-back/src/entities/ciudad.entity';
 import { Region } from 'apps/citi-back/src/entities/region.entity';
 import { GeoDataDto } from './dto/geoData.dto';
+import { User } from 'apps/citi-back/src/entities/user.entity';
 
 @Injectable()
 export class GeoService {
@@ -22,6 +23,9 @@ export class GeoService {
 
         @InjectRepository(Region)
         private RegionRepository: Repository<Region>,
+
+        @InjectRepository(User)
+        private UserRepository: Repository<User>,
 
     ) {}
 
@@ -93,5 +97,11 @@ export class GeoService {
         Ciudad.region = Region;
         await Ciudad.save();
         return await Ciudad
+    }
+
+
+    async SaveDataUser(data: GeoDataDto,user ) {
+
+        return {data,user}
     }
 }
