@@ -100,8 +100,13 @@ export class GeoService {
     }
 
 
-    async SaveDataUser(data: GeoDataDto,user ) {
+    async SaveDataUser(data: GeoDataDto,user:User ) {
 
-        return {data,user}
+
+        const geodata = await this.GetData(data);
+        user.ciudad = geodata.ciudad;
+        await user.save()
+
+        return geodata.ciudad 
     }
 }

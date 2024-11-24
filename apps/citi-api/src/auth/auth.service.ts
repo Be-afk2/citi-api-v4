@@ -52,7 +52,6 @@ export class AuthService {
         //     .
         // });
 
-        console.log("-------antes-----------")
 
         const user = await this.UsersRepository.createQueryBuilder("User")
         .leftJoinAndSelect('User.tipoUser', 'TipoUser')
@@ -71,7 +70,7 @@ export class AuthService {
         ])
         .getOne();
 
-
+        console.log(user)
         console.log("-------despies-----------")
         return user 
     }

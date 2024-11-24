@@ -46,7 +46,7 @@ export class LocalService {
         local.latitud = data.latitud;
         local.ciudad = geodata.ciudad;
         await local.save();
-        return await this.GetOne(local.id);
+        return await this.getOne(local.id);
     }
 
     async ComprobarCrearLocal(data: CreateLocalDto)  {
@@ -60,15 +60,6 @@ export class LocalService {
         return true
     }
 
-
-
-    async GetOne(id: string) {
-        const ciudad = await this.LocalRepository.createQueryBuilder("local")
-        .where("local.id = :id", {id: id})
-        .getOne();
-
-        return ciudad
-    }	
 
 
     async SubirFoto(files,id){

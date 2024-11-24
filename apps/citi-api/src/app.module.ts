@@ -1,3 +1,4 @@
+import { UserModule } from './user/user.module';
 import { LocalModule } from './local/local.module';
 import { GeoModule } from './geolocalizacion/geo.module';
 import { AuthModule } from './auth/auth.module';
@@ -22,7 +23,7 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
 
 @Module({
   imports: [
-        LocalModule, 
+
     ConfigModule.forRoot({ envFilePath: '.env' }),
 
     TypeOrmModule.forRoot({
@@ -53,7 +54,8 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
 
     AuthModule,
     GeoModule,
-
+    UserModule, 
+    LocalModule, 
   ],
   controllers: [AppController],
   providers: [AppService],

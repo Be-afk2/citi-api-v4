@@ -2,7 +2,7 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Post, Put, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { LocalService } from './local.service';
 import { CreateLocalDto } from './dto/CreateLocal.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -27,5 +27,8 @@ export class LocalController {
     return await this.localService.SubirFoto(files,data.id)
   }
 
-
+  @Get('one')
+  async GetOne(@Query() data: GetOneDto) {
+    return await this.localService.getOne(data.id);
+  }
 }
