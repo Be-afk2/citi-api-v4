@@ -69,6 +69,9 @@ export class Local extends BaseEntity {
     // local: Local
 
 
+    @Column({default:true})
+    Habilitar :boolean
+
 
     @DeleteDateColumn()
     deleted_at:Date;
