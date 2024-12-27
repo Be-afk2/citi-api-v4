@@ -1,3 +1,4 @@
+import { EtiquetaModule } from './etiqueta/etiqueta.module';
 import { UserModule } from './user/user.module';
 import { LocalModule } from './local/local.module';
 import { GeoModule } from './geolocalizacion/geo.module';
@@ -23,6 +24,7 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
 
 @Module({
   imports: [
+        EtiquetaModule, 
 
     ConfigModule.forRoot({ envFilePath: '.env' }),
 

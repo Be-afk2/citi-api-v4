@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { GeoService } from '../geolocalizacion/geo.service';
 import { GeoDataDto } from '../geolocalizacion/dto/geoData.dto';
 import { FotosLocal } from 'apps/citi-back/src/entities/fotoslocal.entity';
+import { User } from 'apps/citi-back/src/entities/user.entity';
 
 @Injectable()
 export class LocalService {
@@ -32,6 +33,8 @@ export class LocalService {
         
         console.log(data)
         const comprobacion = await this.ComprobarCrearLocal(data);
+        
+
 
         const local = await this.LocalRepository.create();
         const GeoData = new GeoDataDto
@@ -106,4 +109,13 @@ export class LocalService {
 
         return local
     }
+
+
+    async getAll(user: User,admin: boolean){
+
+                
+
+
+    }
+
  }
