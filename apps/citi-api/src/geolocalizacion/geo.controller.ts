@@ -18,6 +18,10 @@ export class GeoController {
         private geoService: GeoService
     ){}
 
+    @UseAuthUser(
+        ValidRoles.SuperAdmin,
+        ValidRoles.Usuario,
+    )
     @Get()
     async GetData(@Query() data: GeoDataDto ) {
         return this.geoService.GetData(data);
