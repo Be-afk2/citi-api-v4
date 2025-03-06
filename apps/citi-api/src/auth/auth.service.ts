@@ -70,8 +70,6 @@ export class AuthService {
         ])
         .getOne();
 
-        console.log(user)
-        console.log("-------despies-----------")
         return user 
     }
 

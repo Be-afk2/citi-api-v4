@@ -18,8 +18,9 @@ export class Etiquetas extends BaseEntity {
     @Column({nullable:false})
     nombre:string;
 
-    @ManyToOne(type => EtiquetasLocal, EtiquetasLocal => EtiquetasLocal.Etiquetas)
-    EtiquetasLocal:EtiquetasLocal
+
+    @OneToMany(() => EtiquetasLocal, EtiquetasLocal => EtiquetasLocal.id)
+    EtiquetasLocal: EtiquetasLocal[];
 
     // @ManyToOne(type => Region, Region => Region.id)
     // region:Region

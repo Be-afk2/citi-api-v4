@@ -25,8 +25,6 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
 
 @Module({
   imports: [
-        EventoModule, 
-        EtiquetaModule, 
 
     ConfigModule.forRoot({ envFilePath: '.env' }),
 
@@ -60,6 +58,9 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
     GeoModule,
     UserModule, 
     LocalModule, 
+    EtiquetaModule,
+    EventoModule, 
+
   ],
   controllers: [AppController],
   providers: [AppService],
