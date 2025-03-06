@@ -12,6 +12,7 @@ import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from 'apps/citi-back/src/entities/user.entity';
 import { GetUser } from '../auth/decorators/get-user.decorator';
+import { AsignarEtiquetaDto } from './dto/AsignarEtiquetaDto.dto';
 
 
 
@@ -68,10 +69,21 @@ export class LocalController {
 
   @UseAuthUser(
     ValidRoles.SuperAdmin,
-    ValidRoles.Usuario,
   )
   @Get('admin/all')
   async GetAlladmin(@GetUser() user: User) {
     return await this.localService.getAll(user, true);
   }
+
+
+  // rincon de las etiq
+
+
+  @Put('etiq')
+  async AgregarEtiq(@Body() data: AsignarEtiquetaDto) {
+    return await this.localService.AgregarEtiq(data);
+  }
+
+
+
 }

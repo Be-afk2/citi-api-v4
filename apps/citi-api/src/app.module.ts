@@ -12,7 +12,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Ciudad } from 'apps/citi-back/src/entities/ciudad.entity';
 import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
 import { EtiquetasEvento } from 'apps/citi-back/src/entities/etiquetasEvento.entity';
-import { EtiquetasLocal } from 'apps/citi-back/src/entities/etiquetasLocal.entity';
 import { Evento } from 'apps/citi-back/src/entities/evento.entity';
 import { FotosEvento } from 'apps/citi-back/src/entities/fotosEvento.entity';
 import { FotosLocal } from 'apps/citi-back/src/entities/fotoslocal.entity';
@@ -39,7 +38,6 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
         Ciudad,
         Etiquetas,
         EtiquetasEvento,
-        EtiquetasLocal,
         Evento,
         FotosEvento,
         FotosLocal,

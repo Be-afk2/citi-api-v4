@@ -9,6 +9,7 @@ import { diskStorage } from 'multer';
 import { MulterModule } from '@nestjs/platform-express';
 import { extname } from 'path';
 import { FotosLocal } from 'apps/citi-back/src/entities/fotoslocal.entity';
+import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
 
 @Module({
     imports: [
@@ -33,7 +34,8 @@ import { FotosLocal } from 'apps/citi-back/src/entities/fotoslocal.entity';
 
         TypeOrmModule.forFeature([
             Local,
-            FotosLocal
+            FotosLocal,
+            Etiquetas,
         ]),
 
         GeoModule

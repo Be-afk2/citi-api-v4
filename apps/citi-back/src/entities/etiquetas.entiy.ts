@@ -1,11 +1,6 @@
 
 import { Entity, Column, PrimaryGeneratedColumn,CreateDateColumn,UpdateDateColumn,DeleteDateColumn, Timestamp, Table, OneToMany, ManyToOne} from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
-import { v4 as uuidv4 } from 'uuid';
-import { Region } from './region.entity';
-import { User } from './user.entity';
-import { Local } from './local.entity';
-import { EtiquetasLocal } from './etiquetasLocal.entity';
 
 
 
@@ -18,18 +13,6 @@ export class Etiquetas extends BaseEntity {
     @Column({nullable:false})
     nombre:string;
 
-
-    @OneToMany(() => EtiquetasLocal, EtiquetasLocal => EtiquetasLocal.id)
-    EtiquetasLocal: EtiquetasLocal[];
-
-    // @ManyToOne(type => Region, Region => Region.id)
-    // region:Region
-
-    // @OneToMany(() => User, user => user.ciudad)
-    // user: User[];
-
-    // @OneToMany(() => Local, Local => Local.ciudad)
-    // local: Local[];
 
 
     @DeleteDateColumn()
