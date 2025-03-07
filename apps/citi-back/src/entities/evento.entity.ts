@@ -1,5 +1,5 @@
 
-import { Entity, Column, PrimaryGeneratedColumn,CreateDateColumn,UpdateDateColumn,DeleteDateColumn, Timestamp, Table, OneToMany, ManyToOne} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Timestamp, Table, OneToMany, ManyToOne, JoinTable, ManyToMany } from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
 import { v4 as uuidv4 } from 'uuid';
 import { Region } from './region.entity';
@@ -8,6 +8,7 @@ import { Local } from './local.entity';
 import { Ciudad } from './ciudad.entity';
 import { FotosEvento } from './fotosEvento.entity';
 import { Interacion } from './interacion.entity';
+import { Etiquetas } from './etiquetas.entiy';
 
 
 
@@ -17,35 +18,35 @@ export class Evento extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({nullable:false})
-    nombre:string;
+    @Column({ nullable: false })
+    nombre: string;
 
     @Column()
-    descripcion:string;
+    descripcion: string;
 
     @Column()
-    longitud:string;
+    longitud: string;
 
     @Column()
-    latitud:string;
+    latitud: string;
 
     @Column()
-    Organizador:string;
+    Organizador: string;
 
     @ManyToOne(() => Ciudad, Ciudad => Ciudad.id)
     ciudad: Ciudad
 
-    @Column({default:0})
-    likes:string;
+    @Column({ default: 0 })
+    likes: string;
 
-    @Column({default:0})
-    compartidos:string;
+    @Column({ default: 0 })
+    compartidos: string;
 
-    @Column({default:0})
-    vistos:string;
+    @Column({ default: 0 })
+    vistos: string;
 
-    @Column({default:0})
-    reportes:string;
+    @Column({ default: 0 })
+    reportes: string;
 
     @OneToMany(() => FotosEvento, FotosEvento => FotosEvento.evento)
     fotos: FotosEvento[];
@@ -53,11 +54,15 @@ export class Evento extends BaseEntity {
     @OneToMany(() => Interacion, Interacion => Interacion.evento)
     interacion: Interacion[];
 
+    @ManyToMany(() => Etiquetas)
+    @JoinTable()
+    etiquetas: Etiquetas[]
+
     @DeleteDateColumn()
-    deleted_at:Date;
+    deleted_at: Date;
     @CreateDateColumn()
-    created_at:Date;
+    created_at: Date;
     @UpdateDateColumn()
-    updated_at:Date;
+    updated_at: Date;
 
 }

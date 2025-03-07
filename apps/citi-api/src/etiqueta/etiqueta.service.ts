@@ -24,7 +24,7 @@ export class EtiquetaService {
             skip: (paguinador.Paguina - 1) * paguinador.Cantidad,
             take: paguinador.Cantidad,
         });
-        return data;
+        return {data, total};
     }
     async CreateEtiqueta(data: CrearEtiquetaDto) {
         const result = {

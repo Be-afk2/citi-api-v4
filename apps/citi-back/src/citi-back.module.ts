@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { Ciudad } from './entities/ciudad.entity';
 import { Etiquetas } from './entities/etiquetas.entiy';
-import { EtiquetasEvento } from './entities/etiquetasEvento.entity';
 import { Evento } from './entities/evento.entity';
 import { FotosEvento } from './entities/fotosEvento.entity';
 import { FotosLocal } from './entities/fotoslocal.entity';
@@ -31,7 +30,6 @@ import { User } from './entities/user.entity';
       entities: [
         Ciudad,
         Etiquetas,
-        EtiquetasEvento,
         Evento,
         FotosEvento,
         FotosLocal,
