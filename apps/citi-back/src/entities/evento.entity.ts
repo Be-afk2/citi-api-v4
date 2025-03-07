@@ -58,6 +58,17 @@ export class Evento extends BaseEntity {
     @JoinTable()
     etiquetas: Etiquetas[]
 
+
+
+    @Column()
+    activo: boolean;
+
+    @Column()
+    fechaInicio: Date;
+
+    @Column()
+    fechaFin: Date;
+
     @DeleteDateColumn()
     deleted_at: Date;
     @CreateDateColumn()

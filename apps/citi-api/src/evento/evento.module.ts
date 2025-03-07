@@ -7,14 +7,24 @@ https://docs.nestjs.com/modules
 
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GeoModule } from '../geolocalizacion/geo.module';
+import { GeoService } from '../geolocalizacion/geo.service';
+import { Ciudad } from 'apps/citi-back/src/entities/ciudad.entity';
+import { Pais } from 'apps/citi-back/src/entities/pais.entity';
+import { Region } from 'apps/citi-back/src/entities/region.entity';
+import { User } from 'apps/citi-back/src/entities/user.entity';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([
-            Evento
+            Evento,
+            Pais,
+            Ciudad,
+            Region,
+            User
         ]),
     ],
     controllers: [EventoController,],
-    providers: [EventoService,],
+    providers: [EventoService, GeoService],
 })
 export class EventoModule { }
