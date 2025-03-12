@@ -2,6 +2,12 @@
 https://docs.nestjs.com/providers#services
 */
 
+
+
+// revisar los codigos postales  para analizar las ciudades / pueblos / etc vecinas
+
+
+
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { Pais } from 'apps/citi-back/src/entities/pais.entity';
@@ -27,52 +33,62 @@ export class GeoService {
         @InjectRepository(User)
         private UserRepository: Repository<User>,
 
-    ) {}
+    ) { }
 
 
     async GetGeoData(data: GeoDataDto) {
         const OPEN_CAGE_API_KEY = process.env.GEOKEY
         const url = `https://api.opencagedata.com/geocode/v1/json?key=${OPEN_CAGE_API_KEY}&q=${data.Latitud}+${data.Longitud}&pretty=1&no_annotations=1`;
         const response = await axios.get(url);
-
+        console.log(JSON.stringify(response.data))
         return {
             comuna: response.data.results[0].components.town,
-            ciudad: response.data.results[0].components.city ? response.data.results[0].components.city : response.data.results[0].components.village ,
+            ciudad: response.data.results[0].components.city ? response.data.results[0].components.city : response.data.results[0].components.village ? response.data.results[0].components.village : response.data.results[0].components.town,
             Region: response.data.results[0].components.state,
             Direcion: response.data.results[0].formatted,
             pais: response.data.results[0].components.country,
             components: response.data.results[0].components,
+            codigoPostal: response.data.results[0].components.postcode
         }
 
+    }
+
+    async asd(data: GeoDataDto) {
+        const OPEN_CAGE_API_KEY = process.env.GEOKEY
+        const url = `https://api.opencagedata.com/geocode/v1/json?key=${OPEN_CAGE_API_KEY}&q=${data.Latitud}+${data.Longitud}&pretty=1&no_annotations=1`;
+        const response = await axios.get(url);
+        return response.data
     }
 
     async GetData(data: GeoDataDto) {
-            const geodata = await this.GetGeoData(data);
-            const pais = await this.crearPais(geodata.pais);
-            const region = await this.crearRegion(geodata.Region, pais);
-            const ciudad = await this.crearCiudad(geodata.ciudad, region);
-            return {
-                pais: pais,
-                region: region,
-                ciudad: ciudad
-            }
+        const geodata = await this.GetGeoData(data);
+        const pais = await this.crearPais(geodata.pais);
+        const region = await this.crearRegion(geodata.Region, pais);
+        const ciudad = await this.crearCiudad(geodata.ciudad, region, geodata.codigoPostal);
+
+
+        return {
+            pais: pais,
+            region: region,
+            ciudad: ciudad
+        }
     }
 
 
-    async crearRegion(RegionName:string, pais : Pais) {
+    async crearRegion(RegionName: string, pais: Pais) {
 
-        var Region = await this.RegionRepository.findOneBy({ nombre: RegionName , Pais: {id: pais.id} });
+        var Region = await this.RegionRepository.findOneBy({ nombre: RegionName, Pais: { id: pais.id } });
         if (Region) {
             return Region;
         }
-        Region =  await this.RegionRepository.create();
+        Region = await this.RegionRepository.create();
         Region.nombre = RegionName;
         Region.Pais = pais;
         await Region.save();
         return await Region
     }
 
-    async crearPais(PaisName:string) { 
+    async crearPais(PaisName: string) {
 
         var Pais = await this.PaisRepository.findOneBy({ nombre: PaisName });
 
@@ -80,33 +96,39 @@ export class GeoService {
             return Pais;
         }
 
-        Pais =  await this.PaisRepository.create();
+        Pais = await this.PaisRepository.create();
         Pais.nombre = PaisName;
         await Pais.save();
         return await Pais
-    }	
+    }
 
-    async crearCiudad(CiudadName:string, Region : Region) {
+    async crearCiudad(CiudadName: string, Region: Region, PostalCode: string) {
 
-        var Ciudad = await this.CiudadRepository.findOneBy({ nombre: CiudadName , region: { id: Region.id } });
+        var Ciudad = await this.CiudadRepository.findOneBy({ nombre: CiudadName, region: { id: Region.id } });
         if (Ciudad) {
             return Ciudad;
         }
-        Ciudad =  await this.CiudadRepository.create();
+        Ciudad = await this.CiudadRepository.create();
         Ciudad.nombre = CiudadName;
         Ciudad.region = Region;
+        console.log(PostalCode)
+        if (PostalCode) {
+            console.log(parseInt(PostalCode.split(' ')[0]))
+            Ciudad.CodigoPostal = parseInt(PostalCode.split(' ')[0] +PostalCode.split(' ')[2].length );
+        }
+
         await Ciudad.save();
         return await Ciudad
     }
 
 
-    async SaveDataUser(data: GeoDataDto,user:User ) {
+    async SaveDataUser(data: GeoDataDto, user: User) {
 
 
         const geodata = await this.GetData(data);
         user.ciudad = geodata.ciudad;
         await user.save()
 
-        return geodata.ciudad 
+        return geodata.ciudad
     }
 }

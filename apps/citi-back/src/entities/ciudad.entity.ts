@@ -30,6 +30,9 @@ export class Ciudad extends BaseEntity {
     @OneToMany(() => Evento, Evento => Evento.ciudad)
     evento: Local[];
 
+    @Column({nullable:true})
+    CodigoPostal:number;
+
     @DeleteDateColumn()
     deleted_at:Date;
     @CreateDateColumn()

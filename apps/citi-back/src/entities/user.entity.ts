@@ -58,7 +58,7 @@ export class User extends BaseEntity {
 
     @OneToMany(() => Interacion, Interacion => Interacion.user)
     interacion: Interacion[];
-    
+ 
     @DeleteDateColumn()
     deleted_at:Date;
     @CreateDateColumn()

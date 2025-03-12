@@ -1,3 +1,4 @@
+import { HomeModule } from './home/home.module';
 import { EventoModule } from './evento/evento.module';
 import { EtiquetaModule } from './etiqueta/etiqueta.module';
 import { UserModule } from './user/user.module';
@@ -23,6 +24,7 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
 
 @Module({
   imports: [
+        HomeModule, 
 
     ConfigModule.forRoot({ envFilePath: '.env' }),
 
