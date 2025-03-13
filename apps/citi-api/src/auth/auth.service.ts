@@ -55,6 +55,7 @@ export class AuthService {
 
         const user = await this.UsersRepository.createQueryBuilder("User")
         .leftJoinAndSelect('User.tipoUser', 'TipoUser')
+        .leftJoinAndSelect('User.ciudad', 'Ciudad')
         .where("User.id = :id", { id }) 
         .select([
             "User.id",
@@ -67,6 +68,8 @@ export class AuthService {
             "User.mostrarContenidoMayor",
             "TipoUser.id",
             "TipoUser.tipo",
+            "Ciudad.id",
+            "Ciudad.nombre",
         ])
         .getOne();
 

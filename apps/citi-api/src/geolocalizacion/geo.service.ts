@@ -40,7 +40,6 @@ export class GeoService {
         const OPEN_CAGE_API_KEY = process.env.GEOKEY
         const url = `https://api.opencagedata.com/geocode/v1/json?key=${OPEN_CAGE_API_KEY}&q=${data.Latitud}+${data.Longitud}&pretty=1&no_annotations=1`;
         const response = await axios.get(url);
-        console.log(JSON.stringify(response.data))
         return {
             comuna: response.data.results[0].components.town,
             ciudad: response.data.results[0].components.city ? response.data.results[0].components.city : response.data.results[0].components.village ? response.data.results[0].components.village : response.data.results[0].components.town,
@@ -111,15 +110,20 @@ export class GeoService {
         Ciudad = await this.CiudadRepository.create();
         Ciudad.nombre = CiudadName;
         Ciudad.region = Region;
+        console.log("--------------------")
         console.log(PostalCode)
+        console.log(PostalCode.split(' ')[0])
+        console.log(PostalCode.split(' ')[1])
+        console.log(PostalCode.split(' ')[0] + PostalCode.split(' ')[1].length)
         if (PostalCode) {
             console.log(parseInt(PostalCode.split(' ')[0]))
-            Ciudad.CodigoPostal = parseInt(PostalCode.split(' ')[0] +PostalCode.split(' ')[2].length );
+            Ciudad.CodigoPostal = parseInt(PostalCode.split(' ')[0] + '0'.repeat(PostalCode.split(' ')[0].length) );
         }
 
         await Ciudad.save();
         return await Ciudad
     }
+    
 
 
     async SaveDataUser(data: GeoDataDto, user: User) {

@@ -11,6 +11,7 @@ import { Ciudad } from 'apps/citi-back/src/entities/ciudad.entity';
 import { Pais } from 'apps/citi-back/src/entities/pais.entity';
 import { Region } from 'apps/citi-back/src/entities/region.entity';
 import { GeoDataDto } from '../geolocalizacion/dto/geoData.dto';
+import { User } from 'apps/citi-back/src/entities/user.entity';
 
 @Injectable()
 export class HomeService {
@@ -39,23 +40,29 @@ export class HomeService {
     }
 
 
-    async homeLocal(data: GeoDataDto) {
+    async homeLocal(data: GeoDataDto,user: User) {
         const lon = data.Longitud;
         const lat = data.Latitud;
-        const maxDistance = 222;
+        const maxDistance = 400;
     
+        console.log(user);
+
         const local = await this.LocalRepository
             .createQueryBuilder("Local") 
+        .leftJoinAndSelect('Local.ciudad', 'Ciudad')
+
             .select("Local.id", "id")
             .addSelect(
                 `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat))`,
                 "distance"
             )
-            .where(
+            .where("Local.ciudad = :ciudad", { ciudad: user.ciudad.id })
+            .andWhere(
                 `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat)) <= :maxDistance`
             )
             .setParameters({ lon, lat, maxDistance })
-            .getRawMany();
+            .orderBy("RAND()")
+            .getRawMany();  
     
         return local;
     }
