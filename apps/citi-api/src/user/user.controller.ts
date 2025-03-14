@@ -10,6 +10,7 @@ import { UseAuthUser } from '../auth/decorators/use-auth-user.decorator';
 import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 import { User } from 'apps/citi-back/src/entities/user.entity';
 import { GetUser } from '../auth/decorators/get-user.decorator';
+import { PreferenciasUser } from './dto/PreferenciaDto.dto';
 
 @Controller('user')
 @UseGuards(JwtAuthGuard)
@@ -33,6 +34,13 @@ export class UserController {
 
     }
 
+
+    @Put('preferencia')
+    async updatePreferencia(@Body() data: PreferenciasUser,@GetUser() user: User) {
+
+        return await this.userService.updatePreferencia(data,user)
+ 
+     }
 
 
 }
