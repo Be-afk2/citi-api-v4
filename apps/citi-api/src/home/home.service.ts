@@ -12,6 +12,7 @@ import { Pais } from 'apps/citi-back/src/entities/pais.entity';
 import { Region } from 'apps/citi-back/src/entities/region.entity';
 import { GeoDataDto } from '../geolocalizacion/dto/geoData.dto';
 import { User } from 'apps/citi-back/src/entities/user.entity';
+import { Evento } from 'apps/citi-back/src/entities/evento.entity';
 
 @Injectable()
 export class HomeService {
@@ -27,11 +28,14 @@ export class HomeService {
         @InjectRepository(Region)
         private RegionRepository: Repository<Region>,
 
+        @InjectRepository(Evento)
+        private EventoRepository: Repository<Evento>,
+
     ) { }
 
 
 
-    async GetLocal(){
+    async GetLocal() {
 
         const local = await this.LocalRepository.find(
             // cosas que se pueden hacer con el find
@@ -40,16 +44,15 @@ export class HomeService {
     }
 
 
-    async homeLocal(data: GeoDataDto,user: User) {
+    async homeLocal(data: GeoDataDto, user: User) {
         const lon = data.Longitud;
         const lat = data.Latitud;
-        const maxDistance = 400;
-    
-        console.log(user);
+        const maxDistance = data.Radio ? data.Radio : 400;
+
 
         const local = await this.LocalRepository
-            .createQueryBuilder("Local") 
-        .leftJoinAndSelect('Local.ciudad', 'Ciudad')
+            .createQueryBuilder("Local")
+            .leftJoinAndSelect('Local.ciudad', 'Ciudad')
 
             .select("Local.id", "id")
             .addSelect(
@@ -62,11 +65,38 @@ export class HomeService {
             )
             .setParameters({ lon, lat, maxDistance })
             .orderBy("RAND()")
-            .getRawMany();  
-    
+            .getRawMany();
+
         return local;
     }
-    
+
+
+
+    async homeEvento(data: GeoDataDto, user: User) {
+        const lon = data.Longitud;
+        const lat = data.Latitud;
+        const maxDistance = data.Radio ? data.Radio : 400;
+
+        const Evento = await this.EventoRepository
+            .createQueryBuilder("Evento")
+            .leftJoinAndSelect('Evento.ciudad', 'Ciudad')
+
+            .select("Evento.id", "id")
+            .addSelect(
+                `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat))`,
+                "distance"
+            )
+            .where("Evento.ciudad = :ciudad", { ciudad: user.ciudad.id })
+            .andWhere(
+                `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat)) <= :maxDistance`
+            )
+            .setParameters({ lon, lat, maxDistance })
+            .orderBy("RAND()")
+            .getRawMany();
+
+
+
+    }
 
 
 }

@@ -10,5 +10,9 @@ export class GeoDataDto {
     @IsNotEmpty()
     Latitud: string;
 
+    @IsOptional()
+    @IsNumber()
+    Radio: number;
+
 
 }

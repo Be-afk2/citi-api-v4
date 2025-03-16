@@ -35,4 +35,19 @@ export class HomeController {
 
 
     }
+
+
+    @Get('evento')
+    @UseAuthUser(
+        ValidRoles.SuperAdmin,
+        ValidRoles.Usuario,
+    )
+    async homeEvento(@Query() data: GeoDataDto, @GetUser() user: User) {
+        {
+
+            return this.homeService.homeLocal(data, user);
+        }
+
+
+    }
 }
