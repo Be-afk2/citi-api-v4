@@ -9,7 +9,7 @@ export class AppController {
   getHello() {
     return {
       Name : "Citi-api",
-      Version : "0.0.2",
+      Version : "0.0.8",
       Developers : [{
         name : "BE"
       }]
