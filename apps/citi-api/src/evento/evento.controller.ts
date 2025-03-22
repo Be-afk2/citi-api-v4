@@ -27,5 +27,10 @@ export class EventoController {
         return await this.eventoService.CrearEvento(data);
     }
 
+    @Post('varias')
+    async CrearEventos(@Body() data: CrearEventoDto[]) {
+        return await this.eventoService.CrearEventos(data);
+    }
+
 
 }

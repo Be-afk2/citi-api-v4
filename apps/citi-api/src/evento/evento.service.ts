@@ -39,12 +39,23 @@ export class EventoService {
         evento.longitud = data.Longitud;
         evento.latitud = data.Latitud;
         evento.Organizador = data.Organizador;
-        
+        evento.fechaInicio = data.FechaInicio;
+        evento.fechaFin = data.FechaFin;
+
         const GeoData = new GeoDataDto
         GeoData.Longitud = data.Longitud;
         GeoData.Latitud = data.Latitud;
         const geodata = await this.geoService.GetData(GeoData);
 
+        evento.ciudad = geodata.ciudad;
+        await evento.save()
         return geodata
+    }
+
+    async CrearEventos(data: CrearEventoDto[]) {
+        for(let item of data){
+            await this.CrearEvento(item)
+        }
+        return {message: 'Eventos creados'}
     }
 }

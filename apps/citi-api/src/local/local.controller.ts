@@ -33,6 +33,12 @@ export class LocalController {
     return this.localService.CreateLocal(data);
   }
 
+  @Post('varias')
+  async CreateLocales(@Body() data: CreateLocalDto[]) {
+    return this.localService.CreateLocales(data);
+  }
+
+
 
   @UseAuthUser(
     ValidRoles.SuperAdmin,

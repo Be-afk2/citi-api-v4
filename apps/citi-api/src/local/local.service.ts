@@ -59,6 +59,14 @@ export class LocalService {
         return await this.getOne(local.id);
     }
 
+    async CreateLocales(data: CreateLocalDto[]) {
+
+        for(let item of data){
+            await this.CreateLocal(item)
+        }
+        return {message: 'Locales creados'}
+    }
+
     async ComprobarCrearLocal(data: CreateLocalDto) {
 
         var local = await this.LocalRepository.findOneBy({ longitud: data.longitud, latitud: data.latitud });
