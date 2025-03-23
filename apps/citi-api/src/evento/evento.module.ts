@@ -13,6 +13,7 @@ import { Ciudad } from 'apps/citi-back/src/entities/ciudad.entity';
 import { Pais } from 'apps/citi-back/src/entities/pais.entity';
 import { Region } from 'apps/citi-back/src/entities/region.entity';
 import { User } from 'apps/citi-back/src/entities/user.entity';
+import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
 
 @Module({
     imports: [
@@ -21,7 +22,8 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
             Pais,
             Ciudad,
             Region,
-            User
+            User,
+            Etiquetas
         ]),
     ],
     controllers: [EventoController,],

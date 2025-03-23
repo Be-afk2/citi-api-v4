@@ -107,15 +107,17 @@ export class GeoService {
         if (Ciudad) {
             return Ciudad;
         }
+
         Ciudad = await this.CiudadRepository.create();
         Ciudad.nombre = CiudadName;
         Ciudad.region = Region;
-        console.log("--------------------")
-        console.log(PostalCode)
-        console.log(PostalCode.split(' ')[0])
-        console.log(PostalCode.split(' ')[1])
-        console.log(PostalCode.split(' ')[0] + PostalCode.split(' ')[1].length)
+
         if (PostalCode) {
+            console.log("--------------------")
+            console.log(PostalCode)
+            console.log(PostalCode.split(' ')[0])
+            console.log(PostalCode.split(' ')[1])
+            console.log(PostalCode.split(' ')[0] + PostalCode.split(' ')[1].length)
             console.log(parseInt(PostalCode.split(' ')[0]))
             Ciudad.CodigoPostal = parseInt(PostalCode.split(' ')[0] + '0'.repeat(PostalCode.split(' ')[0].length) );
         }

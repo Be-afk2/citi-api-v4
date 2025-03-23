@@ -2,10 +2,11 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Query } from '@nestjs/common';
 import { EventoService } from './evento.service';
 import { PaguinadorDto } from '../etiqueta/dto/paguinadorDto.dto';
 import { CrearEventoDto } from './dto/CrearEventoDto.dto';
+import { AsignarEtiqEventoDto } from './dto/AsignarEtiqEventoDto.dto';
 
 @Controller('evento')
 export class EventoController {
@@ -30,6 +31,14 @@ export class EventoController {
     @Post('varias')
     async CrearEventos(@Body() data: CrearEventoDto[]) {
         return await this.eventoService.CrearEventos(data);
+    }
+
+  // rincon de las etiq
+
+
+    @Put("etiq")
+    async AsignarEtiqueta(@Query() data: AsignarEtiqEventoDto) {
+        return await this.eventoService.AsignarEtiqueta(data);
     }
 
 

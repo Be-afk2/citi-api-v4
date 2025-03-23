@@ -106,6 +106,7 @@ export class LocalService {
         const local = await this.LocalRepository.createQueryBuilder("local")
             .where("local.id = :id", { id: id })
             .leftJoinAndSelect('local.fotos', 'FotosLocal')
+            .leftJoinAndSelect('local.etiquetas', 'Etiquetas')
             .select([
                 'local.id',
                 'local.nombre',
@@ -118,11 +119,30 @@ export class LocalService {
                 'local.vistos',
                 'FotosLocal.id',
                 'FotosLocal.path',
+                'Etiquetas.id',
+                'Etiquetas.nombre',
 
             ])
             .getOne();
-
         return local
+    }
+
+    async getOneMini(id : string) {
+
+        const local = await this.LocalRepository.createQueryBuilder("local")
+        .where("local.id = :id", { id: id })
+        .leftJoinAndSelect('local.fotos', 'FotosLocal')
+        .leftJoinAndSelect('local.etiquetas', 'Etiquetas')
+        .select([
+            'local.id',
+            'local.nombre',
+            'local.longitud',
+            'local.latitud',
+            'Etiquetas.id',
+            'Etiquetas.nombre',
+        ])
+        .getOne();
+    return local
     }
 
 
@@ -148,7 +168,7 @@ export class LocalService {
             oldetiq: 0,
             errorid: [],
             error: 0,
-            message: 'esto deberia estar vacio , si ves esto es porque se paso los filtros',
+            message: '',
 
         }
 
