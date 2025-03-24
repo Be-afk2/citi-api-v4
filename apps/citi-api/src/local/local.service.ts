@@ -13,6 +13,7 @@ import { FotosLocal } from 'apps/citi-back/src/entities/fotoslocal.entity';
 import { User } from 'apps/citi-back/src/entities/user.entity';
 import { AsignarEtiquetaDto } from './dto/AsignarEtiquetaDto.dto';
 import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
+import { PaguinadorDto } from '../etiqueta/dto/paguinadorDto.dto';
 
 @Injectable()
 export class LocalService {
@@ -146,9 +147,24 @@ export class LocalService {
     }
 
 
-    async getAll(user: User, admin: boolean) {
+    async getAll(user: User,admin:boolean, paguinador:PaguinadorDto) {
+
+        const Query = await this.LocalRepository.createQueryBuilder('local')
+        .leftJoinAndSelect('local.etiquetas', 'Etiquetas') 
+        .select([
+            'local.id',
+            'local.nombre',
+            'local.longitud',
+            'local.latitud',
+            'Etiquetas.id',
+            'Etiquetas.nombre',
+        ])
+        .skip((paguinador.Paguina - 1) * paguinador.Cantidad)
+        .take(paguinador.Cantidad)
 
 
+        // .getManyAndCount();
+        return {data, total};
 
 
     }

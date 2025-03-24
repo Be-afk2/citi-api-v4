@@ -13,6 +13,8 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from 'apps/citi-back/src/entities/user.entity';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { AsignarEtiquetaDto } from './dto/AsignarEtiquetaDto.dto';
+import { PaguinadorDto } from '../etiqueta/dto/paguinadorDto.dto';
+import { FiltroDto } from './dto/FiltroDto.dto';
 
 
 
@@ -68,18 +70,11 @@ export class LocalController {
     ValidRoles.Usuario,
   )
   @Get('all')
-  async GetAll(@GetUser() user: User) {
-    return await this.localService.getAll(user, false);
+  async GetAll(@GetUser() user: User,@Query() data: PaguinadorDto,@Query() filtros :FiltroDto) {
+    return await this.localService.getAll(user, user.tipoUser.id == 1 ,data);
   }
 
 
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-  )
-  @Get('admin/all')
-  async GetAlladmin(@GetUser() user: User) {
-    return await this.localService.getAll(user, true);
-  }
 
 
   // rincon de las etiq
