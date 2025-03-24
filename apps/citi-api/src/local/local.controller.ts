@@ -15,6 +15,7 @@ import { GetUser } from '../auth/decorators/get-user.decorator';
 import { AsignarEtiquetaDto } from './dto/AsignarEtiquetaDto.dto';
 import { PaguinadorDto } from '../etiqueta/dto/paguinadorDto.dto';
 import { FiltroDto } from './dto/FiltroDto.dto';
+import { FiltroPaguinadorDto } from './dto/FiltroPaguinadorDto.dto';
 
 
 
@@ -70,7 +71,7 @@ export class LocalController {
     ValidRoles.Usuario,
   )
   @Get('all')
-  async GetAll(@GetUser() user: User,@Query() data: PaguinadorDto,@Query() filtros :FiltroDto) {
+  async GetAll(@GetUser() user: User,@Query() data: FiltroPaguinadorDto) {
     return await this.localService.getAll(user, user.tipoUser.id == 1 ,data);
   }
 

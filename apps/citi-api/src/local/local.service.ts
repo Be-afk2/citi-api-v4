@@ -14,6 +14,8 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
 import { AsignarEtiquetaDto } from './dto/AsignarEtiquetaDto.dto';
 import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
 import { PaguinadorDto } from '../etiqueta/dto/paguinadorDto.dto';
+import { query } from 'express';
+import { FiltroPaguinadorDto } from './dto/FiltroPaguinadorDto.dto';
 
 @Injectable()
 export class LocalService {
@@ -146,8 +148,8 @@ export class LocalService {
     return local
     }
 
-
-    async getAll(user: User,admin:boolean, paguinador:PaguinadorDto) {
+ 
+    async getAll(user: User,admin:boolean, data:FiltroPaguinadorDto) {
 
         const Query = await this.LocalRepository.createQueryBuilder('local')
         .leftJoinAndSelect('local.etiquetas', 'Etiquetas') 
@@ -159,12 +161,29 @@ export class LocalService {
             'Etiquetas.id',
             'Etiquetas.nombre',
         ])
-        .skip((paguinador.Paguina - 1) * paguinador.Cantidad)
-        .take(paguinador.Cantidad)
 
+        if( data.Nombre){
+            console.log('admin')
+            Query .where('local.nombre LIKE :search', { search: `%${data.Nombre}%` })
+        }
+        if(admin && data.ciudad){
+            Query .andWhere('local.ciudad = :ciudad', { ciudad: data.ciudad })
+        }
+        if(admin && data.region){
+            Query .andWhere('local.region = :region', { region: data.region })
+        }
+        if(admin && data.pais){
+            Query .andWhere('local.pais = :pais', { pais: data.pais })
+        }
+        if(!admin){
+            Query .andWhere('local.ciudad = :ciudad', { ciudad: user.ciudad })
+        }
 
+        Query .skip((data.Paguina - 1) * data.Cantidad)
+        Query.take(data.Cantidad)
+        const [result, total] = await Query.getManyAndCount();
         // .getManyAndCount();
-        return {data, total};
+        return {data:result, total};
 
 
     }
