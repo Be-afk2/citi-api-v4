@@ -29,13 +29,16 @@ export class LocalController {
 
   @UseAuthUser(
     ValidRoles.SuperAdmin,
-    ValidRoles.Usuario,
   )
   @Post()
   async CreateLocal(@Body() data: CreateLocalDto) {
     return this.localService.CreateLocal(data);
   }
 
+
+  @UseAuthUser(
+    ValidRoles.SuperAdmin,
+  )
   @Post('varias')
   async CreateLocales(@Body() data: CreateLocalDto[]) {
     return this.localService.CreateLocales(data);
@@ -45,7 +48,6 @@ export class LocalController {
 
   @UseAuthUser(
     ValidRoles.SuperAdmin,
-    ValidRoles.Usuario,
   )
   @Put()
   @UseInterceptors(FilesInterceptor('archivo'))

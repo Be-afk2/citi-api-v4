@@ -37,16 +37,16 @@ export class Evento extends BaseEntity {
     ciudad: Ciudad
 
     @Column({ default: 0 })
-    likes: string;
+    likes: number;
 
     @Column({ default: 0 })
-    compartidos: string;
+    compartidos: number;
 
     @Column({ default: 0 })
-    vistos: string;
+    vistos: number;
 
     @Column({ default: 0 })
-    reportes: string;
+    reportes: number;
 
     @OneToMany(() => FotosEvento, FotosEvento => FotosEvento.evento)
     fotos: FotosEvento[];

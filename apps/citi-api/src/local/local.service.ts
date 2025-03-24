@@ -64,10 +64,10 @@ export class LocalService {
 
     async CreateLocales(data: CreateLocalDto[]) {
 
-        for(let item of data){
+        for (let item of data) {
             await this.CreateLocal(item)
         }
-        return {message: 'Locales creados'}
+        return { message: 'Locales creados' }
     }
 
     async ComprobarCrearLocal(data: CreateLocalDto) {
@@ -127,69 +127,74 @@ export class LocalService {
 
             ])
             .getOne();
+
+        if (!local) {
+            throw new NotFoundException(`Local con ID ${id} no encontrado`);
+        }
+
         return local
     }
 
-    async getOneMini(id : string) {
+    async getOneMini(id: string) {
 
         const local = await this.LocalRepository.createQueryBuilder("local")
-        .where("local.id = :id", { id: id })
-        .leftJoinAndSelect('local.fotos', 'FotosLocal')
-        .leftJoinAndSelect('local.etiquetas', 'Etiquetas')
-        .select([
-            'local.id',
-            'local.nombre',
-            'local.longitud',
-            'local.latitud',
-            'Etiquetas.id',
-            'Etiquetas.nombre',
-        ])
-        .getOne();
-    return local
+            .where("local.id = :id", { id: id })
+            .leftJoinAndSelect('local.fotos', 'FotosLocal')
+            .leftJoinAndSelect('local.etiquetas', 'Etiquetas')
+            .select([
+                'local.id',
+                'local.nombre',
+                'local.longitud',
+                'local.latitud',
+                'Etiquetas.id',
+                'Etiquetas.nombre',
+            ])
+            .getOne();
+        return local
     }
 
- 
-    async getAll(user: User,admin:boolean, data:FiltroPaguinadorDto) {
+
+    async getAll(user: User, admin: boolean, data: FiltroPaguinadorDto) {
 
         const Query = await this.LocalRepository.createQueryBuilder('local')
-        .leftJoinAndSelect('local.etiquetas', 'Etiquetas') 
-        .select([
-            'local.id',
-            'local.nombre',
-            'local.longitud',
-            'local.latitud',
-            'Etiquetas.id',
-            'Etiquetas.nombre',
-        ])
+            .leftJoinAndSelect('local.etiquetas', 'Etiquetas')
+            .select([
+                'local.id',
+                'local.nombre',
+                'local.longitud',
+                'local.latitud',
+                'Etiquetas.id',
+                'Etiquetas.nombre',
+            ])
 
-        if( data.Nombre){
+        if (data.Nombre) {
             console.log('admin')
-            Query .where('local.nombre LIKE :search', { search: `%${data.Nombre}%` })
+            Query.where('local.nombre LIKE :search', { search: `%${data.Nombre}%` })
         }
-        if(admin && data.ciudad){
-            Query .andWhere('local.ciudad = :ciudad', { ciudad: data.ciudad })
+        if (admin && data.ciudad) {
+            Query.andWhere('local.ciudad = :ciudad', { ciudad: data.ciudad })
         }
-        if(admin && data.region){
-            Query .andWhere('local.region = :region', { region: data.region })
+        if (admin && data.region) {
+            Query.andWhere('local.region = :region', { region: data.region })
         }
-        if(admin && data.pais){
-            Query .andWhere('local.pais = :pais', { pais: data.pais })
+        if (admin && data.pais) {
+            Query.andWhere('local.pais = :pais', { pais: data.pais })
         }
-        if(!admin){
-            Query .andWhere('local.ciudad = :ciudad', { ciudad: user.ciudad })
+        if (!admin) {
+            Query.andWhere('local.ciudad = :ciudad', { ciudad: user.ciudad })
         }
 
-        Query .skip((data.Paguina - 1) * data.Cantidad)
+        Query.skip((data.Paguina - 1) * data.Cantidad)
         Query.take(data.Cantidad)
         const [result, total] = await Query.getManyAndCount();
         // .getManyAndCount();
-        return {data:result, total};
+        return { data: result, total };
 
 
     }
 
 
-    
+
 
 
 

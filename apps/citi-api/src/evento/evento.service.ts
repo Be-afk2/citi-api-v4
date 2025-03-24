@@ -2,7 +2,7 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PaguinadorDto } from '../etiqueta/dto/paguinadorDto.dto';
 import { Evento } from 'apps/citi-back/src/entities/evento.entity';
 import { Repository } from 'typeorm/repository/Repository';
@@ -12,6 +12,7 @@ import { GeoDataDto } from '../geolocalizacion/dto/geoData.dto';
 import { GeoService } from '../geolocalizacion/geo.service';
 import { AsignarEtiqEventoDto } from './dto/AsignarEtiqEventoDto.dto';
 import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
+import { GetOneDtoNumber } from './dto/GetOneDtoNumber.dto';
 
 @Injectable()
 export class EventoService {
@@ -28,16 +29,49 @@ export class EventoService {
     ) { }
 
 
-    async GetEventos(paguinador : PaguinadorDto) {
+    async GetEventos(paguinador: PaguinadorDto) {
         const [data, total] = await this.EventoRepository.findAndCount({
             skip: (paguinador.Paguina - 1) * paguinador.Cantidad,
             take: paguinador.Cantidad,
         });
-        return {data, total};
+        return { data, total };
+    }
+
+    async GetEvento(data: GetOneDtoNumber) {
+        const evento = await this.EventoRepository.createQueryBuilder('Evento')
+            .leftJoinAndSelect('Evento.etiquetas', 'Etiquetas')
+            .leftJoinAndSelect('Evento.ciudad', 'Ciudad')
+            .leftJoinAndSelect('Evento.fotos', 'FotosEvento')
+            .where('Evento.id = :id', { id: data.id })
+            .select([
+                'Evento.id',
+                'Evento.nombre',
+                'Evento.descripcion',
+                'Evento.longitud',
+                'Evento.latitud',
+                'Evento.Organizador',
+                'Evento.likes',
+                'Evento.compartidos',
+                'Evento.vistos',
+                'Evento.reportes',
+                'FotosEvento.id',
+                'FotosEvento.path',
+                'Ciudad.id',
+                'Ciudad.nombre',
+
+            ])
+            .getOne();
+
+        if (!evento) {
+            throw new NotFoundException(`Evento con ID ${data.id} no encontrado`);
+        }
+
+        return evento
+
     }
 
     async CrearEvento(data: CrearEventoDto) {
-        
+
         const evento = await this.EventoRepository.create();
         evento.nombre = data.Nombre;
         evento.descripcion = data.Descripcion;
@@ -59,10 +93,10 @@ export class EventoService {
     }
 
     async CrearEventos(data: CrearEventoDto[]) {
-        for(let item of data){
+        for (let item of data) {
             await this.CrearEvento(item)
         }
-        return {message: 'Eventos creados'}
+        return { message: 'Eventos creados' }
     }
 
     async AsignarEtiqueta(data: AsignarEtiqEventoDto) {
