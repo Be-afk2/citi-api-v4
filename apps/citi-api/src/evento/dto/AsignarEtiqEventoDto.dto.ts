@@ -9,15 +9,27 @@ export class AsignarEtiqEventoDto {
 
     @IsArray()
     @ValidateNested({ each: true })
-    @Type(() => Etiqueta)
+    @Type(() => EtiquetaAgregar)
     @IsNotEmpty()
-    Etiquetas: Etiqueta[];
+    EtiquetaAgregar: EtiquetaAgregar[];
+    
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => EtiquetaEliminar)
+    @IsNotEmpty()
+    EtiquetaEliminar: EtiquetaEliminar[];
 
 }
 
-class Etiqueta {
+class EtiquetaAgregar {
     @IsNumber()
     @IsNotEmpty()
     id: number;
+}
 
+
+class EtiquetaEliminar {
+    @IsNumber()
+    @IsNotEmpty()
+    id: number;
 }

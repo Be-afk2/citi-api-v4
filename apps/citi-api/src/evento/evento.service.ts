@@ -99,44 +99,74 @@ export class EventoService {
         return { message: 'Eventos creados' }
     }
 
-    async AsignarEtiqueta(data: AsignarEtiqEventoDto) {
 
+    async agregarEtiqv2(data: AsignarEtiqEventoDto) {
+        const [resultAgregar, resultEliminar] = await Promise.all([
+            this.manejarEtiquetas(data, 'agregar'),
+            this.manejarEtiquetas(data, 'eliminar')
+        ]);
+        return { resultAgregar, resultEliminar };
+    }
+
+    private async manejarEtiquetas(data: AsignarEtiqEventoDto, operacion: 'agregar' | 'eliminar') {
         const result = {
             newetiq: 0,
             oldetiq: 0,
             errorid: [],
             error: 0,
             message: '',
+        };
 
-        }
         const evento = await this.EventoRepository.findOne({
             where: { id: data.idEvento },
-            relations: ['etiquetas'],  // Asegúrate de cargar la relación
+            relations: ['etiquetas'],
         });
 
         if (!evento) {
-            result.error = 1
-            result.message = 'Local no encontrado'
-            return result
+            return {
+                ...result,
+                error: 1,
+                message: 'Local no encontrado'
+            };
         }
-        for (let item of data.Etiquetas) {
+ 
+        const etiquetasOperacion = operacion === 'agregar'
+            ? data.EtiquetaAgregar
+            : data.EtiquetaEliminar;
 
-            const etiq = await this.EtiquetasRepository.findOneBy({ id: item.id })
+        for (const item of etiquetasOperacion) {
+            const etiq = await this.EtiquetasRepository.findOneBy({ id: item.id });
+
             if (!etiq) {
-                result.errorid.push(item.id)
-                result.error++
-                continue
+                result.errorid.push(item.id);
+                result.error++;
+                continue;
             }
+
             if (!evento.etiquetas) {
                 evento.etiquetas = [];
             }
-            if (!evento.etiquetas.some(e => e.id === etiq.id)) {
-                evento.etiquetas.push(etiq);
-                result.newetiq++;
+
+            const etiquetaExiste = evento.etiquetas.some(e => e.id === etiq.id);
+
+            if (operacion === 'agregar') {
+                if (!etiquetaExiste) {
+                    evento.etiquetas.push(etiq);
+                    result.newetiq++;
+                } else {
+                    result.oldetiq++;
+                }
             } else {
-                result.oldetiq++;
+                if (etiquetaExiste) {
+                    evento.etiquetas = evento.etiquetas.filter(e => e.id !== etiq.id);
+                    result.oldetiq++;
+                } else {
+                    result.newetiq++;
+                }
             }
         }
 
+        await evento.save();
+        return result;
     }
 }

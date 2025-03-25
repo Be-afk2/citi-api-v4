@@ -85,7 +85,7 @@ export class LocalController {
 
   @Put('etiq')
   async AgregarEtiq(@Body() data: AsignarEtiquetaDto) {
-    return await this.localService.AgregarEtiq(data);
+    return await this.localService.agregarEtiqv2(data);
   }
 
 

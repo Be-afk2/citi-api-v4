@@ -64,7 +64,7 @@ export class EventoController {
     )
     @Put("etiq")
     async AsignarEtiqueta(@Query() data: AsignarEtiqEventoDto) {
-        return await this.eventoService.AsignarEtiqueta(data);
+        return await this.eventoService.agregarEtiqv2(data);
     }
 
 
