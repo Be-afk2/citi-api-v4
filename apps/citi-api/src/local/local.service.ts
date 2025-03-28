@@ -16,7 +16,8 @@ import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
 import { PaguinadorDto } from '../etiqueta/dto/paguinadorDto.dto';
 import { query } from 'express';
 import { FiltroPaguinadorDto } from './dto/FiltroPaguinadorDto.dto';
-
+import * as fs from 'fs';
+import * as path from 'path';
 @Injectable()
 export class LocalService {
 
@@ -84,8 +85,7 @@ export class LocalService {
 
 
     async SubirFoto(files, id) {
-        console.log(id)
-        console.log(files)
+
         const local = await this.LocalRepository.findOneBy({ id })
 
         if (!local) {
@@ -102,6 +102,21 @@ export class LocalService {
 
         return await this.getOne(id)
     }
+
+        async borrarFoto(idFoto: number) {
+    
+            const foto = await this.FotosLocalRepository.findOneBy({ id: idFoto });
+            if (!foto) {
+                throw new NotFoundException('Registro con este id no encontrado');
+            }
+            const filePath = path.join(__dirname, '..', '..', '..', foto.path);
+
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+            foto.remove();
+            return { message: 'Foto eliminada' };
+        }
 
 
     async getOne(id) {

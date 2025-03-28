@@ -2,16 +2,16 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Get, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, Query, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { EventoService } from './evento.service';
 import { PaguinadorDto } from '../etiqueta/dto/paguinadorDto.dto';
 import { CrearEventoDto } from './dto/CrearEventoDto.dto';
 import { AsignarEtiqEventoDto } from './dto/AsignarEtiqEventoDto.dto';
-import { GetOneDto } from '../local/dto/GetOneDto.dto';
 import { GetOneDtoNumber } from './dto/GetOneDtoNumber.dto';
 import { UseAuthUser } from '../auth/decorators/use-auth-user.decorator';
 import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('evento')
 @UseGuards(JwtAuthGuard)
@@ -55,6 +55,24 @@ export class EventoController {
     @Post('varias')
     async CrearEventos(@Body() data: CrearEventoDto[]) {
         return await this.eventoService.CrearEventos(data);
+    }
+
+    @UseAuthUser(
+        ValidRoles.SuperAdmin,
+    )
+    @Put()
+    @UseInterceptors(FilesInterceptor('archivo'))
+    async actualizarFoto(@UploadedFiles() files: Express.Multer.File, @Body() data: GetOneDtoNumber) {
+
+        return await this.eventoService.SubirFoto(files, data)
+    }
+    
+    @UseAuthUser(
+        ValidRoles.SuperAdmin,
+    )
+    @Delete()
+    async borrarFoto(@Query() data: GetOneDtoNumber) {
+        return await this.eventoService.borrarFoto(data.id)
     }
 
     // rincon de las etiq

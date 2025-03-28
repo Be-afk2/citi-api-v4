@@ -13,7 +13,9 @@ import { GeoService } from '../geolocalizacion/geo.service';
 import { AsignarEtiqEventoDto } from './dto/AsignarEtiqEventoDto.dto';
 import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
 import { GetOneDtoNumber } from './dto/GetOneDtoNumber.dto';
-
+import { FotosEvento } from 'apps/citi-back/src/entities/fotosEvento.entity';
+import * as fs from 'fs';
+import * as path from 'path';
 @Injectable()
 export class EventoService {
 
@@ -25,6 +27,9 @@ export class EventoService {
         @InjectRepository(Etiquetas)
         private EtiquetasRepository: Repository<Etiquetas>,
 
+        @InjectRepository(FotosEvento)
+        private FotosEventoRepository: Repository<FotosEvento>,
+        
         private readonly geoService: GeoService
     ) { }
 
@@ -100,12 +105,48 @@ export class EventoService {
     }
 
 
+
+    async SubirFoto(files, data: GetOneDtoNumber) {
+        const evento = await this.EventoRepository.findOneBy({id: data.id })
+
+        if (!evento) {
+            throw new NotFoundException('Registro con este id no encontrado');
+
+        }
+
+        for (let item of files) {
+            const newfoto = await this.FotosEventoRepository.create()
+            newfoto.evento = evento
+            newfoto.path = item.path
+            await newfoto.save()
+        }
+
+        return await this.GetEvento(data)
+    }
+
+
     async agregarEtiqv2(data: AsignarEtiqEventoDto) {
         const [resultAgregar, resultEliminar] = await Promise.all([
             this.manejarEtiquetas(data, 'agregar'),
             this.manejarEtiquetas(data, 'eliminar')
         ]);
         return { resultAgregar, resultEliminar };
+    }
+
+
+    async borrarFoto(idFoto: number) {
+
+        const foto = await this.FotosEventoRepository.findOneBy({ id: idFoto });
+        if (!foto) {
+            throw new NotFoundException('Registro con este id no encontrado');
+        }
+        const filePath = path.join(__dirname, '..', '..', '..', foto.path);
+
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+        foto.remove();
+        return { message: 'Foto eliminada' };
     }
 
     private async manejarEtiquetas(data: AsignarEtiqEventoDto, operacion: 'agregar' | 'eliminar') {

@@ -2,7 +2,7 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Get, Post, Put, Query, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, Query, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { LocalService } from './local.service';
 import { CreateLocalDto } from './dto/CreateLocal.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -16,6 +16,7 @@ import { AsignarEtiquetaDto } from './dto/AsignarEtiquetaDto.dto';
 import { PaguinadorDto } from '../etiqueta/dto/paguinadorDto.dto';
 import { FiltroDto } from './dto/FiltroDto.dto';
 import { FiltroPaguinadorDto } from './dto/FiltroPaguinadorDto.dto';
+import { GetOneDtoNumber } from '../evento/dto/GetOneDtoNumber.dto';
 
 
 
@@ -56,6 +57,13 @@ export class LocalController {
     return await this.localService.SubirFoto(files, data.id)
   }
 
+  @UseAuthUser(
+    ValidRoles.SuperAdmin,
+  )
+  @Delete()
+  async borrarFoto(@Query() data: GetOneDtoNumber) {
+    return await this.localService.borrarFoto(data.id)
+  }
 
   @UseAuthUser(
     ValidRoles.SuperAdmin,
@@ -73,8 +81,8 @@ export class LocalController {
     ValidRoles.Usuario,
   )
   @Get('all')
-  async GetAll(@GetUser() user: User,@Query() data: FiltroPaguinadorDto) {
-    return await this.localService.getAll(user, user.tipoUser.id == 1 ,data);
+  async GetAll(@GetUser() user: User, @Query() data: FiltroPaguinadorDto) {
+    return await this.localService.getAll(user, user.tipoUser.id == 1, data);
   }
 
 
