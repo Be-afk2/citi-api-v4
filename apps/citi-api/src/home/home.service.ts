@@ -13,6 +13,7 @@ import { Region } from 'apps/citi-back/src/entities/region.entity';
 import { GeoDataDto } from '../geolocalizacion/dto/geoData.dto';
 import { User } from 'apps/citi-back/src/entities/user.entity';
 import { Evento } from 'apps/citi-back/src/entities/evento.entity';
+import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
 
 @Injectable()
 export class HomeService {
@@ -27,6 +28,8 @@ export class HomeService {
         private CiudadRepository: Repository<Ciudad>,
         @InjectRepository(Region)
         private RegionRepository: Repository<Region>,
+        @InjectRepository(Etiquetas)
+        private EtiquetasRepository: Repository<Etiquetas>,
 
         @InjectRepository(Evento)
         private EventoRepository: Repository<Evento>,
@@ -53,6 +56,7 @@ export class HomeService {
         const local = await this.LocalRepository
             .createQueryBuilder("Local")
             .leftJoinAndSelect('Local.ciudad', 'Ciudad')
+            .leftJoinAndSelect('Local.etiquetas', 'Etiquetas')
 
             .select("Local.id", "id")
             .addSelect(
@@ -65,6 +69,16 @@ export class HomeService {
             )
             .setParameters({ lon, lat, maxDistance })
             .orderBy("RAND()")
+            .select([
+                'Local.id',
+                'Local.Nombre',
+                'Local.likes',
+                'Local.compartidos',
+                'Local.vistos',
+                'Etiquetas.id',
+                'Etiquetas.nombre',
+
+            ])
             .getRawMany();
 
         return local;
@@ -80,6 +94,8 @@ export class HomeService {
         const Evento = await this.EventoRepository
             .createQueryBuilder("Evento")
             .leftJoinAndSelect('Evento.ciudad', 'Ciudad')
+            .leftJoinAndSelect('Evento.etiquetas', 'Etiquetas')
+
 
             .select("Evento.id", "id")
             .addSelect(
@@ -92,11 +108,21 @@ export class HomeService {
             )
             .setParameters({ lon, lat, maxDistance })
             .orderBy("RAND()")
+            .select([
+                'Evento.id',
+                'Evento.Nombre',
+                'Evento.likes',
+                'Evento.compartidos',
+                'Evento.vistos',
+                'Etiquetas.id',
+                'Etiquetas.nombre',
+
+            ])
             .getRawMany();
 
 
-
+        return Evento
     }
 
- //test test test
+    //test test test
 }

@@ -45,7 +45,7 @@ export class HomeController {
     async homeEvento(@Query() data: GeoDataDto, @GetUser() user: User) {
         {
 
-            return this.homeService.homeLocal(data, user);
+            return this.homeService.homeEvento(data, user);
         }
 
 
