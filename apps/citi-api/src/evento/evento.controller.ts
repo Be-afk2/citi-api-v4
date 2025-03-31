@@ -12,6 +12,7 @@ import { UseAuthUser } from '../auth/decorators/use-auth-user.decorator';
 import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { EditarEventoDto } from './dto/EditarEventoDto.dto';
 
 @Controller('evento')
 @UseGuards(JwtAuthGuard)
@@ -73,6 +74,11 @@ export class EventoController {
     @Delete()
     async borrarFoto(@Query() data: GetOneDtoNumber) {
         return await this.eventoService.borrarFoto(data.id)
+    }
+
+    @Put("editar")
+    async editarEvento(@Body() data: EditarEventoDto) {
+        return await this.eventoService.editarEvento(data);
     }
 
     // rincon de las etiq

@@ -17,6 +17,7 @@ import { PaguinadorDto } from '../etiqueta/dto/paguinadorDto.dto';
 import { FiltroDto } from './dto/FiltroDto.dto';
 import { FiltroPaguinadorDto } from './dto/FiltroPaguinadorDto.dto';
 import { GetOneDtoNumber } from '../evento/dto/GetOneDtoNumber.dto';
+import { EditarLocalDto } from './dto/EditarLocal.dto';
 
 
 
@@ -85,6 +86,12 @@ export class LocalController {
     return await this.localService.getAll(user, user.tipoUser.id == 1, data);
   }
 
+
+  @Put('editar')
+  async EditarLocal(@Body() data: EditarLocalDto) {
+    return await this.localService.EditarLocal(data);
+  }
+	
 
 
 

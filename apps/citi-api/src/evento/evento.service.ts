@@ -16,6 +16,8 @@ import { GetOneDtoNumber } from './dto/GetOneDtoNumber.dto';
 import { FotosEvento } from 'apps/citi-back/src/entities/fotosEvento.entity';
 import * as fs from 'fs';
 import * as path from 'path';
+import { EditarEventoDto } from './dto/EditarEventoDto.dto';
+import * as moment from 'moment';
 @Injectable()
 export class EventoService {
 
@@ -29,7 +31,7 @@ export class EventoService {
 
         @InjectRepository(FotosEvento)
         private FotosEventoRepository: Repository<FotosEvento>,
-        
+
         private readonly geoService: GeoService
     ) { }
 
@@ -107,7 +109,7 @@ export class EventoService {
 
 
     async SubirFoto(files, data: GetOneDtoNumber) {
-        const evento = await this.EventoRepository.findOneBy({id: data.id })
+        const evento = await this.EventoRepository.findOneBy({ id: data.id })
 
         if (!evento) {
             throw new NotFoundException('Registro con este id no encontrado');
@@ -149,6 +151,50 @@ export class EventoService {
         return { message: 'Foto eliminada' };
     }
 
+    async editarEvento(data: EditarEventoDto) {
+        const evento = await this.EventoRepository.findOneBy({ id: data.id });
+        const fechaHoy = moment();
+        if (!evento) {
+            throw new NotFoundException('Registro con este id no encontrado');
+        }
+        if (data.Nombre) {
+            evento.nombre = data.Nombre;
+        }
+        if (data.Descripcion) {
+            evento.descripcion = data.Descripcion;
+        }
+
+        if (data.Latitud && data.Longitud) {
+            evento.latitud = data.Latitud;
+            evento.longitud = data.Longitud;
+            const GeoData = new GeoDataDto
+            GeoData.Longitud = data.Longitud;
+            GeoData.Latitud = data.Latitud;
+            const geodata = await this.geoService.GetData(GeoData);
+            evento.ciudad = geodata.ciudad;
+
+        }
+        if (data.Organizador) {
+            evento.Organizador = data.Organizador;
+        }
+        if (data.FechaInicio) {
+            evento.fechaInicio = data.FechaInicio;
+            if(fechaHoy.isAfter(moment(data.FechaInicio))) {
+                evento.activo = true;
+            }
+        }
+        if (data.FechaFin) {
+            evento.fechaFin = data.FechaFin;
+            if(moment(data.FechaFin).isBefore(fechaHoy)) {
+                evento.activo = false;
+            }
+        }
+        await evento.save();
+        return await this.GetEvento({ id: evento.id });
+
+
+    }
+
     private async manejarEtiquetas(data: AsignarEtiqEventoDto, operacion: 'agregar' | 'eliminar') {
         const result = {
             newetiq: 0,
@@ -170,7 +216,7 @@ export class EventoService {
                 message: 'Local no encontrado'
             };
         }
- 
+
         const etiquetasOperacion = operacion === 'agregar'
             ? data.EtiquetaAgregar
             : data.EtiquetaEliminar;

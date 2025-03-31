@@ -18,6 +18,7 @@ import { query } from 'express';
 import { FiltroPaguinadorDto } from './dto/FiltroPaguinadorDto.dto';
 import * as fs from 'fs';
 import * as path from 'path';
+import { EditarLocalDto } from './dto/EditarLocal.dto';
 @Injectable()
 export class LocalService {
 
@@ -166,6 +167,35 @@ export class LocalService {
             ])
             .getOne();
         return local
+    }
+
+    async EditarLocal(data:EditarLocalDto){
+
+        const local = await this.LocalRepository.findOneBy({ id: data.id })
+        if (!local) {
+            throw new NotFoundException('Registro con este id no encontrado');
+        }
+
+        if(data.nombre){
+            local.nombre = data.nombre;
+        }
+        if(data.descripcion){
+            local.descripcion = data.descripcion;
+        }
+        if(data.contacto){
+            local.contacto = data.contacto;
+        }
+        if(data.longitud && data.latitud){
+            const GeoData = new GeoDataDto
+            GeoData.Longitud = data.longitud;
+            GeoData.Latitud = data.latitud;
+            const geodata = await this.geoService.GetData(GeoData);
+            local.ciudad = geodata.ciudad;
+            local.latitud = data.latitud;
+            local.longitud = data.longitud;
+        }
+        await local.save();
+        return await this.getOne(local.id);
     }
 
 
