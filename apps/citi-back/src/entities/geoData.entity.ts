@@ -10,20 +10,22 @@ import { Evento } from './evento.entity';
 
 
 @Entity()
-export class Admin extends BaseEntity {
+export class GeoData extends BaseEntity {
 
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
-
-    @Column({nullable:false})
-    pass:string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
 
     @Column({nullable:false})
-    nombre:string;
+    longitud:string;
 
     @Column({nullable:false})
-    correo:string;
+    latitud:string;
+
+
+    @ManyToOne(() => User, user => user.id)
+    user: User
+
 
 
     @DeleteDateColumn()

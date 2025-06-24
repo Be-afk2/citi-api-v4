@@ -14,6 +14,7 @@ import { Pais } from './entities/pais.entity';
 import { Region } from './entities/region.entity';
 import { TipoUser } from './entities/TipoUser.entity';
 import { User } from './entities/user.entity';
+import { GeoData } from './entities/geoData.entity';
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { User } from './entities/user.entity';
         Pais,
         Region,
         TipoUser,
-        User
+        User,
+        GeoData
       ],
       synchronize: true,
     }),

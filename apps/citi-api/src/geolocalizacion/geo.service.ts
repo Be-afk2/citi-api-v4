@@ -17,6 +17,7 @@ import { Ciudad } from 'apps/citi-back/src/entities/ciudad.entity';
 import { Region } from 'apps/citi-back/src/entities/region.entity';
 import { GeoDataDto } from './dto/geoData.dto';
 import { User } from 'apps/citi-back/src/entities/user.entity';
+import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
 
 @Injectable()
 export class GeoService {
@@ -30,12 +31,16 @@ export class GeoService {
         @InjectRepository(Region)
         private RegionRepository: Repository<Region>,
 
+        @InjectRepository(GeoData)
+        private GeoDataRepository: Repository<GeoData>,
+
         @InjectRepository(User)
         private UserRepository: Repository<User>,
 
     ) { }
 
 
+    // peticion a la api para obtener la geolocalizacion del lugar
     async GetGeoData(data: GeoDataDto) {
         const OPEN_CAGE_API_KEY = process.env.GEOKEY
         const url = `https://api.opencagedata.com/geocode/v1/json?key=${OPEN_CAGE_API_KEY}&q=${data.Latitud}+${data.Longitud}&pretty=1&no_annotations=1`;
@@ -52,6 +57,7 @@ export class GeoService {
 
     }
 
+    // test
     async asd(data: GeoDataDto) {
         const OPEN_CAGE_API_KEY = process.env.GEOKEY
         const url = `https://api.opencagedata.com/geocode/v1/json?key=${OPEN_CAGE_API_KEY}&q=${data.Latitud}+${data.Longitud}&pretty=1&no_annotations=1`;
@@ -59,6 +65,7 @@ export class GeoService {
         return response.data
     }
 
+    // peticion para crear los diferentes elementos como ciudad , region , pais
     async GetData(data: GeoDataDto) {
         const geodata = await this.GetGeoData(data);
         const pais = await this.crearPais(geodata.pais);
@@ -119,13 +126,13 @@ export class GeoService {
             console.log(PostalCode.split(' ')[1])
             console.log(PostalCode.split(' ')[0] + PostalCode.split(' ')[1].length)
             console.log(parseInt(PostalCode.split(' ')[0]))
-            Ciudad.CodigoPostal = parseInt(PostalCode.split(' ')[0] + '0'.repeat(PostalCode.split(' ')[0].length) );
+            Ciudad.CodigoPostal = parseInt(PostalCode.split(' ')[0] + '0'.repeat(PostalCode.split(' ')[0].length));
         }
 
         await Ciudad.save();
         return await Ciudad
     }
-    
+
 
 
     async SaveDataUser(data: GeoDataDto, user: User) {
@@ -134,7 +141,24 @@ export class GeoService {
         const geodata = await this.GetData(data);
         user.ciudad = geodata.ciudad;
         await user.save()
-
+        await this.SaveGeoData(data, user)
         return geodata.ciudad
+    }
+
+
+    async SaveGeoData(data: GeoDataDto, User: User) {
+        const Geodata = await this.GeoDataRepository.create();
+        Geodata.longitud = data.Longitud;
+        Geodata.latitud = data.Latitud;
+        Geodata.user = User
+        await Geodata.save();
+    }
+
+    async GetUserDataGeo(user: User) {
+
+        const data = await this.GeoDataRepository
+        .createQueryBuilder("GeoData")
+        .where("user.id = :id", { id: user.id })
+        .getRawMany();
     }
 }

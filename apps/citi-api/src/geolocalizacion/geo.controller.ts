@@ -37,6 +37,23 @@ export class GeoController {
         return this.geoService.SaveDataUser(data,user);
     }
 
+    @UseAuthUser(
+        ValidRoles.SuperAdmin,
+        ValidRoles.Usuario,
+    )
+    @Post("geo")
+    async SaveGeoData(@Body() data: GeoDataDto,@GetUser() user: User ) {
+        return this.geoService.SaveGeoData(data,user);
+    }
+
+    @UseAuthUser(
+        ValidRoles.SuperAdmin,
+        ValidRoles.Usuario,
+    )
+    @Get("")
+    async GetUserDataGeo(@GetUser() user: User ) {
+        return this.geoService.GetUserDataGeo(user);
+    }
     
 
 }

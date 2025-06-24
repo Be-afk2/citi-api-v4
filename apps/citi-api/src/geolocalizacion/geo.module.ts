@@ -7,6 +7,7 @@ import { Ciudad } from 'apps/citi-back/src/entities/ciudad.entity';
 import { Region } from 'apps/citi-back/src/entities/region.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'apps/citi-back/src/entities/user.entity';
+import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
 
 @Module({
     imports: [
@@ -14,7 +15,8 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
             Pais,
             Ciudad,
             Region,
-            User
+            User,
+            GeoData
         ]),
     ],
     controllers: [GeoController,],
