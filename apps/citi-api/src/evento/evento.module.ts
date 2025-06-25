@@ -18,6 +18,7 @@ import { FotosEvento } from 'apps/citi-back/src/entities/fotosEvento.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
 
 @Module({
     imports: [
@@ -44,7 +45,8 @@ import { extname } from 'path';
             Region,
             User,
             Etiquetas,
-            FotosEvento
+            FotosEvento,
+            GeoData
         ]),
     ],
     controllers: [EventoController,],

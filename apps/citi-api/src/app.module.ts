@@ -21,6 +21,7 @@ import { Pais } from 'apps/citi-back/src/entities/pais.entity';
 import { Region } from 'apps/citi-back/src/entities/region.entity';
 import { TipoUser } from 'apps/citi-back/src/entities/TipoUser.entity';
 import { User } from 'apps/citi-back/src/entities/user.entity';
+import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
 
 @Module({
   imports: [
@@ -46,7 +47,8 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
         Pais,
         Region,
         TipoUser,
-        User
+        User,
+        GeoData
       ],
       synchronize: false,
     }),

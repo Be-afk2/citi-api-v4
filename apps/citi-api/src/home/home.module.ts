@@ -16,6 +16,7 @@ import { Region } from 'apps/citi-back/src/entities/region.entity';
 import { User } from 'apps/citi-back/src/entities/user.entity';
 import { Evento } from 'apps/citi-back/src/entities/evento.entity';
 import { LocalService } from '../local/local.service';
+import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
 
 @Module({
     imports: [
@@ -27,7 +28,8 @@ import { LocalService } from '../local/local.service';
             Ciudad,
             Region,
             User,
-            Evento
+            Evento,
+            GeoData
         ]),
     ],
     controllers: [HomeController,],
