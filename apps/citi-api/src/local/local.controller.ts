@@ -104,5 +104,12 @@ export class LocalController {
   }
 
 
+  // rincon de necro
+
+  @Post("necro")
+  async crearNecro(@Body() data: CreateLocalDto) {
+    return await this.localService.CreateLocal(data,true);
+  }
+
 
 }

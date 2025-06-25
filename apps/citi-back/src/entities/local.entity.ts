@@ -73,6 +73,9 @@ export class Local extends BaseEntity {
     @Column({default:true})
     Habilitar :boolean
 
+    @Column({default:false})
+    necro :boolean
+
 
     @DeleteDateColumn()
     deleted_at:Date;

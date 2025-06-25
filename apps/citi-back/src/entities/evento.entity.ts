@@ -69,6 +69,9 @@ export class Evento extends BaseEntity {
     @Column()
     fechaFin: Date;
 
+    @Column({default:false})
+    necro :boolean
+
     @DeleteDateColumn()
     deleted_at: Date;
     @CreateDateColumn()

@@ -2,7 +2,7 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateLocalDto } from './dto/CreateLocal.dto';
 import { Local } from 'apps/citi-back/src/entities/local.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -41,12 +41,14 @@ export class LocalService {
     ) { }
 
 
-    async CreateLocal(data: CreateLocalDto) {
+    async CreateLocal(data: CreateLocalDto, necro: boolean = false) {
 
         console.log(data)
         const comprobacion = await this.ComprobarCrearLocal(data);
 
-
+        if(!comprobacion){
+            throw new ConflictException('No se pudo crear el local')
+        }
 
         const local = await this.LocalRepository.create();
         const GeoData = new GeoDataDto
@@ -60,6 +62,7 @@ export class LocalService {
         local.longitud = data.longitud;
         local.latitud = data.latitud;
         local.ciudad = geodata.ciudad;
+        local.necro = necro;
         await local.save();
         return await this.getOne(local.id);
     }
@@ -104,20 +107,20 @@ export class LocalService {
         return await this.getOne(id)
     }
 
-        async borrarFoto(idFoto: number) {
-    
-            const foto = await this.FotosLocalRepository.findOneBy({ id: idFoto });
-            if (!foto) {
-                throw new NotFoundException('Registro con este id no encontrado');
-            }
-            const filePath = path.join(__dirname, '..', '..', '..', foto.path);
+    async borrarFoto(idFoto: number) {
 
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
-            }
-            foto.remove();
-            return { message: 'Foto eliminada' };
+        const foto = await this.FotosLocalRepository.findOneBy({ id: idFoto });
+        if (!foto) {
+            throw new NotFoundException('Registro con este id no encontrado');
         }
+        const filePath = path.join(__dirname, '..', '..', '..', foto.path);
+
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+        foto.remove();
+        return { message: 'Foto eliminada' };
+    }
 
 
     async getOne(id) {
@@ -169,23 +172,23 @@ export class LocalService {
         return local
     }
 
-    async EditarLocal(data:EditarLocalDto){
+    async EditarLocal(data: EditarLocalDto) {
 
         const local = await this.LocalRepository.findOneBy({ id: data.id })
         if (!local) {
             throw new NotFoundException('Registro con este id no encontrado');
         }
 
-        if(data.nombre){
+        if (data.nombre) {
             local.nombre = data.nombre;
         }
-        if(data.descripcion){
+        if (data.descripcion) {
             local.descripcion = data.descripcion;
         }
-        if(data.contacto){
+        if (data.contacto) {
             local.contacto = data.contacto;
         }
-        if(data.longitud && data.latitud){
+        if (data.longitud && data.latitud) {
             const GeoData = new GeoDataDto
             GeoData.Longitud = data.longitud;
             GeoData.Latitud = data.latitud;
@@ -316,6 +319,10 @@ export class LocalService {
         await local.save();
         return result;
     }
+
+
+
+    // rincon de necro
 
 
 }
