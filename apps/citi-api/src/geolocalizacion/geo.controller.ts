@@ -10,6 +10,7 @@ import { GetUser } from '../auth/decorators/get-user.decorator';
 import { UseAuthUser } from '../auth/decorators/use-auth-user.decorator';
 import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { GetOneDto } from '../local/dto/GetOneDto.dto';
 
 @Controller('Geo')
 @UseGuards(JwtAuthGuard)
@@ -41,6 +42,7 @@ export class GeoController {
         ValidRoles.SuperAdmin,
         ValidRoles.Usuario,
     )
+    // guardar saltando el servicio de geolocalizacion
     @Post("geo")
     async SaveGeoData(@Body() data: GeoDataDto,@GetUser() user: User ) {
         return this.geoService.SaveGeoData(data,user);
@@ -48,11 +50,10 @@ export class GeoController {
 
     @UseAuthUser(
         ValidRoles.SuperAdmin,
-        ValidRoles.Usuario,
     )
     @Get("")
-    async GetUserDataGeo(@GetUser() user: User ) {
-        return this.geoService.GetUserDataGeo(user);
+    async GetUserDataGeo(@Body() data: GetOneDto ) {
+        return this.geoService.GetUserDataGeo(data);
     }
     
 

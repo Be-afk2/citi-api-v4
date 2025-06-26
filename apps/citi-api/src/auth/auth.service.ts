@@ -26,7 +26,8 @@ export class AuthService {
 
     
     async createUser(data: CreateUserDto) {
-
+        await this.comprobarTipo();
+        
         var user = await this.UsersRepository.findOneBy({correo: data.correo});
         if (user) {
             throw new ConflictException('El correo ya existe');
@@ -81,7 +82,6 @@ export class AuthService {
 
 
     async get_token(user: User) {
-        console.log(user)
         const payload = {
             id: user.id,
             nombre: user.nombre,
@@ -118,6 +118,21 @@ export class AuthService {
         }
     }
 
+
+    async comprobarTipo(){
+        const tipos = await this.TipoUserRepository.find();
+        if(tipos.length == 0){
+            const tipo = [{
+                id: 1,
+                tipo: "Admin"
+            },
+            {
+                id: 2,
+                tipo: "App"
+            }]
+            await this.TipoUserRepository.save(tipo);
+        }
+    }
 
 
 }

@@ -18,6 +18,7 @@ import { Region } from 'apps/citi-back/src/entities/region.entity';
 import { GeoDataDto } from './dto/geoData.dto';
 import { User } from 'apps/citi-back/src/entities/user.entity';
 import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
+import { GetOneDto } from '../local/dto/GetOneDto.dto';
 
 @Injectable()
 export class GeoService {
@@ -120,12 +121,7 @@ export class GeoService {
         Ciudad.region = Region;
 
         if (PostalCode) {
-            console.log("--------------------")
-            console.log(PostalCode)
-            console.log(PostalCode.split(' ')[0])
-            console.log(PostalCode.split(' ')[1])
-            console.log(PostalCode.split(' ')[0] + PostalCode.split(' ')[1].length)
-            console.log(parseInt(PostalCode.split(' ')[0]))
+
             Ciudad.CodigoPostal = parseInt(PostalCode.split(' ')[0] + '0'.repeat(PostalCode.split(' ')[0].length));
         }
 
@@ -154,11 +150,13 @@ export class GeoService {
         await Geodata.save();
     }
 
-    async GetUserDataGeo(user: User) {
-
+    async GetUserDataGeo(userId: GetOneDto) {
+        const user = await this.UserRepository.findOneBy({ id: userId.id });
         const data = await this.GeoDataRepository
         .createQueryBuilder("GeoData")
         .where("user.id = :id", { id: user.id })
         .getRawMany();
+
+        return data
     }
 }
