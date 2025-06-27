@@ -77,7 +77,7 @@ export class EventoService {
 
     }
 
-    async CrearEvento(data: CrearEventoDto) {
+    async CrearEvento(data: CrearEventoDto, Necro: boolean = false) {
 
         const evento = await this.EventoRepository.create();
         evento.nombre = data.Nombre;
@@ -88,6 +88,7 @@ export class EventoService {
         evento.fechaInicio = data.FechaInicio;
         evento.fechaFin = data.FechaFin;
         evento.activo = true;
+        evento.necro = Necro
 
         const GeoData = new GeoDataDto
         GeoData.Longitud = data.Longitud;

@@ -92,4 +92,14 @@ export class EventoController {
     }
 
 
+    //rincon de necro
+
+    @UseAuthUser(
+        ValidRoles.SuperAdmin,
+    )
+    @Post()
+    async CrearEventoNecro(@Body() data: CrearEventoDto) {
+        return await this.eventoService.CrearEvento(data, true);
+    }
+
 }
