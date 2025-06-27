@@ -97,7 +97,7 @@ export class EventoController {
     @UseAuthUser(
         ValidRoles.SuperAdmin,
     )
-    @Post()
+    @Post("necro")
     async CrearEventoNecro(@Body() data: CrearEventoDto) {
         return await this.eventoService.CrearEvento(data, true);
     }
