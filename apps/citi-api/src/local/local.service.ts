@@ -43,7 +43,7 @@ export class LocalService {
 
     async CreateLocal(data: CreateLocalDto, necro: boolean = false) {
 
-        console.log(data)
+        
         const comprobacion = await this.ComprobarCrearLocal(data);
 
         if(!comprobacion){
@@ -67,10 +67,10 @@ export class LocalService {
         return await this.getOne(local.id);
     }
 
-    async CreateLocales(data: CreateLocalDto[]) {
+    async CreateLocales(data: CreateLocalDto[], necro: boolean = false) {
 
         for (let item of data) {
-            await this.CreateLocal(item)
+            await this.CreateLocal(item,necro)
         }
         return { message: 'Locales creados' }
     }

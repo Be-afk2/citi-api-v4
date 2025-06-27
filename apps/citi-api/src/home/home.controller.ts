@@ -2,7 +2,7 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Controller, Get, UseGuards, Request, Query } from '@nestjs/common';
+import { Controller, Get, UseGuards, Request, Query, NotFoundException } from '@nestjs/common';
 import { HomeService } from './home.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { GeoDataDto } from '../geolocalizacion/dto/geoData.dto';
@@ -20,6 +20,10 @@ export class HomeController {
         private readonly homeService: HomeService
     ) { }
 
+    ComprobarUser(user: User) {
+        if (user.ciudad == undefined) { throw new NotFoundException('Usuario sin ciudad asociada'); }
+
+    }
 
 
     @Get('local')
@@ -28,10 +32,10 @@ export class HomeController {
         ValidRoles.Usuario,
     )
     async homeLocal(@Query() data: GeoDataDto, @GetUser() user: User) {
-        {
+        this.ComprobarUser(user);
 
-            return this.homeService.homeLocal(data, user);
-        }
+
+        return this.homeService.homeLocal(data, user);
 
 
     }
@@ -43,11 +47,24 @@ export class HomeController {
         ValidRoles.Usuario,
     )
     async homeEvento(@Query() data: GeoDataDto, @GetUser() user: User) {
-        {
+        this.ComprobarUser(user);
 
-            return this.homeService.homeEvento(data, user);
-        }
 
+        return this.homeService.homeEvento(data, user);
 
     }
+
+    // rincon necro turismo
+
+    @Get("necro")
+    @UseAuthUser(
+        ValidRoles.SuperAdmin,
+        ValidRoles.Usuario,
+    )
+    async homeNecro(@Query() data: GeoDataDto, @GetUser() user: User) {
+        this.ComprobarUser(user);
+
+        return this.homeService.homeNecro(data, user);
+    }
+
 }

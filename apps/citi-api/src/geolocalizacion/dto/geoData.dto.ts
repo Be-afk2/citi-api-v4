@@ -2,10 +2,13 @@ import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength } from '
 
 export class GeoDataDto {
 
+
+    @IsOptional()
     @IsString()
     @IsNotEmpty()
     Longitud: string;
 
+    @IsOptional()
     @IsString()
     @IsNotEmpty()
     Latitud: string;

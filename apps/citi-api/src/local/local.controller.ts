@@ -111,5 +111,13 @@ export class LocalController {
     return await this.localService.CreateLocal(data,true);
   }
 
+  @UseAuthUser(
+    ValidRoles.SuperAdmin,
+  )
+  @Post('necro/varias')
+  async CreateNecroMulti(@Body() data: CreateLocalDto[]) {
+    return this.localService.CreateLocales(data,true);
+  }
+
 
 }

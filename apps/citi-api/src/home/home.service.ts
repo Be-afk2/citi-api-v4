@@ -47,22 +47,30 @@ export class HomeService {
     }
 
 
-    async homeLocal(data: GeoDataDto, user: User) {
-        const lon = data.Longitud;
-        const lat = data.Latitud;
+
+
+    async homeLocal(data: GeoDataDto, user: User, necro: boolean = false) {
+
+        var lon
+        var lat
+        console.log("llego aqui 1")
+
+        if (data.Latitud != null || data.Longitud != null) {
+            lon = data.Longitud;
+            lat = data.Latitud;
+        }
+        else {
+            const geo = await this.geoService.getGeoDataUser(user);
+            lon = geo.Longitud;
+            lat = geo.Latitud;
+        }
+
         const maxDistance = data.Radio ? data.Radio : 400;
 
-
-        const local = await this.LocalRepository
+        var local = await this.LocalRepository
             .createQueryBuilder("Local")
             .leftJoinAndSelect('Local.ciudad', 'Ciudad')
             .leftJoinAndSelect('Local.etiquetas', 'Etiquetas')
-
-            .select("Local.id", "id")
-            .addSelect(
-                `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat))`,
-                "distance"
-            )
             .where("Local.ciudad = :ciudad", { ciudad: user.ciudad.id })
             .andWhere(
                 `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat)) <= :maxDistance`
@@ -79,25 +87,63 @@ export class HomeService {
                 'Etiquetas.nombre',
 
             ])
-            .getRawMany();
+            .addSelect(
+                `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat))`,
+                "distance"
+            )
+        if (necro) {
+            local.andWhere("Local.necro = :necro", { necro: necro })
+        }
 
-        return local;
+        return await local.getMany();
     }
 
 
 
-    async homeEvento(data: GeoDataDto, user: User) {
+    /*
+    var local = await this.LocalRepository
+      .createQueryBuilder("Local")
+      .leftJoin('Local.ciudad', 'Ciudad')
+      .leftJoin('Local.etiquetas', 'Etiquetas')
+      .select([
+          'Local.id',
+          'Local.Nombre',
+          'Local.likes',
+          'Local.compartidos',
+          'Local.vistos',
+          'Etiquetas.id',
+          'Etiquetas.nombre',
+      ])
+      .addSelect(`ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat))`, "distance")
+      .where("Local.ciudad = :ciudad", { ciudad: user.ciudad.id })
+      .andWhere(`ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat)) <= :maxDistance`)
+      
+    if(necro){
+      local.andWhere("Local.necro = :necro", { necro: necro })
+    }
+    
+    local.setParameters({ lon, lat, maxDistance })
+      .orderBy("RAND()")
+    
+    const result = await local.getRawMany();
+    return result;
+    */
+
+
+    async homeEvento(data: GeoDataDto, user: User, necro: boolean = false) {
         const lon = data.Longitud;
         const lat = data.Latitud;
         const maxDistance = data.Radio ? data.Radio : 400;
 
         const Evento = await this.EventoRepository
             .createQueryBuilder("Evento")
-            .leftJoinAndSelect('Evento.ciudad', 'Ciudad')
-            .leftJoinAndSelect('Evento.etiquetas', 'Etiquetas')
+            .leftJoin('Evento.ciudad', 'Ciudad')
+            .leftJoin('Evento.etiquetas', 'Etiquetas')
+        if (necro) {
+            Evento.andWhere("Local.necro = :necro", { necro: necro })
+        }
 
-
-            .select("Evento.id", "id")
+        Evento.select("Evento.id", "id")
             .addSelect(
                 `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat))`,
                 "distance"
@@ -118,11 +164,18 @@ export class HomeService {
                 'Etiquetas.nombre',
 
             ])
-            .getRawMany();
 
 
-        return Evento
+        return await Evento.getMany();
     }
 
-    //test test test
+
+    //rincon necro
+
+    async homeNecro(data: GeoDataDto, user: User) {
+        const dataLocales = await this.homeLocal(data, user, true);
+        const dataEventos = await this.homeEvento(data, user, true);
+
+        return [dataLocales, dataEventos];
+    }
 }

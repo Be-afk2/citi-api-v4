@@ -159,4 +159,18 @@ export class GeoService {
 
         return data
     }
+
+    // Obtener la ultima geodata del usuario
+    async getGeoDataUser(user: User): Promise<GeoDataDto> {
+        const data = await this.GeoDataRepository
+        .createQueryBuilder("GeoData")
+        .where("user.id = :id", { id: user.id })
+        .orderBy("GeoData.id", "DESC")
+        .getOne();
+
+        const geo= new GeoDataDto();
+        geo.Latitud=data.latitud;
+        geo.Longitud=data.longitud;
+        return geo
+    }
 }
