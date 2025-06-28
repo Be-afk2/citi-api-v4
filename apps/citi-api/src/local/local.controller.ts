@@ -87,7 +87,11 @@ export class LocalController {
   }
 
 
+
   @Put('editar')
+    @UseAuthUser(
+    ValidRoles.SuperAdmin,
+  )
   async EditarLocal(@Body() data: EditarLocalDto) {
     return await this.localService.EditarLocal(data);
   }
@@ -99,6 +103,9 @@ export class LocalController {
 
 
   @Put('etiq')
+    @UseAuthUser(
+    ValidRoles.SuperAdmin,
+  )
   async AgregarEtiq(@Body() data: AsignarEtiquetaDto) {
     return await this.localService.agregarEtiqv2(data);
   }
