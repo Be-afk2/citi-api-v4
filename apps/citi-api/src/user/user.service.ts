@@ -32,7 +32,6 @@ export class UserService {
 
     async updatePreferencia(data: PreferenciasUser, user: User) {
 
-        console.log(user)
         const result = {
             newetiq: 0,
             oldetiq: 0,
@@ -63,5 +62,9 @@ export class UserService {
         }
         await user.save()
         return result;
+    }
+
+    async getPreferences(user: User) {
+        return user.Preferencias;
     }
 }

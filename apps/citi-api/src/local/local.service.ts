@@ -279,7 +279,6 @@ export class LocalService {
                 message: 'Local no encontrado'
             };
         }
-        console.log(local)
         const etiquetasOperacion = operacion === 'agregar'
             ? data.EtiquetaAgregar
             : data.EtiquetaEliminar;

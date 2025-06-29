@@ -19,7 +19,6 @@ async function bootstrap() {
 		}),
 	);
 	const publicPath = path.join(__dirname, '..', '..', '..', 'public');
-	console.log('Ruta de archivos públicos:', publicPath);
 	app.use('/public', serveStatic(publicPath));
   await app.listen(process.env.APIPORT );
 

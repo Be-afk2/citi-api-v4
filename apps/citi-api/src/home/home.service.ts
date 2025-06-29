@@ -18,6 +18,9 @@ import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
 @Injectable()
 export class HomeService {
 
+
+
+
     constructor(
         private readonly geoService: GeoService,
         @InjectRepository(Local)
@@ -49,11 +52,10 @@ export class HomeService {
 
 
 
-    async homeLocal(data: GeoDataDto, user: User, necro: boolean = false) {
+    async homeLocal(data: GeoDataDto, user: User, necro: boolean = false, Preferencias: number[] = []) {
 
         var lon
         var lat
-        console.log("llego aqui 1")
 
         if (data.Latitud != null || data.Longitud != null) {
             lon = data.Longitud;
@@ -75,7 +77,13 @@ export class HomeService {
             .andWhere(
                 `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat)) <= :maxDistance`
             )
-            .setParameters({ lon, lat, maxDistance })
+        if (necro) {
+            local.andWhere("Local.necro = :necro", { necro: necro })
+        }
+        if (Preferencias.length > 0) {
+            local.andWhere("Etiquetas.id IN (:...preferencias)", { preferencias: Preferencias })
+        }
+        local.setParameters({ lon, lat, maxDistance })
             .orderBy("RAND()")
             .select([
                 'Local.id',
@@ -91,9 +99,7 @@ export class HomeService {
                 `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat))`,
                 "distance"
             )
-        if (necro) {
-            local.andWhere("Local.necro = :necro", { necro: necro })
-        }
+
 
         return await local.getMany();
     }
@@ -130,7 +136,7 @@ export class HomeService {
     */
 
 
-    async homeEvento(data: GeoDataDto, user: User, necro: boolean = false) {
+    async homeEvento(data: GeoDataDto, user: User, necro: boolean = false, Preferencias: [] = []) {
         const lon = data.Longitud;
         const lat = data.Latitud;
         const maxDistance = data.Radio ? data.Radio : 400;
@@ -139,9 +145,6 @@ export class HomeService {
             .createQueryBuilder("Evento")
             .leftJoin('Evento.ciudad', 'Ciudad')
             .leftJoin('Evento.etiquetas', 'Etiquetas')
-        if (necro) {
-            Evento.andWhere("Local.necro = :necro", { necro: necro })
-        }
 
         Evento.select("Evento.id", "id")
             .addSelect(
@@ -152,7 +155,13 @@ export class HomeService {
             .andWhere(
                 `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat)) <= :maxDistance`
             )
-            .setParameters({ lon, lat, maxDistance })
+        if (necro) {
+            Evento.andWhere("Local.necro = :necro", { necro: necro })
+        }
+        if (Preferencias.length > 0) {
+            Evento.andWhere("Etiquetas.id IN (:...preferencias)", { preferencias: Preferencias })
+        }
+        Evento.setParameters({ lon, lat, maxDistance })
             .orderBy("RAND()")
             .select([
                 'Evento.id',
@@ -162,7 +171,6 @@ export class HomeService {
                 'Evento.vistos',
                 'Etiquetas.id',
                 'Etiquetas.nombre',
-
             ])
 
 
@@ -177,5 +185,12 @@ export class HomeService {
         const dataEventos = await this.homeEvento(data, user, true);
 
         return [dataLocales, dataEventos];
+    }
+
+    async GetPreferencias(user: User,data: GeoDataDto) {
+
+        const preferencia = user.Preferencias.map((preferencia) => preferencia.id)
+        return await this.homeLocal(data, user, false, preferencia);
+
     }
 }

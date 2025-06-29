@@ -2,7 +2,7 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/UpdateUserDto.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -27,20 +27,25 @@ export class UserController {
         ValidRoles.Usuario,
     )
     @Put()
-    async update(@Body() data: UpdateUserDto,@GetUser() user: User) {
+    async update(@Body() data: UpdateUserDto, @GetUser() user: User) {
 
-       return await this.userService.update(data,user)
+        return await this.userService.update(data, user)
 
 
     }
 
 
     @Put('preferencia')
-    async updatePreferencia(@Body() data: PreferenciasUser,@GetUser() user: User) {
+    async updatePreferencia(@Body() data: PreferenciasUser, @GetUser() user: User) {
 
-        return await this.userService.updatePreferencia(data,user)
- 
-     }
+        return await this.userService.updatePreferencia(data, user)
+    }
+
+    @Get('preferencia')
+    async GetPreferencia( @GetUser() user: User) {
+
+        return await this.userService.getPreferences( user)
+    }
 
 
 }

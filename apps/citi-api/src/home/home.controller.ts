@@ -53,6 +53,16 @@ export class HomeController {
         return this.homeService.homeEvento(data, user);
 
     }
+    
+    @Get('preferencia')
+    @UseAuthUser(
+        ValidRoles.SuperAdmin,
+        ValidRoles.Usuario,
+    )
+    async GetPreferencias(@Query() data: GeoDataDto,@GetUser() user: User) {
+
+        return await this.homeService.GetPreferencias(user, data);
+    }
 
     // rincon necro turismo
 
