@@ -15,7 +15,7 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
 import { Evento } from 'apps/citi-back/src/entities/evento.entity';
 import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
 import { FotosLocal } from 'apps/citi-back/src/entities/fotoslocal.entity';
-
+import { FotosEvento } from 'apps/citi-back/src/entities/fotosEvento.entity';
 @Injectable()
 export class HomeService {
 
@@ -139,7 +139,7 @@ export class HomeService {
             }
         });
 
-        return   Array.from(localesMap.values());
+        return Array.from(localesMap.values());
     }
 
 
@@ -210,9 +210,47 @@ export class HomeService {
                 'Etiquetas.id',
                 'Etiquetas.nombre',
             ])
+            .addSelect(subQuery => {
+                return subQuery
+                    .select("fotos.path")
+                    .from(FotosEvento, "fotos")
+                    .where("fotos.eventoId = evento.id")
+                    .orderBy("RAND()")
+                    .limit(1)
+            }, "fotoAleatoria")
 
 
-        return await Evento.getMany();
+        const rawResults =await Evento.getRawMany();
+
+        const localesMap = new Map();
+
+        rawResults.forEach(item => {
+            if (!localesMap.has(item.Local_id)) {
+                localesMap.set(item.Local_id, {
+                    id: item.Local_id,
+                    nombre: item.Nombre,
+                    likes: item.Local_likes,
+                    compartidos: item.Local_compartidos,
+                    vistos: item.Local_vistos,
+                    foto: item.fotoAleatoria,
+                    etiquetas: []
+                });
+            }
+
+            // Si hay etiqueta en esta fila, la agrega
+            if (item.Etiquetas_id) {
+                const etiquetas = localesMap.get(item.Local_id).etiquetas;
+                // Evitar duplicados
+                if (!etiquetas.find(e => e.id === item.Etiquetas_id)) {
+                    etiquetas.push({
+                        id: item.Etiquetas_id,
+                        nombre: item.Etiquetas_nombre
+                    });
+                }
+            }
+        });
+
+        return Array.from(localesMap.values());
     }
 
 
