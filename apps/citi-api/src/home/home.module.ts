@@ -30,7 +30,7 @@ import { UserService } from '../user/user.service';
             Region,
             User,
             Evento,
-            GeoData
+            GeoData,
         ]),
     ],
     controllers: [HomeController,],

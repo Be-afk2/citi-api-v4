@@ -14,6 +14,7 @@ import { GeoDataDto } from '../geolocalizacion/dto/geoData.dto';
 import { User } from 'apps/citi-back/src/entities/user.entity';
 import { Evento } from 'apps/citi-back/src/entities/evento.entity';
 import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
+import { FotosLocal } from 'apps/citi-back/src/entities/fotoslocal.entity';
 
 @Injectable()
 export class HomeService {
@@ -69,7 +70,7 @@ export class HomeService {
 
         const maxDistance = data.Radio ? data.Radio : 400;
 
-        var local = await this.LocalRepository
+        var local = this.LocalRepository
             .createQueryBuilder("Local")
             .leftJoinAndSelect('Local.ciudad', 'Ciudad')
             .leftJoinAndSelect('Local.etiquetas', 'Etiquetas')
@@ -99,9 +100,46 @@ export class HomeService {
                 `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat))`,
                 "distance"
             )
+            .addSelect(subQuery => {
+                return subQuery
+                    .select("fotos.path")
+                    .from(FotosLocal, "fotos")
+                    .where("fotos.localId = Local.id")
+                    .orderBy("RAND()")
+                    .limit(1)
+            }, "fotoAleatoria")
 
 
-        return await local.getMany();
+        const rawResults = await local.getRawMany();
+        const localesMap = new Map();
+
+        rawResults.forEach(item => {
+            if (!localesMap.has(item.Local_id)) {
+                localesMap.set(item.Local_id, {
+                    id: item.Local_id,
+                    nombre: item.Nombre,
+                    likes: item.Local_likes,
+                    compartidos: item.Local_compartidos,
+                    vistos: item.Local_vistos,
+                    foto: item.fotoAleatoria,
+                    etiquetas: []
+                });
+            }
+
+            // Si hay etiqueta en esta fila, la agrega
+            if (item.Etiquetas_id) {
+                const etiquetas = localesMap.get(item.Local_id).etiquetas;
+                // Evitar duplicados
+                if (!etiquetas.find(e => e.id === item.Etiquetas_id)) {
+                    etiquetas.push({
+                        id: item.Etiquetas_id,
+                        nombre: item.Etiquetas_nombre
+                    });
+                }
+            }
+        });
+
+        return   Array.from(localesMap.values());
     }
 
 
@@ -187,7 +225,7 @@ export class HomeService {
         return [dataLocales, dataEventos];
     }
 
-    async GetPreferencias(user: User,data: GeoDataDto) {
+    async GetPreferencias(user: User, data: GeoDataDto) {
 
         const preferencia = user.Preferencias.map((preferencia) => preferencia.id)
         return await this.homeLocal(data, user, false, preferencia);
