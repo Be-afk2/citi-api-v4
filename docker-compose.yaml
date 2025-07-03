@@ -1,0 +1,52 @@
+services:
+  # * ===============
+  # * Base de datos
+  # * ===============
+  database:
+    # Este es el nombre del "server"
+    container_name: mariadb_container
+    ports:
+      - 3306:3306
+    image: mariadb:jammy
+    volumes:
+      - database-data:/var/lib/mysql
+    environment:
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
+
+  # * ===============
+  # * Panel de admin
+  # * ===============
+  panel:
+    profiles:
+      - phpmyadmin
+    depends_on:
+      - database
+    container_name: phpmyadmin_container
+    ports:
+      - 8080:80
+    image: phpmyadmin:5-fpm-alpine
+    environment:
+      - PMA_ARBITRARY=1
+  # * ===============
+  # * Panel (alt)
+  # * ===============
+  adminer:
+    profiles:
+      - adminer
+    depends_on:
+      - database
+    container_name: adminer_admin
+    image: adminer:5.3.0-standalone
+    restart: unless-stopped
+    ports:
+      - '8001:8080'
+    environment:
+      ADMINER_PLUGINS: 'dump-alter dump-json dump-date dump-xml dump-zip tables-filter monaco tinymce'
+      ADMINER_DESIGN: 'dracula'
+
+volumes:
+  database-data:
+    external: false

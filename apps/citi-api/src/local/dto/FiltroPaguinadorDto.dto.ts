@@ -1,26 +1,25 @@
-import { IsOptional, IsString, IsNumber } from "class-validator";
+import { IsOptional, IsString, IsNumber } from 'class-validator';
 
 export class FiltroPaguinadorDto {
+  @IsOptional()
+  @IsString()
+  Nombre: string;
 
-    @IsOptional()
-    @IsString()
-    Nombre: string;
+  @IsOptional()
+  @IsNumber()
+  ciudad: number;
 
-    @IsOptional()
-    @IsNumber()
-    ciudad: number;
-    
-    @IsOptional()
-    @IsNumber()
-    region: string;
+  @IsOptional()
+  @IsNumber()
+  region: string;
 
-    @IsOptional()
-    @IsNumber()
-    pais: string;
+  @IsOptional()
+  @IsNumber()
+  pais: string;
 
-    @IsNumber()
-    Paguina: number;
-  
-    @IsNumber()
-    Cantidad: number;
+  @IsNumber()
+  Paguina: number;
+
+  @IsNumber()
+  Cantidad: number;
 }

@@ -1,5 +1,17 @@
-
-import { Entity, Column, PrimaryGeneratedColumn,CreateDateColumn,UpdateDateColumn,DeleteDateColumn, Timestamp, Table, OneToMany, ManyToOne, ManyToMany, JoinTable} from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  Timestamp,
+  Table,
+  OneToMany,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
 import { v4 as uuidv4 } from 'uuid';
 import { Region } from './region.entity';
@@ -9,79 +21,71 @@ import { Interacion } from './interacion.entity';
 import { FotosLocal } from './fotoslocal.entity';
 import { Etiquetas } from './etiquetas.entiy';
 
-
-
 @Entity()
 export class Local extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @Column({ nullable: false })
+  nombre: string;
 
-    @Column({nullable:false})
-    nombre:string;
+  @Column({ nullable: false })
+  descripcion: string;
 
-    @Column({nullable:false})
-    descripcion:string;
+  @Column({ nullable: false })
+  contacto: string;
 
-    @Column({nullable:false})
-    contacto:string;
+  @Column({ nullable: false })
+  longitud: string;
 
-    @Column({nullable:false})
-    longitud:string;
+  @Column({ nullable: false })
+  latitud: string;
 
-    @Column({nullable:false})
-    latitud:string;
+  @ManyToOne(() => Ciudad, (Ciudad) => Ciudad.id)
+  ciudad: Ciudad;
 
-    @ManyToOne(() => Ciudad, Ciudad => Ciudad.id)
-    ciudad: Ciudad
+  @Column({ default: 0 })
+  likes: string;
 
-    @Column({default:0})
-    likes:string;
+  @Column({ default: 0 })
+  compartidos: string;
 
-    @Column({default:0})
-    compartidos:string;
+  @Column({ default: 0 })
+  vistos: string;
 
-    @Column({default:0})
-    vistos:string;
-    
-    
-    @Column({default:0})
-    reportes:string;
+  @Column({ default: 0 })
+  reportes: string;
 
-    @Column({default:0})
-    tipo:string;
- 
-    @OneToMany(() => User, user => user.id, { nullable: true })
-    user: User[];
-    
-    @OneToMany(() => Interacion, Interacion => Interacion.local)
-    interacion: Interacion[];
+  @Column({ default: 0 })
+  tipo: string;
 
-    @OneToMany(() => FotosLocal, FotosLocal => FotosLocal.local)
-    fotos: FotosLocal[];
+  @OneToMany(() => User, (user) => user.id, { nullable: true })
+  user: User[];
 
+  @OneToMany(() => Interacion, (Interacion) => Interacion.local)
+  interacion: Interacion[];
 
-    @ManyToMany(() => Etiquetas)
-    @JoinTable()
-    etiquetas: Etiquetas[]
+  @OneToMany(() => FotosLocal, (FotosLocal) => FotosLocal.local)
+  fotos: FotosLocal[];
 
-    // @ManyToOne(() => Local, {nullable :true})
-    // @JoinColumn()
-    // local: Local
+  @ManyToMany(() => Etiquetas)
+  @JoinTable()
+  etiquetas: Etiquetas[];
 
+  // @ManyToOne(() => Local, {nullable :true})
+  // @JoinColumn()
+  // local: Local
 
-    @Column({default:true})
-    Habilitar :boolean
+  @Column({ default: true })
+  Habilitar: boolean;
 
-    @Column({default:false})
-    necro :boolean
+  @Column({ default: false })
+  necro: boolean;
 
-
-    @DeleteDateColumn()
-    deleted_at:Date;
-    @CreateDateColumn()
-    created_at:Date;
-    @UpdateDateColumn()
-    updated_at:Date;
-
+  @DeleteDateColumn()
+  deleted_at: Date;
+  @CreateDateColumn()
+  created_at: Date;
+  @UpdateDateColumn()
+  updated_at: Date;
 }

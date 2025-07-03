@@ -18,7 +18,6 @@ import { GeoData } from './entities/geoData.entity';
 
 @Module({
   imports: [
-
     ConfigModule.forRoot({ envFilePath: '.env' }),
 
     TypeOrmModule.forRoot({
@@ -40,11 +39,10 @@ import { GeoData } from './entities/geoData.entity';
         Region,
         TipoUser,
         User,
-        GeoData
+        GeoData,
       ],
       synchronize: true,
     }),
-
   ],
   controllers: [CitiBackController],
   providers: [CitiBackService],

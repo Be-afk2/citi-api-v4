@@ -25,7 +25,7 @@ import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
 
 @Module({
   imports: [
-        HomeModule, 
+    HomeModule,
 
     ConfigModule.forRoot({ envFilePath: '.env' }),
 
@@ -48,21 +48,19 @@ import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
         Region,
         TipoUser,
         User,
-        GeoData
+        GeoData,
       ],
       synchronize: false,
     }),
 
-
     AuthModule,
     GeoModule,
-    UserModule, 
-    LocalModule, 
+    UserModule,
+    LocalModule,
     EtiquetaModule,
-    EventoModule, 
-
+    EventoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

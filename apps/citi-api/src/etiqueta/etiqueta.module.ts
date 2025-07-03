@@ -9,12 +9,8 @@ import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
 import { EtiquetaController } from './etiqueta.controller';
 
 @Module({
-    imports: [        
-        TypeOrmModule.forFeature([
-                Etiquetas
-            ]),
-        ],
-    controllers: [EtiquetaController],
-    providers: [EtiquetaService,],
+  imports: [TypeOrmModule.forFeature([Etiquetas])],
+  controllers: [EtiquetaController],
+  providers: [EtiquetaService],
 })
-export class EtiquetaModule { }
+export class EtiquetaModule {}

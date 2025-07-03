@@ -1,11 +1,14 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class GetOneDto {
-
-
-
-    @IsString()
-    @IsNotEmpty()
-    readonly id: string;
-
+  @IsString()
+  @IsNotEmpty()
+  readonly id: string;
 }

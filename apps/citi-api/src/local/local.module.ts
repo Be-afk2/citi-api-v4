@@ -12,35 +12,29 @@ import { FotosLocal } from 'apps/citi-back/src/entities/fotoslocal.entity';
 import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
 
 @Module({
-    imports: [
-
-
-        MulterModule.registerAsync({
-            useFactory: () => ({
-                storage: diskStorage({
-                    destination: 'public/fotosLocal',
-                    filename: (req, file, cb) => {
-                        const fileName = file.originalname
-                            .normalize('NFD')
-                            .replace(/[\u0300-\u036f]/g, '')
-                            .replace(/\s+/g, '')
-                            .replace(/[^\w\d]/g, '');
-                        const extension = extname(file.originalname);
-                        cb(null, `${fileName}-${Date.now()}${extension}`);
-                    },
-                }),
-            }),
+  imports: [
+    MulterModule.registerAsync({
+      useFactory: () => ({
+        storage: diskStorage({
+          destination: 'public/fotosLocal',
+          filename: (req, file, cb) => {
+            const fileName = file.originalname
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .replace(/\s+/g, '')
+              .replace(/[^\w\d]/g, '');
+            const extension = extname(file.originalname);
+            cb(null, `${fileName}-${Date.now()}${extension}`);
+          },
         }),
+      }),
+    }),
 
-        TypeOrmModule.forFeature([
-            Local,
-            FotosLocal,
-            Etiquetas,
-        ]),
+    TypeOrmModule.forFeature([Local, FotosLocal, Etiquetas]),
 
-        GeoModule
-    ],
-    controllers: [LocalController,],
-    providers: [LocalService,],
+    GeoModule,
+  ],
+  controllers: [LocalController],
+  providers: [LocalService],
 })
-export class LocalModule { }
+export class LocalModule {}

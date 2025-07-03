@@ -11,14 +11,8 @@ import { TipoUser } from 'apps/citi-back/src/entities/TipoUser.entity';
 import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            User,
-            TipoUser,
-            Etiquetas
-        ]),
-    ],
-    controllers: [UserController,],
-    providers: [UserService,],
+  imports: [TypeOrmModule.forFeature([User, TipoUser, Etiquetas])],
+  controllers: [UserController],
+  providers: [UserService],
 })
-export class UserModule { }
+export class UserModule {}

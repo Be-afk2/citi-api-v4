@@ -21,21 +21,21 @@ import { UserService } from '../user/user.service';
 import { FotosEvento } from 'apps/citi-back/src/entities/fotosEvento.entity';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            Local,
-            FotosLocal,
-            Etiquetas,
-            Pais,
-            Ciudad,
-            Region,
-            User,
-            Evento,
-            GeoData,
-            FotosEvento
-        ]),
-    ],
-    controllers: [HomeController,],
-    providers: [HomeService, GeoService,LocalService],
+  imports: [
+    TypeOrmModule.forFeature([
+      Local,
+      FotosLocal,
+      Etiquetas,
+      Pais,
+      Ciudad,
+      Region,
+      User,
+      Evento,
+      GeoData,
+      FotosEvento,
+    ]),
+  ],
+  controllers: [HomeController],
+  providers: [HomeService, GeoService, LocalService],
 })
-export class HomeModule { }
+export class HomeModule {}
