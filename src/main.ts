@@ -18,8 +18,10 @@ async function bootstrap() {
       },
     }),
   );
-  const publicPath = path.join(__dirname, '..', '..', '..', 'public');
+  const publicPath = path.join(__dirname, '..', 'public');
   app.use('/public', serveStatic(publicPath));
+  console.log({ publicPath });
+
   await app.listen(process.env.APIPORT);
 }
 bootstrap();

@@ -10,6 +10,21 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import {
+  Admin,
+  Ciudad,
+  Etiquetas,
+  Evento,
+  FotosEvento,
+  FotosLocal,
+  GeoData,
+  Interacion,
+  Local,
+  Pais,
+  Region,
+  TipoUser,
+  User,
+} from './entities';
 
 @Module({
   imports: [
@@ -23,7 +38,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       // * Tablas
-      entities: [__dirname + '**/*.entity{.ts,.js}'],
+      entities: [
+        Admin,
+        Ciudad,
+        Etiquetas,
+        Evento,
+        FotosEvento,
+        FotosLocal,
+        GeoData,
+        Interacion,
+        Local,
+        Pais,
+        Region,
+        TipoUser,
+        User,
+      ],
       synchronize: false,
     }),
 
