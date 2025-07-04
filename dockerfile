@@ -19,8 +19,6 @@ FROM node:23-alpine as runner
 WORKDIR /app
 COPY --from=production /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
-COPY package.json .
-COPY public ./public
 ENV APIPORT=3000
 EXPOSE 3000
 CMD ["node", "dist/main.js"]
