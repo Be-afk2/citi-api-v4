@@ -1,0 +1,23 @@
+services:
+  admin_api:
+    container_name: admin_api
+    image: ghcr.io/be-afk2/citi-api-v4:latest
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: dockerfile
+      target: runner
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./public:/app/public
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      GEOKEY: ${GEOKEY}
+    labels:
+      - 'com.centurylinklabs.watchtower.enable=true'

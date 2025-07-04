@@ -17,6 +17,34 @@ services:
       MARIADB_DATABASE: ${DB_NAME}
 
   # * ===============
+  # * Aplicación
+  # * ===============
+  admin_api:
+    container_name: admin_api
+    image: ghcr.io/be-afk2/citi-api-v4:latest
+    restart: unless-stopped
+    profiles:
+      - production_app
+    build:
+      context: .
+      dockerfile: dockerfile
+      target: runner
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./public:/app/public
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      GEOKEY: ${GEOKEY}
+    labels:
+      - 'com.centurylinklabs.watchtower.enable=true'
+
+  # * ===============
   # * Panel de admin
   # * ===============
   panel:
@@ -30,22 +58,6 @@ services:
     image: phpmyadmin:5-fpm-alpine
     environment:
       - PMA_ARBITRARY=1
-  # * ===============
-  # * Panel (alt)
-  # * ===============
-  adminer:
-    profiles:
-      - adminer
-    depends_on:
-      - database
-    container_name: adminer_admin
-    image: adminer:5.3.0-standalone
-    restart: unless-stopped
-    ports:
-      - '8001:8080'
-    environment:
-      ADMINER_PLUGINS: 'dump-alter dump-json dump-date dump-xml dump-zip tables-filter monaco tinymce'
-      ADMINER_DESIGN: 'dracula'
 
 volumes:
   database-data:
