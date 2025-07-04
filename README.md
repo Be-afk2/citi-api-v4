@@ -4,6 +4,8 @@
 
 # Proyecto Citi Backend
 
+![Docker Image CI For GHCR](https://github.com/Be-afk2/citi-api-v4/actions/workflows/ghcr-publish.yaml/badge.svg)
+
 Backend principal para la aplicacion y panel admin web
 
 > Creado en NestJS
