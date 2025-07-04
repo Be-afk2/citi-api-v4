@@ -3,10 +3,6 @@ services:
     container_name: admin_api
     image: ghcr.io/be-afk2/citi-api-v4:latest
     restart: unless-stopped
-    build:
-      context: .
-      dockerfile: dockerfile
-      target: runner
     ports:
       - '3000:3000'
     volumes:
