@@ -40,7 +40,6 @@ export class AuthService {
         user.password = await hash(data.password, 10)
         user.tipoUser = await this.TipoUserRepository.findOneBy({id: 2})
         await user.save();
-
         
         return {user : await this.findUserById(user.id, false), token : await this.get_token(user)}
     }
