@@ -15,6 +15,7 @@ import { Region } from './entities/region.entity';
 import { TipoUser } from './entities/TipoUser.entity';
 import { User } from './entities/user.entity';
 import { GeoData } from './entities/geoData.entity';
+import { LocalTipo } from './entities/localTipo.entity';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { GeoData } from './entities/geoData.entity';
         Region,
         TipoUser,
         User,
-        GeoData
+        GeoData,
+        LocalTipo
       ],
       synchronize: true,
     }),

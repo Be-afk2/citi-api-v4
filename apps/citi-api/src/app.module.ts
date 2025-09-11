@@ -1,3 +1,4 @@
+import { SubscriptionModule } from './subscription/subscription.module';
 import { HomeModule } from './home/home.module';
 import { EventoModule } from './evento/evento.module';
 import { EtiquetaModule } from './etiqueta/etiqueta.module';
@@ -22,10 +23,12 @@ import { Region } from 'apps/citi-back/src/entities/region.entity';
 import { TipoUser } from 'apps/citi-back/src/entities/TipoUser.entity';
 import { User } from 'apps/citi-back/src/entities/user.entity';
 import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
+import { LocalTipo } from 'apps/citi-back/src/entities/localTipo.entity';
 
 @Module({
   imports: [
-        HomeModule, 
+    SubscriptionModule,
+    HomeModule,
 
     ConfigModule.forRoot({ envFilePath: '.env' }),
 
@@ -48,7 +51,8 @@ import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
         Region,
         TipoUser,
         User,
-        GeoData
+        GeoData,
+        LocalTipo
       ],
       synchronize: false,
     }),
@@ -56,13 +60,15 @@ import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
 
     AuthModule,
     GeoModule,
-    UserModule, 
-    LocalModule, 
+    UserModule,
+    LocalModule,
     EtiquetaModule,
-    EventoModule, 
+    EventoModule,
+  SubscriptionModule
 
   ],
-  controllers: [AppController],
+  controllers: [
+    AppController],
   providers: [AppService],
 })
 export class AppModule { }

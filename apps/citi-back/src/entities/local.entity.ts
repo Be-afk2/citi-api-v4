@@ -8,8 +8,7 @@ import { Ciudad } from './ciudad.entity';
 import { Interacion } from './interacion.entity';
 import { FotosLocal } from './fotoslocal.entity';
 import { Etiquetas } from './etiquetas.entiy';
-
-
+import { LocalTipo } from './localTipo.entity';
 
 @Entity()
 export class Local extends BaseEntity {
@@ -49,7 +48,10 @@ export class Local extends BaseEntity {
     reportes:string;
 
     @Column({default:0})
-    tipo:string;
+    tipo:number;
+
+    @ManyToOne(() => LocalTipo, LocalTipo => LocalTipo.id, {nullable:true})
+    LocalTipo: LocalTipo
  
     @OneToMany(() => User, user => user.id, { nullable: true })
     user: User[];
