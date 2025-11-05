@@ -52,11 +52,10 @@ import { LocalTipo } from 'apps/citi-back/src/entities/localTipo.entity';
         TipoUser,
         User,
         GeoData,
-        LocalTipo
+        LocalTipo,
       ],
       synchronize: false,
     }),
-
 
     AuthModule,
     GeoModule,
@@ -64,11 +63,9 @@ import { LocalTipo } from 'apps/citi-back/src/entities/localTipo.entity';
     LocalModule,
     EtiquetaModule,
     EventoModule,
-  SubscriptionModule
-
+    SubscriptionModule,
   ],
-  controllers: [
-    AppController],
+  controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

@@ -16,22 +16,19 @@ import { Pais } from 'apps/citi-back/src/entities/pais.entity';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-    imports: [
-      ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
-      JwtModule.registerAsync({
-        imports: [ConfigModule],
-        inject: [ConfigService],
-        useFactory: async (configService: ConfigService) => ({
-          secret: configService.get<string>('JWT_SECRET'),
-          signOptions: { expiresIn: '1y' },
-        }),
+  imports: [
+    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1y' },
       }),
-      TypeOrmModule.forFeature([
-        User,
-        TipoUser
-      ]),
-    ],
-    controllers: [AuthController,],
-    providers: [AuthService,JwtStrategy],
+    }),
+    TypeOrmModule.forFeature([User, TipoUser]),
+  ],
+  controllers: [AuthController],
+  providers: [AuthService, JwtStrategy],
 })
-export class AuthModule { }
+export class AuthModule {}

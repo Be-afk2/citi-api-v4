@@ -4,7 +4,6 @@ import { ValidRoles } from '../interfaces/valid-roles.enum';
 import { JwtAuthGuard } from '../jwt-auth.guard';
 import { RoleProtected } from './role-protected.decorator';
 
-
 /**
  * Esto combina decoradores, en lugar de aplicar linea x linea, queda aplicado en una.
  *
@@ -24,9 +23,8 @@ import { RoleProtected } from './role-protected.decorator';
  *		}
  */
 export const UseAuthUser = (...args: ValidRoles[]) => {
-
-	return applyDecorators(
-		RoleProtected(...args),
-		UseGuards(JwtAuthGuard, UserRoleGuard),
-	);
+  return applyDecorators(
+    RoleProtected(...args),
+    UseGuards(JwtAuthGuard, UserRoleGuard),
+  );
 };

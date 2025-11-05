@@ -1,39 +1,45 @@
-import { IsString, IsNumber, IsDate, IsNotEmpty, Length, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsDate,
+  IsNotEmpty,
+  Length,
+  IsOptional,
+} from 'class-validator';
 
 export class EditarEventoDto {
+  @IsNumber()
+  @IsOptional()
+  id: number;
 
-    @IsNumber()
-    @IsOptional()
-    id: number;
+  @IsString()
+  @IsOptional()
+  @Length(3, 100)
+  Nombre: string;
 
-    @IsString()
-    @IsOptional()
-    @Length(3, 100)
-    Nombre: string;
+  @IsString()
+  @IsOptional()
+  Longitud: string;
 
-    @IsString()
-    @IsOptional()
-    Longitud: string;
+  @IsString()
+  @IsOptional()
+  Latitud: string;
 
-    @IsString()
-    @IsOptional()
-    Latitud: string;
+  @IsString()
+  @IsOptional()
+  @Length(3, 100)
+  Organizador: string;
 
-    @IsString()
-    @IsOptional()
-    @Length(3, 100)
-    Organizador: string;
+  @IsString()
+  @IsOptional()
+  @Length(10, 500)
+  Descripcion: string;
 
-    @IsString()
-    @IsOptional()
-    @Length(10, 500)
-    Descripcion: string;
+  @IsDate()
+  @IsOptional()
+  FechaInicio: Date;
 
-    @IsDate()
-    @IsOptional()
-    FechaInicio: Date;
-
-    @IsDate()
-    @IsOptional()
-    FechaFin: Date;
+  @IsDate()
+  @IsOptional()
+  FechaFin: Date;
 }

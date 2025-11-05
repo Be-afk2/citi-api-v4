@@ -18,133 +18,123 @@ import { FotosLocal } from 'apps/citi-back/src/entities/fotoslocal.entity';
 import { FotosEvento } from 'apps/citi-back/src/entities/fotosEvento.entity';
 @Injectable()
 export class HomeService {
+  constructor(
+    private readonly geoService: GeoService,
+    @InjectRepository(Local)
+    private LocalRepository: Repository<Local>,
+    @InjectRepository(Pais)
+    private PaisRepository: Repository<Pais>,
+    @InjectRepository(Ciudad)
+    private CiudadRepository: Repository<Ciudad>,
+    @InjectRepository(Region)
+    private RegionRepository: Repository<Region>,
+    @InjectRepository(Etiquetas)
+    private EtiquetasRepository: Repository<Etiquetas>,
 
+    @InjectRepository(Evento)
+    private EventoRepository: Repository<Evento>,
+  ) {}
 
+  async GetLocal() {
+    const local = await this.LocalRepository
+      .find
+      // cosas que se pueden hacer con el find
+      ();
+  }
 
+  async homeLocal(
+    data: GeoDataDto,
+    user: User,
+    necro: boolean = false,
+    Preferencias: number[] = [],
+  ) {
+    let lon;
+    let lat;
 
-    constructor(
-        private readonly geoService: GeoService,
-        @InjectRepository(Local)
-        private LocalRepository: Repository<Local>,
-        @InjectRepository(Pais)
-        private PaisRepository: Repository<Pais>,
-        @InjectRepository(Ciudad)
-        private CiudadRepository: Repository<Ciudad>,
-        @InjectRepository(Region)
-        private RegionRepository: Repository<Region>,
-        @InjectRepository(Etiquetas)
-        private EtiquetasRepository: Repository<Etiquetas>,
-
-        @InjectRepository(Evento)
-        private EventoRepository: Repository<Evento>,
-
-    ) { }
-
-
-
-    async GetLocal() {
-
-        const local = await this.LocalRepository.find(
-            // cosas que se pueden hacer con el find
-        );
-
+    if (data.Latitud != null || data.Longitud != null) {
+      lon = data.Longitud;
+      lat = data.Latitud;
+    } else {
+      const geo = await this.geoService.getGeoDataUser(user);
+      lon = geo.Longitud;
+      lat = geo.Latitud;
     }
 
+    const maxDistance = data.Radio ? data.Radio : 400;
 
+    const local = this.LocalRepository.createQueryBuilder('Local')
+      .leftJoinAndSelect('Local.ciudad', 'Ciudad')
+      .leftJoinAndSelect('Local.etiquetas', 'Etiquetas')
+      .where('Local.ciudad = :ciudad', { ciudad: user.ciudad.id })
+      .andWhere(
+        `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat)) <= :maxDistance`,
+      );
+    if (necro) {
+      local.andWhere('Local.necro = :necro', { necro: necro });
+    }
+    if (Preferencias.length > 0) {
+      local.andWhere('Etiquetas.id IN (:...preferencias)', {
+        preferencias: Preferencias,
+      });
+    }
+    local
+      .setParameters({ lon, lat, maxDistance })
+      .orderBy('RAND()')
+      .select([
+        'Local.id',
+        'Local.Nombre',
+        'Local.likes',
+        'Local.compartidos',
+        'Local.vistos',
+        'Etiquetas.id',
+        'Etiquetas.nombre',
+      ])
+      .addSelect(
+        `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat))`,
+        'distance',
+      )
+      .addSelect((subQuery) => {
+        return subQuery
+          .select('fotos.path')
+          .from(FotosLocal, 'fotos')
+          .where('fotos.localId = Local.id')
+          .orderBy('RAND()')
+          .limit(1);
+      }, 'fotoAleatoria');
 
+    const rawResults = await local.getRawMany();
+    const localesMap = new Map();
 
-    async homeLocal(data: GeoDataDto, user: User, necro: boolean = false, Preferencias: number[] = []) {
-
-        var lon
-        var lat
-
-        if (data.Latitud != null || data.Longitud != null) {
-            lon = data.Longitud;
-            lat = data.Latitud;
-        }
-        else {
-            const geo = await this.geoService.getGeoDataUser(user);
-            lon = geo.Longitud;
-            lat = geo.Latitud;
-        }
-
-        const maxDistance = data.Radio ? data.Radio : 400;
-
-        var local = this.LocalRepository
-            .createQueryBuilder("Local")
-            .leftJoinAndSelect('Local.ciudad', 'Ciudad')
-            .leftJoinAndSelect('Local.etiquetas', 'Etiquetas')
-            .where("Local.ciudad = :ciudad", { ciudad: user.ciudad.id })
-            .andWhere(
-                `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat)) <= :maxDistance`
-            )
-        if (necro) {
-            local.andWhere("Local.necro = :necro", { necro: necro })
-        }
-        if (Preferencias.length > 0) {
-            local.andWhere("Etiquetas.id IN (:...preferencias)", { preferencias: Preferencias })
-        }
-        local.setParameters({ lon, lat, maxDistance })
-            .orderBy("RAND()")
-            .select([
-                'Local.id',
-                'Local.Nombre',
-                'Local.likes',
-                'Local.compartidos',
-                'Local.vistos',
-                'Etiquetas.id',
-                'Etiquetas.nombre',
-
-            ])
-            .addSelect(
-                `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat))`,
-                "distance"
-            )
-            .addSelect(subQuery => {
-                return subQuery
-                    .select("fotos.path")
-                    .from(FotosLocal, "fotos")
-                    .where("fotos.localId = Local.id")
-                    .orderBy("RAND()")
-                    .limit(1)
-            }, "fotoAleatoria")
-
-
-        const rawResults = await local.getRawMany();
-        const localesMap = new Map();
-
-        rawResults.forEach(item => {
-            if (!localesMap.has(item.Local_id)) {
-                localesMap.set(item.Local_id, {
-                    id: item.Local_id,
-                    nombre: item.Nombre,
-                    likes: item.Local_likes,
-                    compartidos: item.Local_compartidos,
-                    vistos: item.Local_vistos,
-                    foto: item.fotoAleatoria,
-                    etiquetas: []
-                });
-            }
-
-            // Si hay etiqueta en esta fila, la agrega
-            if (item.Etiquetas_id) {
-                const etiquetas = localesMap.get(item.Local_id).etiquetas;
-                // Evitar duplicados
-                if (!etiquetas.find(e => e.id === item.Etiquetas_id)) {
-                    etiquetas.push({
-                        id: item.Etiquetas_id,
-                        nombre: item.Etiquetas_nombre
-                    });
-                }
-            }
+    rawResults.forEach((item) => {
+      if (!localesMap.has(item.Local_id)) {
+        localesMap.set(item.Local_id, {
+          id: item.Local_id,
+          nombre: item.Nombre,
+          likes: item.Local_likes,
+          compartidos: item.Local_compartidos,
+          vistos: item.Local_vistos,
+          foto: item.fotoAleatoria,
+          etiquetas: [],
         });
+      }
 
-        return Array.from(localesMap.values());
-    }
+      // Si hay etiqueta en esta fila, la agrega
+      if (item.Etiquetas_id) {
+        const etiquetas = localesMap.get(item.Local_id).etiquetas;
+        // Evitar duplicados
+        if (!etiquetas.find((e) => e.id === item.Etiquetas_id)) {
+          etiquetas.push({
+            id: item.Etiquetas_id,
+            nombre: item.Etiquetas_nombre,
+          });
+        }
+      }
+    });
 
+    return Array.from(localesMap.values());
+  }
 
-
-    /*
+  /*
     var local = await this.LocalRepository
       .createQueryBuilder("Local")
       .leftJoin('Local.ciudad', 'Ciudad')
@@ -173,100 +163,101 @@ export class HomeService {
     return result;
     */
 
+  async homeEvento(
+    data: GeoDataDto,
+    user: User,
+    necro: boolean = false,
+    Preferencias: [] = [],
+  ) {
+    const lon = data.Longitud;
+    const lat = data.Latitud;
+    const maxDistance = data.Radio ? data.Radio : 400;
 
-    async homeEvento(data: GeoDataDto, user: User, necro: boolean = false, Preferencias: [] = []) {
-        const lon = data.Longitud;
-        const lat = data.Latitud;
-        const maxDistance = data.Radio ? data.Radio : 400;
+    const Evento = await this.EventoRepository.createQueryBuilder('Evento')
+      .leftJoin('Evento.ciudad', 'Ciudad')
+      .leftJoin('Evento.etiquetas', 'Etiquetas');
 
-        const Evento = await this.EventoRepository
-            .createQueryBuilder("Evento")
-            .leftJoin('Evento.ciudad', 'Ciudad')
-            .leftJoin('Evento.etiquetas', 'Etiquetas')
+    Evento.select('Evento.id', 'id')
+      .addSelect(
+        `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat))`,
+        'distance',
+      )
+      .where('Evento.ciudad = :ciudad', { ciudad: user.ciudad.id })
+      .andWhere(
+        `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat)) <= :maxDistance`,
+      );
+    if (necro) {
+      Evento.andWhere('Local.necro = :necro', { necro: necro });
+    }
+    if (Preferencias.length > 0) {
+      Evento.andWhere('Etiquetas.id IN (:...preferencias)', {
+        preferencias: Preferencias,
+      });
+    }
+    Evento.setParameters({ lon, lat, maxDistance })
+      .orderBy('RAND()')
+      .select([
+        'Evento.id',
+        'Evento.Nombre',
+        'Evento.likes',
+        'Evento.compartidos',
+        'Evento.vistos',
+        'Etiquetas.id',
+        'Etiquetas.nombre',
+      ])
+      .addSelect((subQuery) => {
+        return subQuery
+          .select('fotos.path')
+          .from(FotosEvento, 'fotos')
+          .where('fotos.eventoId = evento.id')
+          .orderBy('RAND()')
+          .limit(1);
+      }, 'fotoAleatoria');
 
-        Evento.select("Evento.id", "id")
-            .addSelect(
-                `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat))`,
-                "distance"
-            )
-            .where("Evento.ciudad = :ciudad", { ciudad: user.ciudad.id })
-            .andWhere(
-                `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat)) <= :maxDistance`
-            )
-        if (necro) {
-            Evento.andWhere("Local.necro = :necro", { necro: necro })
-        }
-        if (Preferencias.length > 0) {
-            Evento.andWhere("Etiquetas.id IN (:...preferencias)", { preferencias: Preferencias })
-        }
-        Evento.setParameters({ lon, lat, maxDistance })
-            .orderBy("RAND()")
-            .select([
-                'Evento.id',
-                'Evento.Nombre',
-                'Evento.likes',
-                'Evento.compartidos',
-                'Evento.vistos',
-                'Etiquetas.id',
-                'Etiquetas.nombre',
-            ])
-            .addSelect(subQuery => {
-                return subQuery
-                    .select("fotos.path")
-                    .from(FotosEvento, "fotos")
-                    .where("fotos.eventoId = evento.id")
-                    .orderBy("RAND()")
-                    .limit(1)
-            }, "fotoAleatoria")
+    const rawResults = await Evento.getRawMany();
 
+    const localesMap = new Map();
 
-        const rawResults =await Evento.getRawMany();
-
-        const localesMap = new Map();
-
-        rawResults.forEach(item => {
-            if (!localesMap.has(item.Local_id)) {
-                localesMap.set(item.Local_id, {
-                    id: item.Local_id,
-                    nombre: item.Nombre,
-                    likes: item.Local_likes,
-                    compartidos: item.Local_compartidos,
-                    vistos: item.Local_vistos,
-                    foto: item.fotoAleatoria,
-                    etiquetas: []
-                });
-            }
-
-            // Si hay etiqueta en esta fila, la agrega
-            if (item.Etiquetas_id) {
-                const etiquetas = localesMap.get(item.Local_id).etiquetas;
-                // Evitar duplicados
-                if (!etiquetas.find(e => e.id === item.Etiquetas_id)) {
-                    etiquetas.push({
-                        id: item.Etiquetas_id,
-                        nombre: item.Etiquetas_nombre
-                    });
-                }
-            }
+    rawResults.forEach((item) => {
+      if (!localesMap.has(item.Local_id)) {
+        localesMap.set(item.Local_id, {
+          id: item.Local_id,
+          nombre: item.Nombre,
+          likes: item.Local_likes,
+          compartidos: item.Local_compartidos,
+          vistos: item.Local_vistos,
+          foto: item.fotoAleatoria,
+          etiquetas: [],
         });
+      }
 
-        return Array.from(localesMap.values());
-    }
+      // Si hay etiqueta en esta fila, la agrega
+      if (item.Etiquetas_id) {
+        const etiquetas = localesMap.get(item.Local_id).etiquetas;
+        // Evitar duplicados
+        if (!etiquetas.find((e) => e.id === item.Etiquetas_id)) {
+          etiquetas.push({
+            id: item.Etiquetas_id,
+            nombre: item.Etiquetas_nombre,
+          });
+        }
+      }
+    });
 
+    return Array.from(localesMap.values());
+  }
 
-    //rincon necro
+  //rincon necro
 
-    async homeNecro(data: GeoDataDto, user: User) {
-        const dataLocales = await this.homeLocal(data, user, true);
-        const dataEventos = await this.homeEvento(data, user, true);
+  async homeNecro(data: GeoDataDto, user: User) {
+    const dataLocales = await this.homeLocal(data, user, true);
+    const dataEventos = await this.homeEvento(data, user, true);
 
-        return [dataLocales, dataEventos];
-    }
+    return [dataLocales, dataEventos];
+  }
 
-    async GetPreferencias(user: User, data: GeoDataDto) {
-
-        const preferencia = user.Preferencias.map((preferencia) => preferencia.id)
-        return await this.homeLocal(data, user, false, preferencia);
-
-    }
+  async GetPreferencias(user: User, data: GeoDataDto) {
+    const preferencia = user.Preferencias.map((preferencia) => preferencia.id);
+    return await this.homeLocal(data, user, false, preferencia);
+  }
 }

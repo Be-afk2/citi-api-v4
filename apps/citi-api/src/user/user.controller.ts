@@ -15,46 +15,35 @@ import { PreferenciasUser } from './dto/PreferenciaDto.dto';
 @Controller('user')
 @UseGuards(JwtAuthGuard)
 export class UserController {
+  constructor(private readonly userService: UserService) {}
 
-    constructor(
-        private readonly userService: UserService
-    ) { }
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario)
+  @Put()
+  async update(@Body() data: UpdateUserDto, @GetUser() user: User) {
+    return await this.userService.update(data, user);
+  }
 
+  @UseAuthUser(
+    ValidRoles.SuperAdmin,
+    ValidRoles.Usuario,
+    ValidRoles.Guest,
+    //rol de invitado sin token
+  )
+  @Get('test')
+  test(@GetUser() user: User) {
+    return user;
+  }
 
+  @Put('preferencia')
+  async updatePreferencia(
+    @Body() data: PreferenciasUser,
+    @GetUser() user: User,
+  ) {
+    return await this.userService.updatePreferencia(data, user);
+  }
 
-    @UseAuthUser(
-        ValidRoles.SuperAdmin,
-        ValidRoles.Usuario,
-    )
-    @Put()
-    async update(@Body() data: UpdateUserDto, @GetUser() user: User) {
-        return await this.userService.update(data, user)
-    }
-
-    @UseAuthUser(
-        ValidRoles.SuperAdmin,
-        ValidRoles.Usuario,
-        ValidRoles.Guest,
-
-        //rol de invitado sin token
-    )
-    @Get("test")
-    async test(@GetUser() user: User){
-        
-        return await this.userService.test(user)
-    }
-
-    @Put('preferencia')
-    async updatePreferencia(@Body() data: PreferenciasUser, @GetUser() user: User) {
-
-        return await this.userService.updatePreferencia(data, user)
-    }
-
-    @Get('preferencia')
-    async GetPreferencia(@GetUser() user: User) {
-
-        return await this.userService.getPreferences(user)
-    }
-
-
+  @Get('preferencia')
+  async GetPreferencia(@GetUser() user: User) {
+    return await this.userService.getPreferences(user);
+  }
 }

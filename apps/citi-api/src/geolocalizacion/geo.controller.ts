@@ -15,46 +15,30 @@ import { GetOneDto } from '../local/dto/GetOneDto.dto';
 @Controller('Geo')
 @UseGuards(JwtAuthGuard)
 export class GeoController {
-    constructor(
-        private geoService: GeoService
-    ){}
+  constructor(private geoService: GeoService) {}
 
-    @UseAuthUser(
-        ValidRoles.SuperAdmin,
-        ValidRoles.Usuario,
-    )
-    @Get()
-    async GetData(@Query() data: GeoDataDto ) {
-        return this.geoService.GetData(data);
-        
-    }
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario)
+  @Get()
+  async GetData(@Query() data: GeoDataDto) {
+    return this.geoService.GetData(data);
+  }
 
-    @UseAuthUser(
-        ValidRoles.SuperAdmin,
-        ValidRoles.Usuario,
-    )
-    @Post('user')
-    async SaveDataUser(@Body() data: GeoDataDto,@GetUser() user: User ) {
-        return this.geoService.SaveDataUser(data,user);
-    }
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario)
+  @Post('user')
+  async SaveDataUser(@Body() data: GeoDataDto, @GetUser() user: User) {
+    return this.geoService.SaveDataUser(data, user);
+  }
 
-    @UseAuthUser(
-        ValidRoles.SuperAdmin,
-        ValidRoles.Usuario,
-    )
-    // guardar saltando el servicio de geolocalizacion
-    @Post("geo")
-    async SaveGeoData(@Body() data: GeoDataDto,@GetUser() user: User ) {
-        return this.geoService.SaveGeoData(data,user);
-    }
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario)
+  // guardar saltando el servicio de geolocalizacion
+  @Post('geo')
+  async SaveGeoData(@Body() data: GeoDataDto, @GetUser() user: User) {
+    return this.geoService.SaveGeoData(data, user);
+  }
 
-    @UseAuthUser(
-        ValidRoles.SuperAdmin,
-    )
-    @Get("")
-    async GetUserDataGeo(@Body() data: GetOneDto ) {
-        return this.geoService.GetUserDataGeo(data);
-    }
-    
-
+  @UseAuthUser(ValidRoles.SuperAdmin)
+  @Get('')
+  async GetUserDataGeo(@Body() data: GetOneDto) {
+    return this.geoService.GetUserDataGeo(data);
+  }
 }

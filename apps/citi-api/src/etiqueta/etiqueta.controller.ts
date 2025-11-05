@@ -13,38 +13,25 @@ import { CrearEtiquetaDto } from './dto/createEtiquetaDto.dto';
 import { GetOneDto } from '../local/dto/GetOneDto.dto';
 import { UpdateEtiquetaDto } from './dto/UpdateEtiquetaDto.dto';
 
-
-
 @Controller('etiqueta')
 export class EtiquetaController {
+  constructor(private EtiquetaService: EtiquetaService) {}
 
-    constructor(
-        private EtiquetaService: EtiquetaService
-    ) { }
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario)
+  @Get()
+  async GetEtiqueta(@Query() data: PaguinadorDto, @GetUser() user: User) {
+    return this.EtiquetaService.GetEtiquetas(data);
+  }
 
+  @UseAuthUser(ValidRoles.SuperAdmin)
+  @Post()
+  async CreateEtiqueta(@Body() data: CrearEtiquetaDto) {
+    return this.EtiquetaService.CreateEtiqueta(data);
+  }
 
-    @UseAuthUser(
-        ValidRoles.SuperAdmin,
-        ValidRoles.Usuario,
-    )
-    @Get()
-    async GetEtiqueta(@Query() data: PaguinadorDto, @GetUser() user: User) {
-        return this.EtiquetaService.GetEtiquetas(data);
-    }
-
-    @UseAuthUser(
-        ValidRoles.SuperAdmin,
-    )
-    @Post()
-    async CreateEtiqueta(@Body() data: CrearEtiquetaDto) {
-        return this.EtiquetaService.CreateEtiqueta(data);
-    }
-    
-    @UseAuthUser(
-        ValidRoles.SuperAdmin,
-    )
-    @Patch()
-    async UpdateEtiqueta(@Body() data :UpdateEtiquetaDto,){
-        return this.EtiquetaService.UpdateEtiqueta(data);
-    }
+  @UseAuthUser(ValidRoles.SuperAdmin)
+  @Patch()
+  async UpdateEtiqueta(@Body() data: UpdateEtiquetaDto) {
+    return this.EtiquetaService.UpdateEtiqueta(data);
+  }
 }
