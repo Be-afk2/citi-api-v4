@@ -1,0 +1,46 @@
+services:
+  # * ===============
+  # * Base de datos
+  # * ===============
+  database:
+    # Este es el nombre del "server"
+    container_name: mariadb_container
+    ports:
+      - 3306:3306
+    image: mariadb:jammy
+    restart: unless-stopped
+    volumes:
+      - ./development/db:/var/lib/mysql
+    environment:
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
+
+  # * ===============
+  # * Aplicación
+  # * ===============
+  admin_api:
+    container_name: admin_api
+    image: ghcr.io/be-afk2/citi-api-v4:latest
+    restart: unless-stopped
+    profiles:
+      - production_app
+    build:
+      context: .
+      dockerfile: dockerfile
+      target: runner
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./public:/app/public
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      GEOKEY: ${GEOKEY}
+    labels:
+      - 'com.centurylinklabs.watchtower.enable=true'
