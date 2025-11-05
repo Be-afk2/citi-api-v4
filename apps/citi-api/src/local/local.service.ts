@@ -112,7 +112,7 @@ export class LocalService {
     return { message: 'Foto eliminada' };
   }
 
-  async getOne(id) {
+  async getOne(id: string) {
     const local = await this.LocalRepository.createQueryBuilder('local')
       .where('local.id = :id', { id: id })
       .leftJoinAndSelect('local.fotos', 'FotosLocal')
@@ -189,6 +189,7 @@ export class LocalService {
   async getAll(user: User, admin: boolean, data: FiltroPaguinadorDto) {
     const Query = await this.LocalRepository.createQueryBuilder('local')
       .leftJoinAndSelect('local.etiquetas', 'Etiquetas')
+      .leftJoinAndSelect('local.fotos', 'FotosLocal')
       .select([
         'local.id',
         'local.nombre',
@@ -196,6 +197,8 @@ export class LocalService {
         'local.latitud',
         'Etiquetas.id',
         'Etiquetas.nombre',
+        'FotosLocal.id',
+        'FotosLocal.path',
       ]);
 
     if (data.Nombre) {
