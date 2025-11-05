@@ -2,21 +2,11 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import {
-  Controller,
-  Get,
-  UseGuards,
-  Request,
-  Query,
-  NotFoundException,
-} from '@nestjs/common';
+import { Controller, Get, Query, NotFoundException } from '@nestjs/common';
 import { HomeService } from './home.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { GeoDataDto } from '../geolocalizacion/dto/geoData.dto';
 import { User } from 'apps/citi-back/src/entities/user.entity';
 import { GetUser } from '../auth/decorators/get-user.decorator';
-import { query } from 'express';
-import { get } from 'http';
 import { UseAuthUser } from '../auth/decorators/use-auth-user.decorator';
 import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 
@@ -24,7 +14,7 @@ import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 export class HomeController {
   constructor(private readonly homeService: HomeService) {}
 
-  ComprobarUser(user: User) {
+  private ComprobarUser(user: User) {
     if (user.ciudad == undefined) {
       throw new NotFoundException('Usuario sin ciudad asociada');
     }
