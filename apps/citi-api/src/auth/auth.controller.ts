@@ -35,6 +35,12 @@ export class AuthController {
         return req.user
 
     }
-    
+
+    @Get("ComprobarData")
+    async ComprobarData(){
+        var response = []
+        response.push(await this.AuthService.comprobarTipoV2())
+        return response
+    }
 
 }

@@ -67,4 +67,11 @@ export class UserService {
     async getPreferences(user: User) {
         return user.Preferencias;
     }
+
+
+
+    //
+    async test(user: User | null){
+            return user
+    }
 }
