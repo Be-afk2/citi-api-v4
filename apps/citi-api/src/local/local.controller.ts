@@ -69,6 +69,7 @@ export class LocalController {
   @UseAuthUser(
     ValidRoles.SuperAdmin,
     ValidRoles.Usuario,
+    ValidRoles.Guest
   )
   @Get('one')
   async GetOne(@Query() data: GetOneDto) {
@@ -80,6 +81,8 @@ export class LocalController {
   @UseAuthUser(
     ValidRoles.SuperAdmin,
     ValidRoles.Usuario,
+    ValidRoles.Guest
+
   )
   @Get('all')
   async GetAll(@GetUser() user: User, @Query() data: FiltroPaguinadorDto) {
@@ -112,7 +115,10 @@ export class LocalController {
 
 
   // rincon de necro
-
+  @Put('etiq')
+    @UseAuthUser(
+    ValidRoles.SuperAdmin,
+  )
   @Post("necro")
   async crearNecro(@Body() data: CreateLocalDto) {
     return await this.localService.CreateLocal(data,true);

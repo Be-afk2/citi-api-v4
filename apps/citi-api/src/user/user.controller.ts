@@ -38,11 +38,7 @@ export class UserController {
 
         //rol de invitado sin token
     )
-    @Get("test")
-    async test(@GetUser() user: User){
-        
-        return await this.userService.test(user)
-    }
+
 
     @Put('preferencia')
     async updatePreferencia(@Body() data: PreferenciasUser, @GetUser() user: User) {
@@ -55,6 +51,9 @@ export class UserController {
 
         return await this.userService.getPreferences(user)
     }
+
+    // rincon invitado
+
 
 
 }

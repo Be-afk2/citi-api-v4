@@ -1,3 +1,4 @@
+import { InvitadoModule } from './invitado/invitado.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { HomeModule } from './home/home.module';
 import { EventoModule } from './evento/evento.module';
@@ -27,6 +28,7 @@ import { LocalTipo } from 'apps/citi-back/src/entities/localTipo.entity';
 
 @Module({
   imports: [
+        InvitadoModule, 
     SubscriptionModule,
     HomeModule,
 

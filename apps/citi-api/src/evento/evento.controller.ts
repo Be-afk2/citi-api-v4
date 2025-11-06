@@ -26,6 +26,8 @@ export class EventoController {
     @UseAuthUser(
         ValidRoles.SuperAdmin,
         ValidRoles.Usuario,
+        ValidRoles.Guest
+
     )
     @Get()
     async GetEventos(@Query() data: PaguinadorDto) {
@@ -35,6 +37,7 @@ export class EventoController {
     @UseAuthUser(
         ValidRoles.SuperAdmin,
         ValidRoles.Usuario,
+        ValidRoles.Guest
     )
     @Get('one')
     async GetEvento(@Query() data: GetOneDtoNumber) {

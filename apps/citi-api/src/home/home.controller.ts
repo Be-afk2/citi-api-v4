@@ -30,6 +30,8 @@ export class HomeController {
     @UseAuthUser(
         ValidRoles.SuperAdmin,
         ValidRoles.Usuario,
+        ValidRoles.Guest
+
     )
     async homeLocal(@Query() data: GeoDataDto, @GetUser() user: User) {
         this.ComprobarUser(user);
@@ -45,6 +47,8 @@ export class HomeController {
     @UseAuthUser(
         ValidRoles.SuperAdmin,
         ValidRoles.Usuario,
+        ValidRoles.Guest
+
     )
     async homeEvento(@Query() data: GeoDataDto, @GetUser() user: User) {
         this.ComprobarUser(user);
@@ -58,6 +62,7 @@ export class HomeController {
     @UseAuthUser(
         ValidRoles.SuperAdmin,
         ValidRoles.Usuario,
+        
     )
     async GetPreferencias(@Query() data: GeoDataDto,@GetUser() user: User) {
 
@@ -70,6 +75,7 @@ export class HomeController {
     @UseAuthUser(
         ValidRoles.SuperAdmin,
         ValidRoles.Usuario,
+        ValidRoles.Guest
     )
     async homeNecro(@Query() data: GeoDataDto, @GetUser() user: User) {
         this.ComprobarUser(user);

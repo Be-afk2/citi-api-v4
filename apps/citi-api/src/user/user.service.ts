@@ -70,8 +70,6 @@ export class UserService {
 
 
 
-    //
-    async test(user: User | null){
-            return user
-    }
+    // rincon invitado
+
 }
