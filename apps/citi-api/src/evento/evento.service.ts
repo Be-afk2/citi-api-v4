@@ -60,6 +60,8 @@ export class EventoService {
         'Evento.compartidos',
         'Evento.vistos',
         'Evento.reportes',
+        'Evento.fechaInicio',
+        'Evento.fechaFin',
         'FotosEvento.id',
         'FotosEvento.path',
         'Ciudad.id',
