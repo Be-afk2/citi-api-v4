@@ -10,14 +10,8 @@ import { LocalTipo } from 'apps/citi-back/src/entities/localTipo.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            Local,
-            LocalTipo
-        ]),
-    ],
-    controllers: [SubscriptionController],
-    providers: [
-        SubscriptionService,],
+  imports: [TypeOrmModule.forFeature([Local, LocalTipo])],
+  controllers: [SubscriptionController],
+  providers: [SubscriptionService],
 })
-export class SubscriptionModule { } 
+export class SubscriptionModule {}

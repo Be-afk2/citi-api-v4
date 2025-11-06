@@ -19,7 +19,6 @@ import { LocalTipo } from './entities/localTipo.entity';
 
 @Module({
   imports: [
-
     ConfigModule.forRoot({ envFilePath: '.env' }),
 
     TypeOrmModule.forRoot({
@@ -42,11 +41,10 @@ import { LocalTipo } from './entities/localTipo.entity';
         TipoUser,
         User,
         GeoData,
-        LocalTipo
+        LocalTipo,
       ],
       synchronize: true,
     }),
-
   ],
   controllers: [CitiBackController],
   providers: [CitiBackService],

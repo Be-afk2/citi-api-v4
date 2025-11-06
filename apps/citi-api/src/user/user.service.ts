@@ -8,68 +8,70 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
+  constructor(
+    @InjectRepository(Etiquetas)
+    private EtiquetasRepository: Repository<Etiquetas>,
+  ) { }
 
+  async update(data: UpdateUserDto, user: User) {
+    user.apellido = data.apellido ? data.apellido : user.apellido;
+    user.apodo = data.apodo ? data.apodo : user.apodo;
+    user.fechaNacimiento = data.fechaNacimiento
+      ? data.fechaNacimiento
+      : user.fechaNacimiento;
+    user.mostrarContenidoMayor = data.mostrarContenidoMayor
+      ? data.mostrarContenidoMayor
+      : user.mostrarContenidoMayor;
+    user.nombre = data.nombre ? data.nombre : user.nombre;
 
-    constructor(
-        @InjectRepository(Etiquetas)
-        private EtiquetasRepository: Repository<Etiquetas>,
-    ) { }
+    const edad =
+      new Date().getFullYear() - new Date(user.fechaNacimiento).getFullYear();
 
-    async update(data: UpdateUserDto, user: User) {
-        user.apellido = data.apellido ? data.apellido : user.apellido;
-        user.apodo = data.apodo ? data.apodo : user.apodo;
-        user.fechaNacimiento = data.fechaNacimiento ? data.fechaNacimiento : user.fechaNacimiento;
-        user.mostrarContenidoMayor = data.mostrarContenidoMayor ? data.mostrarContenidoMayor : user.mostrarContenidoMayor;
-        user.nombre = data.nombre ? data.nombre : user.nombre;
+    user.mayorEdad = edad >= 18 ? true : false;
+    await user.save();
+    return user;
+  }
 
-        const edad = new Date().getFullYear() - new Date(user.fechaNacimiento).getFullYear();
+  async updatePreferencia(data: PreferenciasUser, user: User) {
 
-        user.mayorEdad = edad >= 18 ? true : false;
-        await user.save()
-        return user;
+    const result = {
+      newetiq: 0,
+      oldetiq: 0,
+      errorid: [],
+      error: 0,
+
     }
+    for (let etiq of data.Etiquetas) {
 
+      const etiqueta = await this.EtiquetasRepository.findOneBy({ id: etiq.id });
 
-    async updatePreferencia(data: PreferenciasUser, user: User) {
+      if (!etiqueta) {
+        result.errorid.push(etiq.id);
+        result.error++;
+        continue;
+      }
 
-        const result = {
-            newetiq: 0,
-            oldetiq: 0,
-            errorid: [],
-            error: 0,
-
-        }
-        for (let etiq of data.Etiquetas) {
-
-            const etiqueta = await this.EtiquetasRepository.findOneBy({ id: etiq.id });
-
-            if (!etiqueta) {
-                result.errorid.push(etiq.id);
-                result.error++;
-                continue;
-            }
-
-            if (!user.Preferencias.some(e => e.id === etiqueta.id)) {
-                user.Preferencias.push(etiqueta);
-                result.newetiq++;
-            }
-            else {
-                result.oldetiq++;
-            }
+      if (!user.Preferencias.some(e => e.id === etiqueta.id)) {
+        user.Preferencias.push(etiqueta);
+        result.newetiq++;
+      }
+      else {
+        result.oldetiq++;
+      }
 
 
 
-        }
-        await user.save()
-        return result;
     }
+    await user.save()
+    return result;
+  }
 
-    async getPreferences(user: User) {
-        return user.Preferencias;
-    }
+  async getPreferences(user: User) {
+    return user.Preferencias;
+  }
 
 
 
-    // rincon invitado
+  // rincon invitado
 
 }

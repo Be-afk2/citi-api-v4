@@ -21,35 +21,35 @@ import { extname } from 'path';
 import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
 
 @Module({
-    imports: [
-        MulterModule.registerAsync({
-            useFactory: () => ({
-                storage: diskStorage({
-                    destination: 'public/fotosEvento',
-                    filename: (req, file, cb) => {
-                        const fileName = file.originalname
-                            .normalize('NFD')
-                            .replace(/[\u0300-\u036f]/g, '')
-                            .replace(/\s+/g, '')
-                            .replace(/[^\w\d]/g, '');
-                        const extension = extname(file.originalname);
-                        cb(null, `${fileName}-${Date.now()}${extension}`);
-                    },
-                }),
-            }),
+  imports: [
+    MulterModule.registerAsync({
+      useFactory: () => ({
+        storage: diskStorage({
+          destination: 'public/fotosEvento',
+          filename: (req, file, cb) => {
+            const fileName = file.originalname
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .replace(/\s+/g, '')
+              .replace(/[^\w\d]/g, '');
+            const extension = extname(file.originalname);
+            cb(null, `${fileName}-${Date.now()}${extension}`);
+          },
         }),
-        TypeOrmModule.forFeature([
-            Evento,
-            Pais,
-            Ciudad,
-            Region,
-            User,
-            Etiquetas,
-            FotosEvento,
-            GeoData
-        ]),
-    ],
-    controllers: [EventoController,],
-    providers: [EventoService, GeoService],
+      }),
+    }),
+    TypeOrmModule.forFeature([
+      Evento,
+      Pais,
+      Ciudad,
+      Region,
+      User,
+      Etiquetas,
+      FotosEvento,
+      GeoData,
+    ]),
+  ],
+  controllers: [EventoController],
+  providers: [EventoService, GeoService],
 })
-export class EventoModule { }
+export class EventoModule {}

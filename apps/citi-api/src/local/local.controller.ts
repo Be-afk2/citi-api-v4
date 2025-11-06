@@ -2,7 +2,18 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Delete, Get, Post, Put, Query, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Query,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { LocalService } from './local.service';
 import { CreateLocalDto } from './dto/CreateLocal.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -19,51 +30,37 @@ import { FiltroPaguinadorDto } from './dto/FiltroPaguinadorDto.dto';
 import { GetOneDtoNumber } from '../evento/dto/GetOneDtoNumber.dto';
 import { EditarLocalDto } from './dto/EditarLocal.dto';
 
-
-
-
 @Controller('local')
 @UseGuards(JwtAuthGuard)
 export class LocalController {
-  constructor(private readonly localService: LocalService) { }
+  constructor(private readonly localService: LocalService) {}
 
-
-
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin)
   @Post()
   async CreateLocal(@Body() data: CreateLocalDto) {
     return this.localService.CreateLocal(data);
   }
 
-
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin)
   @Post('varias')
   async CreateLocales(@Body() data: CreateLocalDto[]) {
     return this.localService.CreateLocales(data);
   }
 
-
-
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin)
   @Put()
   @UseInterceptors(FilesInterceptor('archivo'))
-  async actualizarFoto(@UploadedFiles() files: Express.Multer.File, @Body() data: GetOneDto) {
-
-    return await this.localService.SubirFoto(files, data.id)
+  async actualizarFoto(
+    @UploadedFiles() files: Express.Multer.File,
+    @Body() data: GetOneDto,
+  ) {
+    return await this.localService.SubirFoto(files, data.id);
   }
 
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin)
   @Delete()
   async borrarFoto(@Query() data: GetOneDtoNumber) {
-    return await this.localService.borrarFoto(data.id)
+    return await this.localService.borrarFoto(data.id);
   }
 
   @UseAuthUser(
@@ -89,30 +86,19 @@ export class LocalController {
     return await this.localService.getAll(user, user.tipoUser.id == 1, data);
   }
 
-
-
   @Put('editar')
-    @UseAuthUser(
-    ValidRoles.SuperAdmin,
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin)
   async EditarLocal(@Body() data: EditarLocalDto) {
     return await this.localService.EditarLocal(data);
   }
-	
-
-
 
   // rincon de las etiq
 
-
   @Put('etiq')
-    @UseAuthUser(
-    ValidRoles.SuperAdmin,
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin)
   async AgregarEtiq(@Body() data: AsignarEtiquetaDto) {
     return await this.localService.agregarEtiqv2(data);
   }
-
 
   // rincon de necro
   @Put('etiq')
@@ -121,16 +107,12 @@ export class LocalController {
   )
   @Post("necro")
   async crearNecro(@Body() data: CreateLocalDto) {
-    return await this.localService.CreateLocal(data,true);
+    return await this.localService.CreateLocal(data, true);
   }
 
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin)
   @Post('necro/varias')
   async CreateNecroMulti(@Body() data: CreateLocalDto[]) {
-    return this.localService.CreateLocales(data,true);
+    return this.localService.CreateLocales(data, true);
   }
-
-
 }

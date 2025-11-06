@@ -10,17 +10,9 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
 import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            Pais,
-            Ciudad,
-            Region,
-            User,
-            GeoData
-        ]),
-    ],
-    controllers: [GeoController,],
-    providers: [GeoService,],
-    exports: [GeoService], 
+  imports: [TypeOrmModule.forFeature([Pais, Ciudad, Region, User, GeoData])],
+  controllers: [GeoController],
+  providers: [GeoService],
+  exports: [GeoService],
 })
-export class GeoModule { }
+export class GeoModule {}

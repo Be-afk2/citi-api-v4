@@ -1,10 +1,9 @@
 import {
-	ExecutionContext,
-	NotFoundException,
-	createParamDecorator,
+  ExecutionContext,
+  NotFoundException,
+  createParamDecorator,
 } from '@nestjs/common';
 import { User } from 'apps/citi-back/src/entities/user.entity';
-
 
 /**
  * Esto sirve para extraer algun valor del user, dentro del metodo del controller
@@ -19,11 +18,11 @@ import { User } from 'apps/citi-back/src/entities/user.entity';
  * ```
  */
 export const GetUser = createParamDecorator(
-	(data: keyof User | undefined, ctx: ExecutionContext) => {
-		const req = ctx.switchToHttp().getRequest();
-		const user = req.user;
+  (data: keyof User | undefined, ctx: ExecutionContext) => {
+    const req = ctx.switchToHttp().getRequest();
+    const user = req.user;
 
-		if (!user) throw new NotFoundException('User not found');
-		return !data ? user : user[data];
-	},
+    if (!user) throw new NotFoundException('User not found');
+    return !data ? user : user[data];
+  },
 );

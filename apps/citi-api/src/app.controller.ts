@@ -8,11 +8,13 @@ export class AppController {
   @Get()
   getHello() {
     return {
-      Name : "Citi-api",
-      Version : "0.0.10",
-      Developers : [{
-        name : "BE._."
-      }]
-    }
+      Name: 'Citi-api',
+      Version: '0.0.10',
+      Developers: [
+        {
+          name: 'BE._.',
+        },
+      ],
+    };
   }
 }
