@@ -202,7 +202,6 @@ export class LocalService {
       ]);
 
     if (data.Nombre) {
-      console.log('admin');
       Query.where('local.nombre LIKE :search', { search: `%${data.Nombre}%` });
     }
     if (admin && data.ciudad) {

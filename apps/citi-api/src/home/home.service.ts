@@ -60,7 +60,6 @@ export class HomeService {
       lat = geo.Latitud;
     }
     const maxDistance = data.Radio ? data.Radio : 400;
-    console.log("-1----")
 
     const local = this.LocalRepository.createQueryBuilder('Local')
       .leftJoinAndSelect('Local.ciudad', 'Ciudad')
@@ -224,7 +223,6 @@ export class HomeService {
       }, 'fotoAleatoria');
 
     const rawResults = await Evento.getRawMany();
-      console.log(rawResults)
     const localesMap = new Map();
 
     rawResults.forEach((item) => {
@@ -253,7 +251,6 @@ export class HomeService {
       }
     });
 
-      console.log(localesMap)
     return Array.from(localesMap.values());
   }
 
