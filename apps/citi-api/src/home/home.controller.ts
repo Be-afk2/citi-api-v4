@@ -29,7 +29,8 @@ export class HomeController {
 
   )
   async homeLocal(@Query() data: GeoDataDto, @GetUser() user: User) {
-    this.ComprobarUser(user);
+    if (user.tipoUser.id != 3) this.ComprobarUser(user);
+    return await this.homeService.homeLocal(data, user)
   }
 
 
@@ -42,7 +43,8 @@ export class HomeController {
 
   )
   async homeEvento(@Query() data: GeoDataDto, @GetUser() user: User) {
-    this.ComprobarUser(user);
+    if (user.tipoUser.id != 3) this.ComprobarUser(user);
+
 
 
     return this.homeService.homeEvento(data, user);
@@ -69,7 +71,7 @@ export class HomeController {
     ValidRoles.Guest
   )
   async homeNecro(@Query() data: GeoDataDto, @GetUser() user: User) {
-    this.ComprobarUser(user);
+    if (user.tipoUser.id != 3) this.ComprobarUser(user);
 
     return this.homeService.homeNecro(data, user);
   }

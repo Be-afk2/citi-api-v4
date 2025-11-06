@@ -33,7 +33,7 @@ export class HomeService {
 
     @InjectRepository(Evento)
     private EventoRepository: Repository<Evento>,
-  ) {}
+  ) { }
 
   async GetLocal() {
     const local = await this.LocalRepository
@@ -59,13 +59,17 @@ export class HomeService {
       lon = geo.Longitud;
       lat = geo.Latitud;
     }
-
     const maxDistance = data.Radio ? data.Radio : 400;
+    console.log("-1----")
 
     const local = this.LocalRepository.createQueryBuilder('Local')
       .leftJoinAndSelect('Local.ciudad', 'Ciudad')
       .leftJoinAndSelect('Local.etiquetas', 'Etiquetas')
-      .where('Local.ciudad = :ciudad', { ciudad: user.ciudad.id })
+
+    if (user.tipoUser.id != 3) {
+      local.where('Local.ciudad = :ciudad', { ciudad: user.ciudad.id })
+    }
+    local
       .andWhere(
         `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat)) <= :maxDistance`,
       );
@@ -182,12 +186,17 @@ export class HomeService {
         `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat))`,
         'distance',
       )
-      .where('Evento.ciudad = :ciudad', { ciudad: user.ciudad.id })
-      .andWhere(
-        `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat)) <= :maxDistance`,
-      );
+    if (user.tipoUser.id != 3) {
+      Evento.where('Evento.ciudad = :ciudad', { ciudad: user.ciudad.id })
+    }
+    Evento.andWhere(
+      `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat)) <= :maxDistance`,
+    )
+    .andWhere(
+      "Evento.activo = TRUE"
+    )
     if (necro) {
-      Evento.andWhere('Local.necro = :necro', { necro: necro });
+      Evento.andWhere('Evento.necro = :necro', { necro: necro });
     }
     if (Preferencias.length > 0) {
       Evento.andWhere('Etiquetas.id IN (:...preferencias)', {
@@ -215,17 +224,17 @@ export class HomeService {
       }, 'fotoAleatoria');
 
     const rawResults = await Evento.getRawMany();
-
+      console.log(rawResults)
     const localesMap = new Map();
 
     rawResults.forEach((item) => {
-      if (!localesMap.has(item.Local_id)) {
-        localesMap.set(item.Local_id, {
-          id: item.Local_id,
+      if (!localesMap.has(item.Evento_id)) {
+        localesMap.set(item.Evento_id, {
+          id: item.Evento_id,
           nombre: item.Nombre,
-          likes: item.Local_likes,
-          compartidos: item.Local_compartidos,
-          vistos: item.Local_vistos,
+          likes: item.Evento_likes,
+          compartidos: item.Evento_compartidos,
+          vistos: item.Evento_vistos,
           foto: item.fotoAleatoria,
           etiquetas: [],
         });
@@ -233,7 +242,7 @@ export class HomeService {
 
       // Si hay etiqueta en esta fila, la agrega
       if (item.Etiquetas_id) {
-        const etiquetas = localesMap.get(item.Local_id).etiquetas;
+        const etiquetas = localesMap.get(item.Evento_id).etiquetas;
         // Evitar duplicados
         if (!etiquetas.find((e) => e.id === item.Etiquetas_id)) {
           etiquetas.push({
@@ -244,6 +253,7 @@ export class HomeService {
       }
     });
 
+      console.log(localesMap)
     return Array.from(localesMap.values());
   }
 
