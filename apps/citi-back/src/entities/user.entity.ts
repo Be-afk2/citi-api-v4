@@ -72,6 +72,10 @@ export class User extends BaseEntity {
   @JoinTable()
   Preferencias: Etiquetas[];
 
+  @ManyToMany(() => Local)
+  @JoinTable()
+  Favoritos: Local[];
+
   @DeleteDateColumn()
   deleted_at: Date;
   @CreateDateColumn()

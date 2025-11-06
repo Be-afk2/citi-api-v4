@@ -36,7 +36,7 @@ export class LocalService {
     private FotosLocalRepository: Repository<FotosLocal>,
 
     private geoService: GeoService,
-  ) {}
+  ) { }
 
   async CreateLocal(data: CreateLocalDto, necro: boolean = false) {
     const comprobacion = await this.ComprobarCrearLocal(data);
@@ -297,5 +297,7 @@ export class LocalService {
     return result;
   }
 
-  // rincon de necro
+  async GuardarFavorito() {
+    
+  }
 }

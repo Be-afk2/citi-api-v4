@@ -33,7 +33,7 @@ import { EditarLocalDto } from './dto/EditarLocal.dto';
 @Controller('local')
 @UseGuards(JwtAuthGuard)
 export class LocalController {
-  constructor(private readonly localService: LocalService) {}
+  constructor(private readonly localService: LocalService) { }
 
   @UseAuthUser(ValidRoles.SuperAdmin)
   @Post()
@@ -102,7 +102,7 @@ export class LocalController {
 
   // rincon de necro
   @Put('etiq')
-    @UseAuthUser(
+  @UseAuthUser(
     ValidRoles.SuperAdmin,
   )
   @Post("necro")
@@ -115,4 +115,16 @@ export class LocalController {
   async CreateNecroMulti(@Body() data: CreateLocalDto[]) {
     return this.localService.CreateLocales(data, true);
   }
+
+
+  @UseAuthUser(
+    ValidRoles.SuperAdmin,
+    ValidRoles.Usuario,
+    ValidRoles.Guest
+  )
+  @Put("Favorito")
+  async GuardarFavorito() {
+    return await this.localService.GuardarFavorito()
+  }
+
 }

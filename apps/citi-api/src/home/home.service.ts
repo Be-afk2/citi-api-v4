@@ -89,6 +89,8 @@ export class HomeService {
         'Local.likes',
         'Local.compartidos',
         'Local.vistos',
+        'Local.latitud',
+        'Local.longitud',
         'Etiquetas.id',
         'Etiquetas.nombre',
       ])
@@ -115,6 +117,8 @@ export class HomeService {
           nombre: item.Nombre,
           likes: item.Local_likes,
           compartidos: item.Local_compartidos,
+          latitud: item.Local_latitud,
+          longitud: item.Local_longitud,
           vistos: item.Local_vistos,
           foto: item.fotoAleatoria,
           etiquetas: [],
@@ -210,6 +214,8 @@ export class HomeService {
         'Evento.likes',
         'Evento.compartidos',
         'Evento.vistos',
+        'Evento.longitud',
+        'Evento.latitud',
         'Etiquetas.id',
         'Etiquetas.nombre',
       ])
@@ -224,7 +230,7 @@ export class HomeService {
 
     const rawResults = await Evento.getRawMany();
     const localesMap = new Map();
-
+    console.log(rawResults)
     rawResults.forEach((item) => {
       if (!localesMap.has(item.Evento_id)) {
         localesMap.set(item.Evento_id, {
@@ -233,6 +239,8 @@ export class HomeService {
           likes: item.Evento_likes,
           compartidos: item.Evento_compartidos,
           vistos: item.Evento_vistos,
+          longitud: item.Evento_longitud,
+          latitud: item.Evento_latitud,
           foto: item.fotoAleatoria,
           etiquetas: [],
         });
