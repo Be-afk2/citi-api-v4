@@ -29,6 +29,7 @@ import { FiltroDto } from './dto/FiltroDto.dto';
 import { FiltroPaguinadorDto } from './dto/FiltroPaguinadorDto.dto';
 import { GetOneDtoNumber } from '../evento/dto/GetOneDtoNumber.dto';
 import { EditarLocalDto } from './dto/EditarLocal.dto';
+import { FavoritoDto } from './dto/FavoritoDto.dto';
 
 @Controller('local')
 @UseGuards(JwtAuthGuard)
@@ -123,8 +124,8 @@ export class LocalController {
     ValidRoles.Guest
   )
   @Put("Favorito")
-  async GuardarFavorito() {
-    return await this.localService.GuardarFavorito()
+  async GuardarFavorito(@Body() data: FavoritoDto,@GetUser() user: User) {
+    return await this.localService.GuardarFavorito(data)
   }
 
 }

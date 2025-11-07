@@ -23,6 +23,7 @@ import { FiltroPaguinadorDto } from './dto/FiltroPaguinadorDto.dto';
 import * as fs from 'fs';
 import * as path from 'path';
 import { EditarLocalDto } from './dto/EditarLocal.dto';
+import { FavoritoDto } from './dto/FavoritoDto.dto';
 @Injectable()
 export class LocalService {
   constructor(
@@ -297,7 +298,13 @@ export class LocalService {
     return result;
   }
 
-  async GuardarFavorito() {
+  async GuardarFavorito(data:FavoritoDto,user:User) {
+    for(let item of data.FavoritoAgregar){
+      
+    }
+
+
+    user.Favoritos
     
   }
 }
