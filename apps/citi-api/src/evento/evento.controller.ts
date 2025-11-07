@@ -28,21 +28,15 @@ import { EditarEventoDto } from './dto/EditarEventoDto.dto';
 @Controller('evento')
 @UseGuards(JwtAuthGuard)
 export class EventoController {
-  constructor(private readonly eventoService: EventoService) { }
+  constructor(private readonly eventoService: EventoService) {}
 
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin)
   @Get()
   async GetEventos(@Query() data: PaguinadorDto) {
     return await this.eventoService.GetEventos(data);
   }
 
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-    ValidRoles.Usuario,
-    ValidRoles.Guest
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
   @Get('one')
   async GetEvento(@Query() data: GetOneDtoNumber) {
     return await this.eventoService.GetEvento(data);
@@ -62,6 +56,18 @@ export class EventoController {
   @Delete()
   async borrarFoto(@Query() data: GetOneDtoNumber) {
     return await this.eventoService.borrarFoto(data.id);
+  }
+
+  @UseAuthUser(ValidRoles.SuperAdmin)
+  @Post()
+  async CrearEvento(@Body() data: CrearEventoDto) {
+    return await this.eventoService.CrearEvento(data);
+  }
+
+  @UseAuthUser(ValidRoles.SuperAdmin)
+  @Post('varias')
+  async CrearEventos(@Body() data: CrearEventoDto[]) {
+    return await this.eventoService.CrearEventos(data);
   }
 
   @Put('editar')
