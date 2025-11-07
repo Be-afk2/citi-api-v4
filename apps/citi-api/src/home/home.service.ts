@@ -33,7 +33,7 @@ export class HomeService {
 
     @InjectRepository(Evento)
     private EventoRepository: Repository<Evento>,
-  ) { }
+  ) {}
 
   async GetLocal() {
     const local = await this.LocalRepository
@@ -63,15 +63,14 @@ export class HomeService {
 
     const local = this.LocalRepository.createQueryBuilder('Local')
       .leftJoinAndSelect('Local.ciudad', 'Ciudad')
-      .leftJoinAndSelect('Local.etiquetas', 'Etiquetas')
+      .leftJoinAndSelect('Local.etiquetas', 'Etiquetas');
 
     if (user.tipoUser.id != 3) {
-      local.where('Local.ciudad = :ciudad', { ciudad: user.ciudad.id })
+      local.where('Local.ciudad = :ciudad', { ciudad: user.ciudad.id });
     }
-    local
-      .andWhere(
-        `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat)) <= :maxDistance`,
-      );
+    local.andWhere(
+      `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat)) <= :maxDistance`,
+    );
     if (necro) {
       local.andWhere('Local.necro = :necro', { necro: necro });
     }
@@ -184,20 +183,16 @@ export class HomeService {
       .leftJoin('Evento.ciudad', 'Ciudad')
       .leftJoin('Evento.etiquetas', 'Etiquetas');
 
-    Evento.select('Evento.id', 'id')
-      .addSelect(
-        `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat))`,
-        'distance',
-      )
+    Evento.select('Evento.id', 'id').addSelect(
+      `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat))`,
+      'distance',
+    );
     if (user.tipoUser.id != 3) {
-      Evento.where('Evento.ciudad = :ciudad', { ciudad: user.ciudad.id })
+      Evento.where('Evento.ciudad = :ciudad', { ciudad: user.ciudad.id });
     }
     Evento.andWhere(
       `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat)) <= :maxDistance`,
-    )
-    .andWhere(
-      "Evento.activo = TRUE"
-    )
+    ).andWhere('Evento.activo = TRUE');
     if (necro) {
       Evento.andWhere('Evento.necro = :necro', { necro: necro });
     }
@@ -230,7 +225,7 @@ export class HomeService {
 
     const rawResults = await Evento.getRawMany();
     const localesMap = new Map();
-    console.log(rawResults)
+    console.log(rawResults);
     rawResults.forEach((item) => {
       if (!localesMap.has(item.Evento_id)) {
         localesMap.set(item.Evento_id, {
@@ -268,7 +263,7 @@ export class HomeService {
     const dataLocales = await this.homeLocal(data, user, true);
     const dataEventos = await this.homeEvento(data, user, true);
 
-    return [dataLocales, dataEventos];
+    return { dataLocales, dataEventos };
   }
 
   async GetPreferencias(user: User, data: GeoDataDto) {

@@ -12,7 +12,7 @@ import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 
 @Controller('home')
 export class HomeController {
-  constructor(private readonly homeService: HomeService) { }
+  constructor(private readonly homeService: HomeService) {}
 
   private ComprobarUser(user: User) {
     if (user.ciudad == undefined) {
@@ -20,60 +20,48 @@ export class HomeController {
     }
   }
 
-
   @Get('local')
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-    ValidRoles.Usuario,
-    ValidRoles.Guest
-
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
   async homeLocal(@Query() data: GeoDataDto, @GetUser() user: User) {
     if (user.tipoUser.id != 3) this.ComprobarUser(user);
-    return await this.homeService.homeLocal(data, user)
+    return await this.homeService.homeLocal(data, user);
   }
 
-
-
   @Get('evento')
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-    ValidRoles.Usuario,
-    ValidRoles.Guest
-
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
   async homeEvento(@Query() data: GeoDataDto, @GetUser() user: User) {
     if (user.tipoUser.id != 3) this.ComprobarUser(user);
 
-
-
     return this.homeService.homeEvento(data, user);
-
   }
 
   @Get('preferencia')
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-    ValidRoles.Usuario,
-
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario)
   async GetPreferencias(@Query() data: GeoDataDto, @GetUser() user: User) {
-
     return await this.homeService.GetPreferencias(user, data);
   }
 
   // rincon necro turismo
 
-  @Get("necro")
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-    ValidRoles.Usuario,
-    ValidRoles.Guest
-  )
+  @Get('necro')
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
   async homeNecro(@Query() data: GeoDataDto, @GetUser() user: User) {
     if (user.tipoUser.id != 3) this.ComprobarUser(user);
 
     return this.homeService.homeNecro(data, user);
   }
 
+  @Get('necro/local')
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
+  async homeNecroLocal(@Query() data: GeoDataDto, @GetUser() user: User) {
+    if (user.tipoUser.id != 3) this.ComprobarUser(user);
+    return this.homeService.homeLocal(data, user, true);
+  }
+
+  @Get('necro/evento')
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
+  async homeNecroEvento(@Query() data: GeoDataDto, @GetUser() user: User) {
+    if (user.tipoUser.id != 3) this.ComprobarUser(user);
+    return this.homeService.homeEvento(data, user, true);
+  }
 }
