@@ -1,0 +1,63 @@
+#!/bin/bash
+
+OUTPUT_DIR="dist/apps"
+ARTIFACT_ZIP="nestjs_server_release.tar.xz"
+
+# Proceso de build y zipeo
+build_process(){
+    npm install
+    npx nest build citi-api
+    npx nest build citi-back
+    tar -cJf $ARTIFACT_ZIP $OUTPUT_DIR
+}
+
+
+# Proceso de entrega del zip y validación de existencia
+restore_process(){
+    if [ ! -f "$ARTIFACT_ZIP" ]; then
+        echo "Archivo $ARTIFACT_ZIP no encontrado."
+        exit 1
+    fi
+    tar -xJf $ARTIFACT_ZIP -C .
+    echo "Recuperado build en $OUTPUT_DIR"    
+}
+
+# Usage
+usage(){
+    echo "Uso: $0 {build|restore}"
+    echo "  build           - Construye y empaqueta la aplicación en $ARTIFACT_ZIP"
+    echo "  restore         - Restaura la aplicación desde $ARTIFACT_ZIP"    
+    echo "  restore-full    - Restaura e instala dependencias limpias para la aplicación"    
+}
+
+# * * * * * * * * * * * * * * * * * 
+# * * * Main Script Execution * * *
+# * * * * * * * * * * * * * * * * * 
+if [ "$1" == "build" ]; then
+    build_process
+    echo ""
+    echo "Build completado y empaquetado en $ARTIFACT_ZIP"
+    echo ""
+
+
+# Restore the web application from a zip file
+# Unzip the contents into the current directory
+elif [ "$1" == "restore" ]; then
+    restore_process    
+    echo "Apps: "
+    ls $OUTPUT_DIR
+    echo "Ejecutar instalación limpia con: npm ci" 
+    echo "Ejecutar paso con pm2 o manualmente con comandos de package.json"
+    cat package.json | grep start
+elif [ "$1" == "restore-full" ]; then
+    restore_process    
+    echo "Apps: "
+    ls $OUTPUT_DIR
+    echo "Ejecutando instalación limpia de dependencias..."
+    npm ci
+    echo "Ejecutar paso con pm2 o manualmente con comandos de package.json"
+    cat package.json | grep start
+else
+    usage
+fi
+
