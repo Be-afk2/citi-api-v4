@@ -13,11 +13,12 @@ build_process(){
 
 
 # Proceso de entrega del zip y validación de existencia
-restore_process(){
+restore_process() {
     if [ ! -f "$ARTIFACT_ZIP" ]; then
         echo "Archivo $ARTIFACT_ZIP no encontrado."
+        echo "Revisa si el build fue creado correctamente en esta rama."
         exit 1
-    fi
+    fi    
     tar -xJf $ARTIFACT_ZIP -C .
     echo "Recuperado build en $OUTPUT_DIR"    
 }
