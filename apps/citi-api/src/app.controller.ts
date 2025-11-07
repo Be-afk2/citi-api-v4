@@ -9,6 +9,7 @@ export class AppController {
   getHello() {
     return {
       Name: 'Citi-api',
+      Message: 'Uno de los mejores servicios API para ciudades turísticas',
       Version: '0.0.10',
       Developers: [
         {
