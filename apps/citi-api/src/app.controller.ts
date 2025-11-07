@@ -10,7 +10,7 @@ export class AppController {
     return {
       Name: 'Citi-api',
       Message: 'Uno de los mejores servicios API para ciudades turísticas',
-      Version: '0.0.10',
+      Version: '0.1.0',
       Developers: [
         {
           name: 'BE._.',
