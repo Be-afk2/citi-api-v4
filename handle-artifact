@@ -19,7 +19,7 @@ restore_process() {
         echo "Revisa si el build fue creado correctamente en esta rama."
         exit 1
     fi    
-    tar -xJf $ARTIFACT_ZIP -C .
+    tar --warning=no-unknown-keyword  -xJf $ARTIFACT_ZIP -C .
     echo "Recuperado build en $OUTPUT_DIR"    
 }
 
