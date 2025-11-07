@@ -34,7 +34,7 @@ import { FavoritoDto } from './dto/FavoritoDto.dto';
 @Controller('local')
 @UseGuards(JwtAuthGuard)
 export class LocalController {
-  constructor(private readonly localService: LocalService) { }
+  constructor(private readonly localService: LocalService) {}
 
   @UseAuthUser(ValidRoles.SuperAdmin)
   @Post()
@@ -64,24 +64,13 @@ export class LocalController {
     return await this.localService.borrarFoto(data.id);
   }
 
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-    ValidRoles.Usuario,
-    ValidRoles.Guest
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
   @Get('one')
   async GetOne(@Query() data: GetOneDto) {
     return await this.localService.getOne(data.id);
   }
 
-
-
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-    ValidRoles.Usuario,
-    ValidRoles.Guest
-
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
   @Get('all')
   async GetAll(@GetUser() user: User, @Query() data: FiltroPaguinadorDto) {
     return await this.localService.getAll(user, user.tipoUser.id == 1, data);
@@ -103,10 +92,8 @@ export class LocalController {
 
   // rincon de necro
   @Put('etiq')
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-  )
-  @Post("necro")
+  @UseAuthUser(ValidRoles.SuperAdmin)
+  @Post('necro')
   async crearNecro(@Body() data: CreateLocalDto) {
     return await this.localService.CreateLocal(data, true);
   }
@@ -117,15 +104,9 @@ export class LocalController {
     return this.localService.CreateLocales(data, true);
   }
 
-
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-    ValidRoles.Usuario,
-    ValidRoles.Guest
-  )
-  @Put("Favorito")
-  async GuardarFavorito(@Body() data: FavoritoDto,@GetUser() user: User) {
-    return await this.localService.GuardarFavorito(data)
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
+  @Put('Favorito')
+  async GuardarFavorito(@Body() data: FavoritoDto, @GetUser() user: User) {
+    return await this.localService.GuardarFavorito(data, user);
   }
-
 }

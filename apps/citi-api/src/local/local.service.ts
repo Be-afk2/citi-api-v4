@@ -37,7 +37,7 @@ export class LocalService {
     private FotosLocalRepository: Repository<FotosLocal>,
 
     private geoService: GeoService,
-  ) { }
+  ) {}
 
   async CreateLocal(data: CreateLocalDto, necro: boolean = false) {
     const comprobacion = await this.ComprobarCrearLocal(data);
@@ -298,13 +298,11 @@ export class LocalService {
     return result;
   }
 
-  async GuardarFavorito(data:FavoritoDto,user:User) {
-    for(let item of data.FavoritoAgregar){
-      
+  async GuardarFavorito(data: FavoritoDto, user: User) {
+    for (let item of data.FavoritoAgregar) {
     }
 
-
-    user.Favoritos
-    
+    user.Favoritos;
+    return { ok: false, message: 'Por implementar' };
   }
 }
