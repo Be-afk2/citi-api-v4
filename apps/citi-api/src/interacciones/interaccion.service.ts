@@ -42,7 +42,6 @@ export class InteraccionService {
     //true : local
     // false : evento
     async GetInte(id, user: User, type: boolean) {
-        // Buscar si ya existe una interacción
         let interaccion = await this.interaccionRepository
             .createQueryBuilder('interaccion')
             .where('interaccion.user = :user', { user: user.id })
@@ -52,9 +51,9 @@ export class InteraccionService {
                     : 'interaccion.evento = :id',
                 { id: id },
             )
-            .getOne(); // <-- este es el método correcto y devuelve una entidad
+            .getOne(); 
 
-        // Si no existe, la creamos
+
         if (!interaccion) {
             interaccion = this.interaccionRepository.create();
 
