@@ -19,7 +19,7 @@ import { Local } from './local.entity';
 import { Evento } from './evento.entity';
 
 @Entity()
-export class Interacion extends BaseEntity {
+export class interaccion extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

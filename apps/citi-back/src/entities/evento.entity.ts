@@ -19,7 +19,7 @@ import { User } from './user.entity';
 import { Local } from './local.entity';
 import { Ciudad } from './ciudad.entity';
 import { FotosEvento } from './fotosEvento.entity';
-import { Interacion } from './interacion.entity';
+import { interaccion } from './interaccion.entity';
 import { Etiquetas } from './etiquetas.entiy';
 
 @Entity()
@@ -60,8 +60,8 @@ export class Evento extends BaseEntity {
   @OneToMany(() => FotosEvento, (FotosEvento) => FotosEvento.evento)
   fotos: FotosEvento[];
 
-  @OneToMany(() => Interacion, (Interacion) => Interacion.evento)
-  interacion: Interacion[];
+  @OneToMany(() => interaccion, (interaccion) => interaccion.evento)
+  interaccion: interaccion[];
 
   @ManyToMany(() => Etiquetas)
   @JoinTable()

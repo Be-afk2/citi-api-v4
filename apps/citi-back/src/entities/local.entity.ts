@@ -17,7 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Region } from './region.entity';
 import { User } from './user.entity';
 import { Ciudad } from './ciudad.entity';
-import { Interacion } from './interacion.entity';
+import { interaccion } from './interaccion.entity';
 import { FotosLocal } from './fotoslocal.entity';
 import { Etiquetas } from './etiquetas.entiy';
 import { LocalTipo } from './localTipo.entity';
@@ -46,16 +46,16 @@ export class Local extends BaseEntity {
   ciudad: Ciudad;
 
   @Column({ default: 0 })
-  likes: string;
+  likes: number;
 
   @Column({ default: 0 })
-  compartidos: string;
+  compartidos: number;
 
   @Column({ default: 0 })
-  vistos: string;
+  vistos: number;
 
   @Column({ default: 0 })
-  reportes: string;
+  reportes: number;
 
   @Column({ default: 0 })
   tipo: number;
@@ -66,8 +66,8 @@ export class Local extends BaseEntity {
   @OneToMany(() => User, (user) => user.id, { nullable: true })
   user: User[];
 
-  @OneToMany(() => Interacion, (Interacion) => Interacion.local)
-  interacion: Interacion[];
+  @OneToMany(() => interaccion, (interaccion) => interaccion.local)
+  interaccion: interaccion[];
 
   @OneToMany(() => FotosLocal, (FotosLocal) => FotosLocal.local)
   fotos: FotosLocal[];

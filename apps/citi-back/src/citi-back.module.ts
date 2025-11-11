@@ -8,7 +8,7 @@ import { Etiquetas } from './entities/etiquetas.entiy';
 import { Evento } from './entities/evento.entity';
 import { FotosEvento } from './entities/fotosEvento.entity';
 import { FotosLocal } from './entities/fotoslocal.entity';
-import { Interacion } from './entities/interacion.entity';
+import { interaccion } from './entities/interaccion.entity';
 import { Local } from './entities/local.entity';
 import { Pais } from './entities/pais.entity';
 import { Region } from './entities/region.entity';
@@ -34,7 +34,7 @@ import { LocalTipo } from './entities/localTipo.entity';
         Evento,
         FotosEvento,
         FotosLocal,
-        Interacion,
+        interaccion,
         Local,
         Pais,
         Region,

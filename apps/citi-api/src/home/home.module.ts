@@ -19,6 +19,8 @@ import { LocalService } from '../local/local.service';
 import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
 import { UserService } from '../user/user.service';
 import { FotosEvento } from 'apps/citi-back/src/entities/fotosEvento.entity';
+import { InteraccionService } from '../interacciones/interaccion.service';
+import { interaccion } from 'apps/citi-back/src/entities/interaccion.entity';
 
 @Module({
   imports: [
@@ -33,9 +35,10 @@ import { FotosEvento } from 'apps/citi-back/src/entities/fotosEvento.entity';
       Evento,
       GeoData,
       FotosEvento,
+      interaccion
     ]),
   ],
   controllers: [HomeController],
-  providers: [HomeService, GeoService, LocalService],
+  providers: [HomeService, GeoService, LocalService,InteraccionService],
 })
 export class HomeModule {}

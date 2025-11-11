@@ -1,3 +1,4 @@
+import { InteraccionModule } from './interacciones/interaccion.module';
 import { InvitadoModule } from './invitado/invitado.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { HomeModule } from './home/home.module';
@@ -17,7 +18,7 @@ import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
 import { Evento } from 'apps/citi-back/src/entities/evento.entity';
 import { FotosEvento } from 'apps/citi-back/src/entities/fotosEvento.entity';
 import { FotosLocal } from 'apps/citi-back/src/entities/fotoslocal.entity';
-import { Interacion } from 'apps/citi-back/src/entities/interacion.entity';
+import { interaccion } from 'apps/citi-back/src/entities/interaccion.entity';
 import { Local } from 'apps/citi-back/src/entities/local.entity';
 import { Pais } from 'apps/citi-back/src/entities/pais.entity';
 import { Region } from 'apps/citi-back/src/entities/region.entity';
@@ -28,7 +29,8 @@ import { LocalTipo } from 'apps/citi-back/src/entities/localTipo.entity';
 
 @Module({
   imports: [
-        InvitadoModule, 
+    InteraccionModule,
+    InvitadoModule,
     SubscriptionModule,
     HomeModule,
 
@@ -47,7 +49,7 @@ import { LocalTipo } from 'apps/citi-back/src/entities/localTipo.entity';
         Evento,
         FotosEvento,
         FotosLocal,
-        Interacion,
+        interaccion,
         Local,
         Pais,
         Region,
@@ -70,4 +72,4 @@ import { LocalTipo } from 'apps/citi-back/src/entities/localTipo.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

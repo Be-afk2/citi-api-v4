@@ -104,7 +104,7 @@ export class LocalController {
     return this.localService.CreateLocales(data, true);
   }
 
-  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario)
   @Put('Favorito')
   async GuardarFavorito(@Body() data: FavoritoDto, @GetUser() user: User) {
     return await this.localService.GuardarFavorito(data, user);

@@ -17,7 +17,7 @@ import {
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Interacion } from './interacion.entity';
+import { interaccion } from './interaccion.entity';
 import { Ciudad } from './ciudad.entity';
 import { Local } from './local.entity';
 import { TipoUser } from './TipoUser.entity';
@@ -65,8 +65,8 @@ export class User extends BaseEntity {
   @JoinColumn()
   local: Local;
 
-  @OneToMany(() => Interacion, (Interacion) => Interacion.user)
-  interacion: Interacion[];
+  @OneToMany(() => interaccion, (interaccion) => interaccion.user)
+  interaccion: interaccion[];
 
   @ManyToMany(() => Etiquetas)
   @JoinTable()

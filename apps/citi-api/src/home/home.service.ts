@@ -16,10 +16,13 @@ import { Evento } from 'apps/citi-back/src/entities/evento.entity';
 import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
 import { FotosLocal } from 'apps/citi-back/src/entities/fotoslocal.entity';
 import { FotosEvento } from 'apps/citi-back/src/entities/fotosEvento.entity';
+import { interaccion } from 'apps/citi-back/src/entities/interaccion.entity';
+import { InteraccionService } from '../interacciones/interaccion.service';
 @Injectable()
 export class HomeService {
   constructor(
     private readonly geoService: GeoService,
+    private readonly InteraccionService: InteraccionService,
     @InjectRepository(Local)
     private LocalRepository: Repository<Local>,
     @InjectRepository(Pais)
@@ -31,9 +34,12 @@ export class HomeService {
     @InjectRepository(Etiquetas)
     private EtiquetasRepository: Repository<Etiquetas>,
 
+    @InjectRepository(Etiquetas)
+    private interaccionRepository: Repository<interaccion>,
+
     @InjectRepository(Evento)
     private EventoRepository: Repository<Evento>,
-  ) {}
+  ) { }
 
   async GetLocal() {
     const local = await this.LocalRepository
@@ -63,7 +69,8 @@ export class HomeService {
 
     const local = this.LocalRepository.createQueryBuilder('Local')
       .leftJoinAndSelect('Local.ciudad', 'Ciudad')
-      .leftJoinAndSelect('Local.etiquetas', 'Etiquetas');
+      .leftJoinAndSelect('Local.etiquetas', 'Etiquetas')
+      .leftJoin('Local.interaccion', 'interaccion', 'interaccion.userId = :userId AND interaccion.local = true')
 
     if (user.tipoUser.id != 3) {
       local.where('Local.ciudad = :ciudad', { ciudad: user.ciudad.id });
@@ -92,6 +99,9 @@ export class HomeService {
         'Local.longitud',
         'Etiquetas.id',
         'Etiquetas.nombre',
+        'interaccion.like',
+        'interaccion.visto',
+        'interaccion.compartido',
       ])
       .addSelect(
         `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat))`,
@@ -181,7 +191,9 @@ export class HomeService {
 
     const Evento = await this.EventoRepository.createQueryBuilder('Evento')
       .leftJoin('Evento.ciudad', 'Ciudad')
-      .leftJoin('Evento.etiquetas', 'Etiquetas');
+      .leftJoin('Evento.etiquetas', 'Etiquetas')
+      .leftJoin('Evento.interaccion', 'interaccion', 'interaccion.userId = :userId AND interaccion.local = false')
+      .leftJoin("interaccion.User", "User")
 
     Evento.select('Evento.id', 'id').addSelect(
       `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat))`,
@@ -213,6 +225,9 @@ export class HomeService {
         'Evento.latitud',
         'Etiquetas.id',
         'Etiquetas.nombre',
+        'interaccion.like',
+        'interaccion.visto',
+        'interaccion.compartido',
       ])
       .addSelect((subQuery) => {
         return subQuery
@@ -225,7 +240,6 @@ export class HomeService {
 
     const rawResults = await Evento.getRawMany();
     const localesMap = new Map();
-    console.log(rawResults);
     rawResults.forEach((item) => {
       if (!localesMap.has(item.Evento_id)) {
         localesMap.set(item.Evento_id, {
