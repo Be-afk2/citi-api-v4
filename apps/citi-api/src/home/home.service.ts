@@ -70,10 +70,16 @@ export class HomeService {
     const local = this.LocalRepository.createQueryBuilder('Local')
       .leftJoinAndSelect('Local.ciudad', 'Ciudad')
       .leftJoinAndSelect('Local.etiquetas', 'Etiquetas')
-      .leftJoin('Local.interaccion', 'interaccion', 'interaccion.userId = :userId AND interaccion.local = true')
+      .leftJoinAndSelect(
+        'Local.interaccion',
+        'Interaccion',
+        'Interaccion.user = :user',
+        { user: user.id }
+      )
 
     if (user.tipoUser.id != 3) {
-      local.where('Local.ciudad = :ciudad', { ciudad: user.ciudad.id });
+      local.where('Local.ciudad = :ciudad', { ciudad: user.ciudad.id })
+
     }
     local.andWhere(
       `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat)) <= :maxDistance`,
@@ -99,9 +105,9 @@ export class HomeService {
         'Local.longitud',
         'Etiquetas.id',
         'Etiquetas.nombre',
-        'interaccion.like',
-        'interaccion.visto',
-        'interaccion.compartido',
+        'Interaccion.like',
+        'Interaccion.visto',
+        'Interaccion.compartido',
       ])
       .addSelect(
         `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat))`,
@@ -118,7 +124,7 @@ export class HomeService {
 
     const rawResults = await local.getRawMany();
     const localesMap = new Map();
-
+    console.log(rawResults)
     rawResults.forEach((item) => {
       if (!localesMap.has(item.Local_id)) {
         localesMap.set(item.Local_id, {
@@ -131,6 +137,11 @@ export class HomeService {
           vistos: item.Local_vistos,
           foto: item.fotoAleatoria,
           etiquetas: [],
+          interaccion:{
+            like : item.Interaccion_like ? Boolean(item.Interaccion_like):false ,
+            compartido : item.Interaccion_compartido ? Boolean(item.Interaccion_compartido) : false,
+            visto : item.Interaccion_visto ? Boolean(item.Interaccion_visto): false
+          }
         });
       }
 
@@ -192,8 +203,12 @@ export class HomeService {
     const Evento = await this.EventoRepository.createQueryBuilder('Evento')
       .leftJoin('Evento.ciudad', 'Ciudad')
       .leftJoin('Evento.etiquetas', 'Etiquetas')
-      .leftJoin('Evento.interaccion', 'interaccion', 'interaccion.userId = :userId AND interaccion.local = false')
-      .leftJoin("interaccion.User", "User")
+      .leftJoinAndSelect(
+        'Evento.interaccion',
+        'Interaccion',
+        'Interaccion.user = :user AND Interaccion.evento = Evento.id',
+        { user: user.id }
+      )
 
     Evento.select('Evento.id', 'id').addSelect(
       `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat))`,
