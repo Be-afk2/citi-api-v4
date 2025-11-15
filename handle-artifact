@@ -1,14 +1,14 @@
 #!/bin/bash
 
 OUTPUT_DIR="dist/apps"
-ARTIFACT_ZIP="nestjs_server_release.tar.xz"
+ARTIFACT_ZIP="nestjs_server_release.zip"
 
 # Proceso de build y zipeo
 build_process(){
     npm install
     npx nest build citi-api
     npx nest build citi-back
-    tar -cJf $ARTIFACT_ZIP $OUTPUT_DIR
+    zip -r $ARTIFACT_ZIP $OUTPUT_DIR
 }
 
 
@@ -19,7 +19,7 @@ restore_process() {
         echo "Revisa si el build fue creado correctamente en esta rama."
         exit 1
     fi    
-    tar --warning=no-unknown-keyword  -xJf $ARTIFACT_ZIP -C .
+    unzip -o $ARTIFACT_ZIP -d .
     echo "Recuperado build en $OUTPUT_DIR"    
 }
 
