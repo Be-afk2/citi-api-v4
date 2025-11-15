@@ -98,16 +98,16 @@ export class InteraccionService {
             case 2:
                 //compartidos
                 interaccion.compartido ?
-                    lugar.compartidos--
+                    null
                     : lugar.compartidos++
                 interaccion.compartido = !interaccion.compartido
                 break
             case 3:
                 //vistos
                 interaccion.visto ?
-                    lugar.vistos--
+                    null
                     : lugar.vistos++
-                interaccion.visto = !interaccion.visto
+
 
         }
 
