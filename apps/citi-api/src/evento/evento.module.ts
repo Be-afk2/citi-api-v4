@@ -19,6 +19,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
+import { InteraccionService } from '../interacciones/interaccion.service';
 
 @Module({
   imports: [
@@ -50,6 +51,6 @@ import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
     ]),
   ],
   controllers: [EventoController],
-  providers: [EventoService, GeoService],
+  providers: [EventoService, GeoService,InteraccionService],
 })
 export class EventoModule {}

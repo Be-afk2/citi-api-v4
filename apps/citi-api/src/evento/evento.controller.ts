@@ -24,11 +24,19 @@ import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { EditarEventoDto } from './dto/EditarEventoDto.dto';
+import { InteraccionService } from '../interacciones/interaccion.service';
+import { User } from 'apps/citi-back/src/entities/user.entity';
+import { GetUser } from '../auth/decorators/get-user.decorator';
+import { GetOneDto } from '../local/dto/GetOneDto.dto';
 
 @Controller('evento')
 @UseGuards(JwtAuthGuard)
 export class EventoController {
-  constructor(private readonly eventoService: EventoService) {}
+  constructor(
+    private readonly eventoService: EventoService,
+    private readonly InteraccionService: InteraccionService
+
+  ) { }
 
   @UseAuthUser(ValidRoles.SuperAdmin)
   @Get()
@@ -38,8 +46,11 @@ export class EventoController {
 
   @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
   @Get('one')
-  async GetEvento(@Query() data: GetOneDtoNumber) {
-    return await this.eventoService.GetEvento(data);
+  async getEvento(@Query() query: GetOneDtoNumber, @GetUser() user: User) {
+    const dto: GetOneDto = { id: String(query.id) }
+    this.InteraccionService.switchInte(3, dto, user, false)
+
+    return await this.eventoService.GetEvento(query);
   }
 
   @UseAuthUser(ValidRoles.SuperAdmin)

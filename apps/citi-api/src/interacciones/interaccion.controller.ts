@@ -44,7 +44,8 @@ export class InteraccionController {
         const accionId = acciones[accion];
         if (!accionId) throw new BadRequestException(`Acción no válida: ${accion}`);
 
-        return this.InteraccionService.switchInte(accionId, data, user, isLocal);
+        return await this.InteraccionService.switchInte(accionId, data, user, isLocal);
+        
     }
 
 
