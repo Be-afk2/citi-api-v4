@@ -66,13 +66,7 @@ export class AuthService {
     };
   }
 
-  async findUserById(id, bool) {
-    // const user = await this.UsersRepository.findOne({
-    //     where: { id: id },
-    //     relations: ['tipoUser']
-    //     .
-    // });
-
+  async findUserById(id: string, param: boolean) {
     const user = await this.UsersRepository.createQueryBuilder('User')
       .leftJoinAndSelect('User.tipoUser', 'TipoUser')
       .leftJoinAndSelect('User.ciudad', 'Ciudad')
@@ -99,7 +93,7 @@ export class AuthService {
     return user;
   }
 
-  async get_token(user: User) {
+  get_token(user: User) {
     const payload = {
       id: user.id,
       nombre: user.nombre,

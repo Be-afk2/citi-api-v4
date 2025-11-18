@@ -34,9 +34,8 @@ import { GetOneDto } from '../local/dto/GetOneDto.dto';
 export class EventoController {
   constructor(
     private readonly eventoService: EventoService,
-    private readonly InteraccionService: InteraccionService
-
-  ) { }
+    private readonly InteraccionService: InteraccionService,
+  ) {}
 
   @UseAuthUser(ValidRoles.SuperAdmin)
   @Get()
@@ -47,8 +46,8 @@ export class EventoController {
   @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
   @Get('one')
   async getEvento(@Query() query: GetOneDtoNumber, @GetUser() user: User) {
-    const dto: GetOneDto = { id: String(query.id) }
-    this.InteraccionService.switchInte(3, dto, user, false)
+    const dto: GetOneDto = { id: String(query.id) };
+    this.InteraccionService.switchInte(3, dto, user, false);
 
     return await this.eventoService.GetEvento(query);
   }

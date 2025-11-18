@@ -31,10 +31,10 @@ import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
     }),
 
     TypeOrmModule.forFeature([Local, FotosLocal, Etiquetas]),
-
     GeoModule,
   ],
   controllers: [LocalController],
   providers: [LocalService],
+  exports: [TypeOrmModule, LocalService],
 })
 export class LocalModule {}

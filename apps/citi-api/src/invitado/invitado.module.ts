@@ -14,24 +14,13 @@ https://docs.nestjs.com/modules
 import { Module } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { JwtStrategy } from '../auth/jwt.strategy';
+import { UserModule } from '../user/user.module';
+import { EtiquetaModule } from '../etiqueta/etiqueta.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            User,
-            TipoUser,
-            Etiquetas
-        ]),
-        JwtModule.registerAsync({
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: async (configService: ConfigService) => ({
-                secret: configService.get<string>('JWT_SECRET'),
-                signOptions: { expiresIn: '1y' },
-            }),
-        })
-    ],
-    controllers: [InvitadoController,],
-    providers: [InvitadoService, AuthService, JwtStrategy],
+  imports: [UserModule, EtiquetaModule, AuthModule],
+  controllers: [InvitadoController],
+  providers: [InvitadoService, AuthService, JwtStrategy],
 })
-export class InvitadoModule { }
+export class InvitadoModule {}

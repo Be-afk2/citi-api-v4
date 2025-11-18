@@ -14,111 +14,94 @@ import { GetOneDtoNumber } from '../evento/dto/GetOneDtoNumber.dto';
 
 @Injectable()
 export class InteraccionService {
+  constructor(
+    @InjectRepository(interaccion)
+    private interaccionRepository: Repository<interaccion>,
 
-    constructor(
-        @InjectRepository(interaccion)
-        private interaccionRepository: Repository<interaccion>,
+    @InjectRepository(Local)
+    private LocalRepository: Repository<Local>,
+    @InjectRepository(Evento)
+    private EventoRepository: Repository<Evento>,
+  ) {}
+  async GetLocalInte(id: string) {
+    const local = await this.LocalRepository.findOneBy({ id: id });
 
-        @InjectRepository(Local)
-        private LocalRepository: Repository<Local>,
-        @InjectRepository(Evento)
-        private EventoRepository: Repository<Evento>,
-    ) { }
-    async GetLocalInte(id: string) {
+    if (!local) throw new NotFoundException(`Local con ID ${id} no encontrado`);
 
-        const local = await this.LocalRepository.findOneBy({ id: id })
+    return {
+      likes: local.likes,
+      compartidos: local.compartidos,
+      vistos: local.vistos,
+      reportes: local.reportes,
+    };
+  }
 
-        if (!local) throw new NotFoundException(`Local con ID ${id} no encontrado`);
+  //true : local
+  // false : evento
+  async GetInte(id, user: User, type: boolean) {
+    let interaccion = await this.interaccionRepository
+      .createQueryBuilder('interaccion')
+      .where('interaccion.user = :user', { user: user.id })
+      .andWhere(type ? 'interaccion.local = :id' : 'interaccion.evento = :id', {
+        id: id,
+      })
+      .getOne();
 
-        return {
-            likes: local.likes,
-            compartidos: local.compartidos,
-            vistos: local.vistos,
-            reportes: local.reportes
-        }
+    if (!interaccion) {
+      interaccion = this.interaccionRepository.create();
+
+      if (type) {
+        interaccion.local = { id: id } as Local;
+      } else {
+        interaccion.evento = { id: id } as Evento;
+      }
+
+      interaccion.user = user;
+      await this.interaccionRepository.save(interaccion);
     }
 
+    return interaccion;
+  }
 
-    //true : local
-    // false : evento
-    async GetInte(id, user: User, type: boolean) {
-        let interaccion = await this.interaccionRepository
-            .createQueryBuilder('interaccion')
-            .where('interaccion.user = :user', { user: user.id })
-            .andWhere(
-                type
-                    ? 'interaccion.local = :id'
-                    : 'interaccion.evento = :id',
-                { id: id },
-            )
-            .getOne(); 
+  async switchInte(type: number, data: GetOneDto, user: User, local) {
+    let lugar;
+    if (local) {
+      lugar = await this.LocalRepository.findOneBy({
+        id: data.id,
+      });
+    } else {
+      lugar = await this.EventoRepository.findOneBy({
+        id: Number(data.id),
+      });
+    }
+    if (!lugar)
+      throw new NotFoundException(`Elemento con ID ${data.id} no encontrado`);
+    const interaccion = await this.GetInte(data.id, user, local);
+    switch (type) {
+      case 1:
+        //like
+        interaccion.like ? lugar.likes-- : lugar.likes++;
 
-
-        if (!interaccion) {
-            interaccion = this.interaccionRepository.create();
-
-            if (type) {
-                interaccion.local = { id: id } as Local;
-            } else {
-                interaccion.evento = { id: id } as Evento;
-            }
-
-            interaccion.user = user;
-            await this.interaccionRepository.save(interaccion);
-        }
-
-        return interaccion;
+        interaccion.like = !interaccion.like;
+        break;
+      case 2:
+        //compartidos
+        interaccion.compartido ? null : lugar.compartidos++;
+        interaccion.compartido = !interaccion.compartido;
+        break;
+      case 3:
+        //vistos
+        interaccion.visto ? null : lugar.vistos++;
     }
 
-
-
-    async switchInte(type: number, data: GetOneDto, user: User, local) {
-        var lugar
-        if (local) {
-            lugar = await this.LocalRepository.findOneBy({
-                id: data.id
-            })
-        }
-        else {
-            lugar = await this.EventoRepository.findOneBy({
-                id: Number(data.id)
-            })
-        }
-        if (!lugar) throw new NotFoundException(`Elemento con ID ${data.id} no encontrado`);
-        const interaccion = await this.GetInte(data.id, user, local)
-        switch (type) {
-            case 1:
-                //like
-                interaccion.like ?
-                    lugar.likes--
-                    : lugar.likes++
-
-                interaccion.like = !interaccion.like
-                break;
-            case 2:
-                //compartidos
-                interaccion.compartido ?
-                    null
-                    : lugar.compartidos++
-                interaccion.compartido = !interaccion.compartido
-                break
-            case 3:
-                //vistos
-                interaccion.visto ?
-                    null
-                    : lugar.vistos++
-
-
-        }
-
-        await interaccion.save()
-        await lugar.save()
-        return {
-            id: lugar.id,
-            likes: lugar.likes,
-            vistas:lugar.vistos,
-            compartidos:lugar.compartidos,
-            interaccion: interaccion
-        }
-    }
+    await interaccion.save();
+    await lugar.save();
+    return {
+      id: lugar.id,
+      likes: lugar.likes,
+      vistas: lugar.vistos,
+      compartidos: lugar.compartidos,
+      interaccion: interaccion,
+    };
+  }
 }

@@ -20,6 +20,8 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
 import { InteraccionService } from '../interacciones/interaccion.service';
+import { InteraccionModule } from '../interacciones/interaccion.module';
+import { EtiquetaModule } from '../etiqueta/etiqueta.module';
 
 @Module({
   imports: [
@@ -39,18 +41,13 @@ import { InteraccionService } from '../interacciones/interaccion.service';
         }),
       }),
     }),
-    TypeOrmModule.forFeature([
-      Evento,
-      Pais,
-      Ciudad,
-      Region,
-      User,
-      Etiquetas,
-      FotosEvento,
-      GeoData,
-    ]),
+    TypeOrmModule.forFeature([Evento, FotosEvento]),
+    InteraccionModule,
+    GeoModule,
+    EtiquetaModule,
   ],
   controllers: [EventoController],
-  providers: [EventoService, GeoService,InteraccionService],
+  providers: [EventoService, GeoService, InteraccionService],
+  exports: [TypeOrmModule, EventoService],
 })
 export class EventoModule {}

@@ -8,11 +8,12 @@ https://docs.nestjs.com/modules
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TipoUser } from 'apps/citi-back/src/entities/TipoUser.entity';
-import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
+import { EtiquetaModule } from '../etiqueta/etiqueta.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, TipoUser, Etiquetas])],
+  imports: [EtiquetaModule, TypeOrmModule.forFeature([User, TipoUser])],
   controllers: [UserController],
   providers: [UserService],
+  exports: [TypeOrmModule, UserService],
 })
 export class UserModule {}

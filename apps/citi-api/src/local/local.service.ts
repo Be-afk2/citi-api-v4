@@ -299,7 +299,7 @@ export class LocalService {
   }
 
   async GuardarFavorito(data: FavoritoDto, user: User) {
-    for (let item of data.FavoritoAgregar) {
+    for (const item of data.FavoritoAgregar) {
     }
 
     user.Favoritos;

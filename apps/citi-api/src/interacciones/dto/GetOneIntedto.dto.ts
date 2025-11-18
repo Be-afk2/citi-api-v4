@@ -1,15 +1,21 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class GetOneIntedto {
-    @IsString()
-    @IsOptional()
-    readonly idLocal: string;
+  @IsString()
+  @IsOptional()
+  readonly idLocal: string;
 
-    @IsNumber()
-    @IsOptional()
-    readonly idEvento: number;
+  @IsNumber()
+  @IsOptional()
+  readonly idEvento: number;
 
-    @IsBoolean()
-    @IsNotEmpty()
-    local:boolean
+  @IsBoolean()
+  @IsNotEmpty()
+  local: boolean;
 }

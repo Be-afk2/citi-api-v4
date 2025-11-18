@@ -15,8 +15,7 @@ import { PreferenciasUser } from './dto/PreferenciaDto.dto';
 @Controller('user')
 @UseGuards(JwtAuthGuard)
 export class UserController {
-  constructor(private readonly userService: UserService) { }
-
+  constructor(private readonly userService: UserService) {}
 
   @UseAuthUser(
     ValidRoles.SuperAdmin,
@@ -37,13 +36,10 @@ export class UserController {
     return await this.userService.updatePreferencia(data, user);
   }
 
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-    ValidRoles.Usuario,
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario)
   @Put()
   async update(@Body() data: UpdateUserDto, @GetUser() user: User) {
-    return await this.userService.update(data, user)
+    return await this.userService.update(data, user);
   }
 
   @UseAuthUser(
@@ -53,16 +49,10 @@ export class UserController {
 
     //rol de invitado sin token
   )
-
-
   @Get('preferencia')
   async GetPreferencia(@GetUser() user: User) {
-
-    return await this.userService.getPreferences(user)
+    return await this.userService.getPreferences(user);
   }
 
   // rincon invitado
-
-
-
 }

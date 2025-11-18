@@ -21,24 +21,21 @@ import { UserService } from '../user/user.service';
 import { FotosEvento } from 'apps/citi-back/src/entities/fotosEvento.entity';
 import { InteraccionService } from '../interacciones/interaccion.service';
 import { interaccion } from 'apps/citi-back/src/entities/interaccion.entity';
+import { GeoModule } from '../geolocalizacion/geo.module';
+import { LocalModule } from '../local/local.module';
+import { EventoModule } from '../evento/evento.module';
+import { InteraccionModule } from '../interacciones/interaccion.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      Local,
-      FotosLocal,
-      Etiquetas,
-      Pais,
-      Ciudad,
-      Region,
-      User,
-      Evento,
-      GeoData,
-      FotosEvento,
-      interaccion
-    ]),
+    GeoModule,
+    LocalModule,
+    EventoModule,
+    InteraccionModule,
+    UserModule,
   ],
   controllers: [HomeController],
-  providers: [HomeService, GeoService, LocalService,InteraccionService],
+  providers: [HomeService, GeoService, LocalService, InteraccionService],
 })
 export class HomeModule {}

@@ -12,51 +12,49 @@ import { hash, compare } from 'bcrypt';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../auth/dto/CreateUser.dto';
 import { AuthService } from '../auth/auth.service';
+
 const UserInvitado = {
-    nombre: "Usuario",
-    apellido: "invitado",
-    correo: "invitado@gmail.com",
-    pass: "invitado",
-}
+  nombre: 'Usuario',
+  apellido: 'invitado',
+  correo: 'invitado@gmail.com',
+  pass: 'invitado',
+};
+
 @Injectable()
 export class InvitadoService {
+  constructor(
+    @InjectRepository(User)
+    private UsersRepository: Repository<User>,
 
-    constructor(
-        @InjectRepository(User)
-        private UsersRepository: Repository<User>,
+    @InjectRepository(TipoUser)
+    private TipoUserRepository: Repository<TipoUser>,
 
-        @InjectRepository(TipoUser)
-        private TipoUserRepository: Repository<TipoUser>,
+    private AuthService: AuthService,
+  ) {}
 
-        private jwtService: JwtService,
-        private AuthService: AuthService
-    ) { }
-
-
-
-
-    async GetInvitado() {
-
-        let user = await this.UsersRepository.findOneBy({ correo: UserInvitado.correo });
-        if (user) {
-            user = await this.AuthService.findUserById(user.id, false)
-            return {
-                user: await this.AuthService.findUserById(user.id, false),
-                token: await this.AuthService.get_token(user),
-            };
-        }
-
-        user = await this.UsersRepository.create();
-        user.nombre = UserInvitado.nombre;
-        user.apellido = UserInvitado.apellido;
-        user.correo = UserInvitado.correo;
-        user.password = await hash(UserInvitado.pass, 10);
-        user.tipoUser = await this.TipoUserRepository.findOneBy({ id: 3 });
-        await user.save();
-
-        return {
-            user: await this.AuthService.findUserById(user.id, false),
-            token: await this.AuthService.get_token(user),
-        };
+  async GetInvitado() {
+    let user = await this.UsersRepository.findOneBy({
+      correo: UserInvitado.correo,
+    });
+    if (user) {
+      return {
+        // user: await this.AuthService.findUserById(user.id, false),
+        user: user,
+        token: await this.AuthService.get_token(user),
+      };
     }
+
+    user = await this.UsersRepository.create();
+    user.nombre = UserInvitado.nombre;
+    user.apellido = UserInvitado.apellido;
+    user.correo = UserInvitado.correo;
+    user.password = await hash(UserInvitado.pass, 10);
+    user.tipoUser = await this.TipoUserRepository.findOneBy({ id: 3 });
+    await user.save();
+
+    return {
+      user: await this.AuthService.findUserById(user.id, false),
+      token: await this.AuthService.get_token(user),
+    };
+  }
 }

@@ -11,7 +11,7 @@ export class UserService {
   constructor(
     @InjectRepository(Etiquetas)
     private EtiquetasRepository: Repository<Etiquetas>,
-  ) { }
+  ) {}
 
   async update(data: UpdateUserDto, user: User) {
     user.apellido = data.apellido ? data.apellido : user.apellido;
@@ -33,17 +33,16 @@ export class UserService {
   }
 
   async updatePreferencia(data: PreferenciasUser, user: User) {
-
     const result = {
       newetiq: 0,
       oldetiq: 0,
       errorid: [],
       error: 0,
-
-    }
-    for (let etiq of data.Etiquetas) {
-
-      const etiqueta = await this.EtiquetasRepository.findOneBy({ id: etiq.id });
+    };
+    for (const etiq of data.Etiquetas) {
+      const etiqueta = await this.EtiquetasRepository.findOneBy({
+        id: etiq.id,
+      });
 
       if (!etiqueta) {
         result.errorid.push(etiq.id);
@@ -51,18 +50,14 @@ export class UserService {
         continue;
       }
 
-      if (!user.Preferencias.some(e => e.id === etiqueta.id)) {
+      if (!user.Preferencias.some((e) => e.id === etiqueta.id)) {
         user.Preferencias.push(etiqueta);
         result.newetiq++;
-      }
-      else {
+      } else {
         result.oldetiq++;
       }
-
-
-
     }
-    await user.save()
+    await user.save();
     return result;
   }
 
@@ -70,8 +65,5 @@ export class UserService {
     return user.Preferencias;
   }
 
-
-
   // rincon invitado
-
 }

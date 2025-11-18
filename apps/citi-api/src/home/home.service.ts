@@ -34,12 +34,12 @@ export class HomeService {
     @InjectRepository(Etiquetas)
     private EtiquetasRepository: Repository<Etiquetas>,
 
-    @InjectRepository(Etiquetas)
+    @InjectRepository(interaccion)
     private interaccionRepository: Repository<interaccion>,
 
     @InjectRepository(Evento)
     private EventoRepository: Repository<Evento>,
-  ) { }
+  ) {}
 
   async GetLocal() {
     const local = await this.LocalRepository
@@ -74,12 +74,11 @@ export class HomeService {
         'Local.interaccion',
         'Interaccion',
         'Interaccion.user = :user',
-        { user: user.id }
-      )
+        { user: user.id },
+      );
 
     if (user.tipoUser.id != 3) {
-      local.where('Local.ciudad = :ciudad', { ciudad: user.ciudad.id })
-
+      local.where('Local.ciudad = :ciudad', { ciudad: user.ciudad.id });
     }
     local.andWhere(
       `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat)) <= :maxDistance`,
@@ -124,7 +123,6 @@ export class HomeService {
 
     const rawResults = await local.getRawMany();
     const localesMap = new Map();
-    console.log(rawResults)
     rawResults.forEach((item) => {
       if (!localesMap.has(item.Local_id)) {
         localesMap.set(item.Local_id, {
@@ -137,11 +135,17 @@ export class HomeService {
           vistos: item.Local_vistos,
           foto: item.fotoAleatoria,
           etiquetas: [],
-          interaccion:{
-            like : item.Interaccion_like ? Boolean(item.Interaccion_like):false ,
-            compartido : item.Interaccion_compartido ? Boolean(item.Interaccion_compartido) : false,
-            visto : item.Interaccion_visto ? Boolean(item.Interaccion_visto): false
-          }
+          interaccion: {
+            like: item.Interaccion_like
+              ? Boolean(item.Interaccion_like)
+              : false,
+            compartido: item.Interaccion_compartido
+              ? Boolean(item.Interaccion_compartido)
+              : false,
+            visto: item.Interaccion_visto
+              ? Boolean(item.Interaccion_visto)
+              : false,
+          },
         });
       }
 
@@ -207,8 +211,8 @@ export class HomeService {
         'Evento.interaccion',
         'Interaccion',
         'Interaccion.user = :user AND Interaccion.evento = Evento.id',
-        { user: user.id }
-      )
+        { user: user.id },
+      );
 
     Evento.select('Evento.id', 'id').addSelect(
       `ST_Distance_Sphere(point(Evento.longitud, Evento.latitud), point(:lon, :lat))`,

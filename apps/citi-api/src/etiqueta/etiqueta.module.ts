@@ -12,5 +12,6 @@ import { EtiquetaController } from './etiqueta.controller';
   imports: [TypeOrmModule.forFeature([Etiquetas])],
   controllers: [EtiquetaController],
   providers: [EtiquetaService],
+  exports: [TypeOrmModule, EtiquetaService],
 })
 export class EtiquetaModule {}

@@ -1,5 +1,4 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 /*
@@ -7,18 +6,15 @@ https://docs.nestjs.com/modules
 */
 
 import { Module } from '@nestjs/common';
-import { User } from 'apps/citi-back/src/entities/user.entity';
-import { TipoUser } from 'apps/citi-back/src/entities/TipoUser.entity';
-import { Ciudad } from 'apps/citi-back/src/entities/ciudad.entity';
 import { JwtStrategy } from './jwt.strategy';
-import { Region } from 'apps/citi-back/src/entities/region.entity';
-import { Pais } from 'apps/citi-back/src/entities/pais.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     JwtModule.registerAsync({
+      global: true,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
@@ -26,9 +22,10 @@ import { JwtModule } from '@nestjs/jwt';
         signOptions: { expiresIn: '1y' },
       }),
     }),
-    TypeOrmModule.forFeature([User, TipoUser]),
+    UserModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
+  exports: [JwtModule, AuthService],
 })
 export class AuthModule {}

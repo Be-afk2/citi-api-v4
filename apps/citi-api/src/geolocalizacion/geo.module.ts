@@ -13,6 +13,6 @@ import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
   imports: [TypeOrmModule.forFeature([Pais, Ciudad, Region, User, GeoData])],
   controllers: [GeoController],
   providers: [GeoService],
-  exports: [GeoService],
+  exports: [TypeOrmModule, GeoService],
 })
 export class GeoModule {}
