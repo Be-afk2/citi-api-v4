@@ -80,17 +80,18 @@ export class InteraccionService {
       case 1:
         //like
         interaccion.like ? lugar.likes-- : lugar.likes++;
-
         interaccion.like = !interaccion.like;
         break;
       case 2:
         // compartidos, no tiene sentido quitar compartidos
         interaccion.compartido ? null : lugar.compartidos++;
-        // interaccion.compartido = !interaccion.compartido;
+        interaccion.compartido = true;
         break;
       case 3:
-        //vistos
+        // vistos, una vez visto no se puede "no ver"
         interaccion.visto ? null : lugar.vistos++;
+        interaccion.visto = true;
+        break;
     }
 
     await interaccion.save();
