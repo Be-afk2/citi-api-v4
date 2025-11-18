@@ -10,7 +10,6 @@ import { interaccion } from 'apps/citi-back/src/entities/interaccion.entity';
 import { Repository } from 'typeorm';
 import { Local } from 'apps/citi-back/src/entities/local.entity';
 import { Evento } from 'apps/citi-back/src/entities/evento.entity';
-import { GetOneDtoNumber } from '../evento/dto/GetOneDtoNumber.dto';
 
 @Injectable()
 export class InteraccionService {
@@ -63,9 +62,9 @@ export class InteraccionService {
     return interaccion;
   }
 
-  async switchInte(type: number, data: GetOneDto, user: User, local) {
+  async switchInte(type: number, data: GetOneDto, user: User, isLocal) {
     let lugar;
-    if (local) {
+    if (isLocal) {
       lugar = await this.LocalRepository.findOneBy({
         id: data.id,
       });
@@ -76,7 +75,7 @@ export class InteraccionService {
     }
     if (!lugar)
       throw new NotFoundException(`Elemento con ID ${data.id} no encontrado`);
-    const interaccion = await this.GetInte(data.id, user, local);
+    const interaccion = await this.GetInte(data.id, user, isLocal);
     switch (type) {
       case 1:
         //like
@@ -85,9 +84,9 @@ export class InteraccionService {
         interaccion.like = !interaccion.like;
         break;
       case 2:
-        //compartidos
+        // compartidos, no tiene sentido quitar compartidos
         interaccion.compartido ? null : lugar.compartidos++;
-        interaccion.compartido = !interaccion.compartido;
+        // interaccion.compartido = !interaccion.compartido;
         break;
       case 3:
         //vistos
