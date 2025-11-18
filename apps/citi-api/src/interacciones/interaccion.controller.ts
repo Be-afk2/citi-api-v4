@@ -2,21 +2,12 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  Param,
-  Put,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Param, Put, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { GetOneDto } from '../local/dto/GetOneDto.dto';
 import { User } from 'apps/citi-back/src/entities/user.entity';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { InteraccionService } from './interaccion.service';
-import { GetOneDtoNumber } from '../evento/dto/GetOneDtoNumber.dto';
 import { GetOneIntedto } from './dto/GetOneIntedto.dto';
 import { UseAuthUser } from '../auth/decorators/use-auth-user.decorator';
 import { ValidRoles } from '../auth/interfaces/valid-roles.enum';

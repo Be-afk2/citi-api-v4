@@ -1,14 +1,9 @@
-import {
-  ArgumentMetadata,
-  Injectable,
-  NotFoundException,
-  PipeTransform,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
 
 @Injectable()
-export class ParseInteractionPipe implements PipeTransform {
+export class ParseInteractionPipe implements PipeTransform<string, number> {
   // Mapeo de acciones a números o enums (según lo que use tu servicio)
-  private interactionTypes = {
+  private interactionTypes: Record<string, number> = {
     like: 1,
     compartir: 2,
     visto: 3,
@@ -17,13 +12,13 @@ export class ParseInteractionPipe implements PipeTransform {
   /**
    * Parsea el valor de interacción a su enum correspondiente.
    * @param value deberia de ser el param del url
-   * @returns Enum InteractionEnum correspondiente
+   * @returns el valor numerico correspondiente a la interaccion
+   * @throws NotFoundException si la interacción no es válida
    */
-  transform(value: any) {
+  transform(value: string): number {
     const result = this.interactionTypes[value];
-
     if (!result) {
-      throw new NotFoundException(
+      throw new BadRequestException(
         `Interaction not supported, you should use one of the following: [ ${Object.keys(this.interactionTypes)} ]`,
       );
     }
