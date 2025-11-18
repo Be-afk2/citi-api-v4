@@ -53,7 +53,7 @@ export class InvitadoService {
     await user.save();
 
     return {
-      user: await this.AuthService.findUserById(user.id, false),
+      user: await this.AuthService.findUserById(user.id),
       token: await this.AuthService.get_token(user),
     };
   }

@@ -16,6 +16,7 @@ import { CreateUserDto } from './dto/CreateUser.dto';
 import { hash, compare } from 'bcrypt';
 import { TipoUser } from 'apps/citi-back/src/entities/TipoUser.entity';
 import { LoginDto } from './dto/LoginDto.dto';
+import { JWTPayload } from './interfaces/JWTPayload';
 
 const tiposUserCrear = [
   {
@@ -61,12 +62,12 @@ export class AuthService {
     await user.save();
 
     return {
-      user: await this.findUserById(user.id, false),
+      user: await this.findUserById(user.id),
       token: await this.get_token(user),
     };
   }
 
-  async findUserById(id: string, param: boolean) {
+  async findUserById(id: string) {
     const user = await this.UsersRepository.createQueryBuilder('User')
       .leftJoinAndSelect('User.tipoUser', 'TipoUser')
       .leftJoinAndSelect('User.ciudad', 'Ciudad')
@@ -94,7 +95,7 @@ export class AuthService {
   }
 
   get_token(user: User) {
-    const payload = {
+    const payload: JWTPayload = {
       id: user.id,
       nombre: user.nombre,
       tipo: user.tipoUser.id,
@@ -116,14 +117,14 @@ export class AuthService {
     }
     const token = await this.get_token(this_user);
     return {
-      user: await this.findUserById(this_user.id, false),
+      user: await this.findUserById(this_user.id),
       token,
     };
   }
 
   async logintoken(userid) {
     return {
-      user: await this.findUserById(userid, false),
+      user: await this.findUserById(userid),
     };
   }
 
