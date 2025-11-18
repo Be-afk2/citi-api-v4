@@ -20,6 +20,7 @@ import { GetOneDtoNumber } from '../evento/dto/GetOneDtoNumber.dto';
 import { GetOneIntedto } from './dto/GetOneIntedto.dto';
 import { UseAuthUser } from '../auth/decorators/use-auth-user.decorator';
 import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
+import { ParseInteractionPipe } from './pipes/interaction.pipe';
 
 @Controller('interaccion')
 @UseGuards(JwtAuthGuard)
@@ -39,21 +40,11 @@ export class InteraccionController {
   @Put(':tipo/:accion')
   async interactuar(
     @Param('tipo') tipo: 'local' | 'evento',
-    @Param('accion') accion: 'like' | 'compartir' | 'visto',
+    @Param('accion', ParseInteractionPipe) accionId,
     @Query() data: GetOneDto,
     @GetUser() user: User,
   ) {
     const isLocal = tipo === 'local';
-
-    // Mapeo de acciones a números o enums (según lo que use tu servicio)
-    const acciones = {
-      like: 1,
-      compartir: 2,
-      visto: 3,
-    };
-
-    const accionId = acciones[accion];
-    if (!accionId) throw new BadRequestException(`Acción no válida: ${accion}`);
 
     return await this.InteraccionService.switchInte(
       accionId,
