@@ -250,9 +250,9 @@ export class HomeService {
       ])
       .addSelect((subQuery) => {
         return subQuery
-          .select('fotos.path')
-          .from(FotosEvento, 'fotos')
-          .where('fotos.eventoId = evento.id')
+          .select('Fotos.path')
+          .from(FotosEvento, 'Fotos')
+          .where('Fotos.eventoId = Evento.id')
           .orderBy('RAND()')
           .limit(1);
       }, 'fotoAleatoria');
