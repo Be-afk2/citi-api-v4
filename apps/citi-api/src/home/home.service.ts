@@ -112,7 +112,7 @@ export class HomeService {
       )
       .addSelect((subQuery) => {
         return subQuery
-          .select('Fotos.Path')
+          .select('Fotos.path')
           .from(FotosLocal, 'fotos')
           .where('Fotos.localId = Local.id')
           .orderBy('RAND()')
