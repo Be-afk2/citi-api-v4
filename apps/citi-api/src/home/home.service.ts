@@ -114,9 +114,9 @@ export class HomeService {
       )
       .addSelect((subQuery) => {
         return subQuery
-          .select('fotos.path')
+          .select('Fotos.path')
           .from(FotosLocal, 'fotos')
-          .where('fotos.localId = Local.id')
+          .where('Fotos.localId = Local.id')
           .orderBy('RAND()')
           .limit(1);
       }, 'fotoAleatoria');
