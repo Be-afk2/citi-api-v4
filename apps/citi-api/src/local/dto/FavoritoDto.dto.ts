@@ -22,13 +22,13 @@ export class FavoritoDto {
 }
 
 class FavoritoAgregar {
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  id: number;
+  id: string;
 }
 
 class FavoritoEliminar {
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  id: number;
+  id: string;
 }

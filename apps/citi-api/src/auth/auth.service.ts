@@ -72,6 +72,7 @@ export class AuthService {
       .leftJoinAndSelect('User.tipoUser', 'TipoUser')
       .leftJoinAndSelect('User.ciudad', 'Ciudad')
       .leftJoinAndSelect('User.Preferencias', 'Etiquetas')
+      .leftJoinAndSelect('User.Favoritos', 'Local')
       .where('User.id = :id', { id })
       .select([
         'User.id',
@@ -88,6 +89,7 @@ export class AuthService {
         'Ciudad.nombre',
         'Etiquetas.id',
         'Etiquetas.nombre',
+        'Local.id',
       ])
       .getOne();
 

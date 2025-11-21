@@ -91,7 +91,6 @@ export class LocalController {
   }
 
   // rincon de necro
-  @Put('etiq')
   @UseAuthUser(ValidRoles.SuperAdmin)
   @Post('necro')
   async crearNecro(@Body() data: CreateLocalDto) {
@@ -108,5 +107,11 @@ export class LocalController {
   @Put('Favorito')
   async GuardarFavorito(@Body() data: FavoritoDto, @GetUser() user: User) {
     return await this.localService.GuardarFavorito(data, user);
+  }
+
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario)
+  @Get("Favorito")
+  async GetFavoritos(@GetUser() user: User){
+    return await this.localService.GetFavoritos(user)
   }
 }

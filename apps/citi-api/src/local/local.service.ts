@@ -24,6 +24,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { EditarLocalDto } from './dto/EditarLocal.dto';
 import { FavoritoDto } from './dto/FavoritoDto.dto';
+import { skip } from 'rxjs';
 @Injectable()
 export class LocalService {
   constructor(
@@ -300,9 +301,22 @@ export class LocalService {
 
   async GuardarFavorito(data: FavoritoDto, user: User) {
     for (const item of data.FavoritoAgregar) {
+      const LocalFavExiste = user.Favoritos.some((e) => e.id === item.id);
+      if(LocalFavExiste) continue;
+      const local = await this.LocalRepository.findOneBy({id:item.id})
+      if(!local) continue;
+      user.Favoritos.push(local)
     }
+    await user.save()
+      
+    return user
+  }
 
-    user.Favoritos;
-    return { ok: false, message: 'Por implementar' };
+  async GetFavoritos(user){
+    var Locales = []
+    for( let item of user.Favoritos){
+      Locales.push(await this.getOneMini(item.id))
+    }
+    return Locales
   }
 }
