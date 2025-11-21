@@ -244,9 +244,9 @@ export class HomeService {
         'Evento.latitud',
         'Etiquetas.id',
         'Etiquetas.nombre',
-        'interaccion.like',
-        'interaccion.visto',
-        'interaccion.compartido',
+        'Interaccion.like',
+        'Interaccion.visto',
+        'Interaccion.compartido',
       ])
       .addSelect((subQuery) => {
         return subQuery
