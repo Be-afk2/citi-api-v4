@@ -38,9 +38,8 @@ export class InvitadoService {
     });
     if (user) {
       return {
-        // user: await this.AuthService.findUserById(user.id, false),
         user: user,
-        token: await this.AuthService.get_token(user),
+        token: this.AuthService.get_token(user),
       };
     }
 
@@ -54,7 +53,7 @@ export class InvitadoService {
 
     return {
       user: await this.AuthService.findUserById(user.id),
-      token: await this.AuthService.get_token(user),
+      token: this.AuthService.get_token(user),
     };
   }
 }

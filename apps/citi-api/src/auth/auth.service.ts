@@ -100,7 +100,7 @@ export class AuthService {
     const payload: JWTPayload = {
       id: user.id,
       nombre: user.nombre,
-      tipo: user.tipoUser.id,
+      tipo: user.tipoUser?.id ?? 3,
     };
     const token = this.jwtService.sign(payload);
     return token;
