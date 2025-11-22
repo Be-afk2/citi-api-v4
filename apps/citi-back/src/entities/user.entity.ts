@@ -22,6 +22,7 @@ import { Ciudad } from './ciudad.entity';
 import { Local } from './local.entity';
 import { TipoUser } from './TipoUser.entity';
 import { Etiquetas } from './etiquetas.entiy';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User extends BaseEntity {
@@ -40,6 +41,7 @@ export class User extends BaseEntity {
   @Column({ nullable: false, unique: true })
   correo: string;
 
+  @Exclude({ toPlainOnly: true })
   @Column({ nullable: false })
   password: string;
 

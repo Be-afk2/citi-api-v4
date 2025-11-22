@@ -1,12 +1,17 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import * as path from 'path';
 import * as serveStatic from 'serve-static';
 const cors = require('cors');
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cors());
+
+  // Para los decoradores @Exclude() de class-transformer
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
