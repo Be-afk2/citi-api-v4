@@ -24,8 +24,6 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from 'apps/citi-back/src/entities/user.entity';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { AsignarEtiquetaDto } from './dto/AsignarEtiquetaDto.dto';
-import { PaguinadorDto } from '../etiqueta/dto/paguinadorDto.dto';
-import { FiltroDto } from './dto/FiltroDto.dto';
 import { FiltroPaguinadorDto } from './dto/FiltroPaguinadorDto.dto';
 import { GetOneDtoNumber } from '../evento/dto/GetOneDtoNumber.dto';
 import { EditarLocalDto } from './dto/EditarLocal.dto';
@@ -110,8 +108,8 @@ export class LocalController {
   }
 
   @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario)
-  @Get("Favorito")
-  async GetFavoritos(@GetUser() user: User){
-    return await this.localService.GetFavoritos(user)
+  @Get('Favorito')
+  async GetFavoritos(@GetUser() user: User) {
+    return await this.localService.GetFavoritos(user);
   }
 }

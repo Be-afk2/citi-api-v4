@@ -37,6 +37,7 @@ export class EventoService {
     const [data, total] = await this.EventoRepository.findAndCount({
       skip: (paguinador.Paguina - 1) * paguinador.Cantidad,
       take: paguinador.Cantidad,
+      order: { id: 'DESC' },
       // Por si es rentable agregar la carga de imagenes desde acá
       // relations: { fotos: true },
     });
