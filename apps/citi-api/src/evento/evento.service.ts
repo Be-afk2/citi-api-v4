@@ -61,6 +61,7 @@ export class EventoService {
         'Evento.compartidos',
         'Evento.vistos',
         'Evento.reportes',
+        'Evento.necro',
         'Evento.fechaInicio',
         'Evento.fechaFin',
         'FotosEvento.id',
