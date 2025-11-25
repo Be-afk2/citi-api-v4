@@ -72,7 +72,8 @@ export class LocalController {
     const dto: GetOneDto = { id: String(data.id) };
 
     await this.InteraccionService.switchInte(3, dto, user, true);
-    return local
+    const interaccion = await this.InteraccionService.GetInte(data.id,user,true)
+    return {...local,interaccion}
 
   }
 

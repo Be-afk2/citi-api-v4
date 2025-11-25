@@ -21,7 +21,7 @@ export class InteraccionService {
     private LocalRepository: Repository<Local>,
     @InjectRepository(Evento)
     private EventoRepository: Repository<Evento>,
-  ) {}
+  ) { }
   async GetLocalInte(id: string) {
     const local = await this.LocalRepository.findOneBy({ id: id });
 
@@ -44,6 +44,12 @@ export class InteraccionService {
       .andWhere(type ? 'interaccion.local = :id' : 'interaccion.evento = :id', {
         id: id,
       })
+      .select([
+        'interaccion.id',
+        'interaccion.like',
+        'interaccion.compartido',
+        'interaccion.visto',
+      ])
       .getOne();
 
     if (!interaccion) {
