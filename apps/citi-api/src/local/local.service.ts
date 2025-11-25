@@ -127,6 +127,7 @@ export class LocalService {
         'local.longitud',
         'local.latitud',
         'local.likes',
+        'local.necro',
         'local.compartidos',
         'local.vistos',
         'FotosLocal.id',
