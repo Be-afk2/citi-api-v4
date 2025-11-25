@@ -2,7 +2,6 @@ import { Local } from 'apps/citi-back/src/entities/local.entity';
 import { GeoModule } from '../geolocalizacion/geo.module';
 import { LocalController } from './local.controller';
 import { LocalService } from './local.service';
-
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { diskStorage } from 'multer';
@@ -10,6 +9,8 @@ import { MulterModule } from '@nestjs/platform-express';
 import { extname } from 'path';
 import { FotosLocal } from 'apps/citi-back/src/entities/fotoslocal.entity';
 import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
+import { InteraccionService } from '../interacciones/interaccion.service';
+import { InteraccionModule } from '../interacciones/interaccion.module';
 
 @Module({
   imports: [
@@ -31,10 +32,11 @@ import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
     }),
 
     TypeOrmModule.forFeature([Local, FotosLocal, Etiquetas]),
+    InteraccionModule,
     GeoModule,
   ],
   controllers: [LocalController],
-  providers: [LocalService],
+  providers: [LocalService,InteraccionService],
   exports: [TypeOrmModule, LocalService],
 })
 export class LocalModule {}

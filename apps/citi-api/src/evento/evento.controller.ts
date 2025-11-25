@@ -47,9 +47,12 @@ export class EventoController {
   @Get('one')
   async getEvento(@Query() query: GetOneDtoNumber, @GetUser() user: User) {
     const dto: GetOneDto = { id: String(query.id) };
-    this.InteraccionService.switchInte(3, dto, user, false);
 
-    return await this.eventoService.GetEvento(query);
+    const evento = await this.eventoService.GetEvento(query);
+
+    await this.InteraccionService.switchInte(3, dto, user, false);
+    return evento
+
   }
 
   @UseAuthUser(ValidRoles.SuperAdmin)

@@ -28,11 +28,14 @@ import { FiltroPaguinadorDto } from './dto/FiltroPaguinadorDto.dto';
 import { GetOneDtoNumber } from '../evento/dto/GetOneDtoNumber.dto';
 import { EditarLocalDto } from './dto/EditarLocal.dto';
 import { FavoritoDto } from './dto/FavoritoDto.dto';
+import { InteraccionService } from '../interacciones/interaccion.service';
 
 @Controller('local')
 @UseGuards(JwtAuthGuard)
 export class LocalController {
-  constructor(private readonly localService: LocalService) {}
+  constructor(private readonly localService: LocalService,
+    private readonly InteraccionService: InteraccionService,
+  ) { }
 
   @UseAuthUser(ValidRoles.SuperAdmin)
   @Post()
@@ -64,8 +67,13 @@ export class LocalController {
 
   @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
   @Get('one')
-  async GetOne(@Query() data: GetOneDto) {
-    return await this.localService.getOne(data.id);
+  async GetOne(@Query() data: GetOneDto, @GetUser() user: User) {
+    const local = await this.localService.getOne(data.id);
+    const dto: GetOneDto = { id: String(data.id) };
+
+    await this.InteraccionService.switchInte(3, dto, user, true);
+    return local
+
   }
 
   @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
