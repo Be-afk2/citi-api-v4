@@ -38,7 +38,7 @@ export class LocalService {
     private FotosLocalRepository: Repository<FotosLocal>,
 
     private geoService: GeoService,
-  ) {}
+  ) { }
 
   async CreateLocal(data: CreateLocalDto, necro: boolean = false) {
     const comprobacion = await this.ComprobarCrearLocal(data);
@@ -192,32 +192,45 @@ export class LocalService {
   async getAll(user: User, admin: boolean, data: FiltroPaguinadorDto) {
     const Query = await this.LocalRepository.createQueryBuilder('local')
       .leftJoinAndSelect('local.etiquetas', 'Etiquetas')
+      .leftJoinAndSelect('local.ciudad', 'Ciudad')
+      .leftJoinAndSelect('Ciudad.region', 'Region')
+      .leftJoinAndSelect('Region.Pais', 'Pais')
       .leftJoinAndSelect('local.fotos', 'FotosLocal')
       .select([
         'local.id',
         'local.nombre',
         'local.longitud',
         'local.latitud',
+        'local.ciudad',
         'Etiquetas.id',
         'Etiquetas.nombre',
         'FotosLocal.id',
         'FotosLocal.path',
+        'Ciudad.nombre',
+        'Region.nombre',
+        'Pais.nombre'
       ]);
 
     if (data.Nombre) {
       Query.where('local.nombre LIKE :search', { search: `%${data.Nombre}%` });
     }
     if (admin && data.ciudad) {
-      Query.andWhere('local.ciudad = :ciudad', { ciudad: data.ciudad });
+      Query.andWhere('ciudad.id = :ciudad', { ciudad: data.ciudad });
     }
     if (admin && data.region) {
-      Query.andWhere('local.region = :region', { region: data.region });
+      Query.andWhere('Region.id = :region', { region: data.region });
     }
     if (admin && data.pais) {
-      Query.andWhere('local.pais = :pais', { pais: data.pais });
+      Query.andWhere('Pais.id = :pais', { pais: data.pais });
     }
     if (!admin) {
+      console.log("dsdsd")
       Query.andWhere('local.ciudad = :ciudad', { ciudad: user.ciudad });
+    }
+    if (data.Etiqueta) {
+      Query.andWhere('etiquetas.id = :idEtiqueta', {
+        idEtiqueta: data.Etiqueta,
+      });
     }
 
     Query.skip((data.Paguina - 1) * data.Cantidad);

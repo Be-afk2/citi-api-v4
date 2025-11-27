@@ -83,6 +83,8 @@ export class LocalController {
     return await this.localService.getAll(user, user.tipoUser.id == 1, data);
   }
 
+
+
   @Put('editar')
   @UseAuthUser(ValidRoles.SuperAdmin)
   async EditarLocal(@Body() data: EditarLocalDto) {

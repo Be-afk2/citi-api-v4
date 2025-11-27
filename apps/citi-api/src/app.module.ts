@@ -1,3 +1,4 @@
+import { DashboardModule } from './dashboard/dashboard.module';
 import { InteraccionModule } from './interacciones/interaccion.module';
 import { InvitadoModule } from './invitado/invitado.module';
 import { SubscriptionModule } from './subscription/subscription.module';
@@ -29,10 +30,7 @@ import { LocalTipo } from 'apps/citi-back/src/entities/localTipo.entity';
 
 @Module({
   imports: [
-    InteraccionModule,
-    InvitadoModule,
-    SubscriptionModule,
-    HomeModule,
+
 
     ConfigModule.forRoot({ envFilePath: '.env' }),
 
@@ -68,8 +66,13 @@ import { LocalTipo } from 'apps/citi-back/src/entities/localTipo.entity';
     EtiquetaModule,
     EventoModule,
     SubscriptionModule,
+    DashboardModule,
+    InteraccionModule,
+    InvitadoModule,
+    SubscriptionModule,
+    HomeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

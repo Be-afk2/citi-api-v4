@@ -15,11 +15,15 @@ export class FiltroPaguinadorDto {
 
   @IsOptional()
   @IsNumber()
-  pais: string;
+  pais: number;
 
   @IsNumber()
   Paguina: number;
 
   @IsNumber()
   Cantidad: number;
+
+  @IsNumber()
+  @IsOptional()
+  Etiqueta:number;
 }
