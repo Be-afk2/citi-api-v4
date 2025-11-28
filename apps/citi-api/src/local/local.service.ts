@@ -228,7 +228,7 @@ export class LocalService {
       Query.andWhere('local.ciudad = :ciudad', { ciudad: user.ciudad });
     }
     if (data.Etiqueta) {
-      Query.andWhere('etiquetas.id = :idEtiqueta', {
+      Query.andWhere('Etiquetas.id = :idEtiqueta', {
         idEtiqueta: data.Etiqueta,
       });
     }
