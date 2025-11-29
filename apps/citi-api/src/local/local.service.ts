@@ -190,6 +190,7 @@ export class LocalService {
   }
 
   async getAll(user: User, admin: boolean, data: FiltroPaguinadorDto) {
+    console.log({user,admin,data})
     const Query = await this.LocalRepository.createQueryBuilder('local')
       .leftJoinAndSelect('local.etiquetas', 'Etiquetas')
       .leftJoinAndSelect('local.ciudad', 'Ciudad')
@@ -224,15 +225,14 @@ export class LocalService {
       Query.andWhere('Pais.id = :pais', { pais: data.pais });
     }
     if (!admin) {
-      console.log("dsdsd")
-      Query.andWhere('local.ciudad = :ciudad', { ciudad: user.ciudad });
+      Query.andWhere('local.ciudad = :ciudad', { ciudad: user.ciudad.id });
     }
     if (data.Etiqueta) {
       Query.andWhere('Etiquetas.id = :idEtiqueta', {
         idEtiqueta: data.Etiqueta,
       });
     }
-
+    console.log(Query.getQuery())
     Query.skip((data.Paguina - 1) * data.Cantidad);
     Query.take(data.Cantidad);
     const [result, total] = await Query.getManyAndCount();

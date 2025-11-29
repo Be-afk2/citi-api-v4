@@ -16,6 +16,7 @@ import { Region } from './region.entity';
 import { User } from './user.entity';
 import { Local } from './local.entity';
 import { Evento } from './evento.entity';
+import { Ciudad } from './ciudad.entity';
 
 @Entity()
 export class GeoData extends BaseEntity {
@@ -30,6 +31,10 @@ export class GeoData extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.id)
   user: User;
+
+  @ManyToOne(() => Ciudad, (Ciudad) => Ciudad.id)
+  ciudad: Ciudad;
+
 
   @DeleteDateColumn()
   deleted_at: Date;

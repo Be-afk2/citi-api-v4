@@ -2,11 +2,12 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Query } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { UseAuthUser } from '../auth/decorators/use-auth-user.decorator';
 import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 import { UpdateEtiquetaDto } from '../etiqueta/dto/UpdateEtiquetaDto.dto';
+import { GetOneDto } from '../local/dto/GetOneDto.dto';
 
 @Controller("dashboard")
 export class DashboardController {
@@ -22,6 +23,12 @@ export class DashboardController {
   @Get("etiqueta")
   async Getetiqueta() {
     return this.DashboardService.GetEtiquetasTop();
+  }
+
+  @UseAuthUser(ValidRoles.SuperAdmin)
+  @Get("mapa")
+  async GetMapa(@Query() data: GetOneDto, @Query() radio: number) {
+    return this.DashboardService.GetMapaCalor(data, radio);
   }
 
 }

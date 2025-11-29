@@ -43,6 +43,7 @@ export class UserRoleGuard implements CanActivate {
     if (!user) throw new BadRequestException('User not found');
 
     // * Verificacion roles
+    console.log(user)
     this.logger.log(`Usuario de tipo: ${user.tipoUser.tipo}`);
     if (validRoles.includes(Number(user.tipoUser.id))) return true;
 

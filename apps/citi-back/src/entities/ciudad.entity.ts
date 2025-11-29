@@ -16,6 +16,7 @@ import { Region } from './region.entity';
 import { User } from './user.entity';
 import { Local } from './local.entity';
 import { Evento } from './evento.entity';
+import { GeoData } from './geoData.entity';
 
 @Entity()
 export class Ciudad extends BaseEntity {
@@ -33,6 +34,9 @@ export class Ciudad extends BaseEntity {
 
   @OneToMany(() => Local, (Local) => Local.ciudad)
   local: Local[];
+
+  @OneToMany(() => GeoData, (GeoData) => GeoData.ciudad)
+  geodata: GeoData[];
 
   @OneToMany(() => Evento, (Evento) => Evento.ciudad)
   evento: Local[];
