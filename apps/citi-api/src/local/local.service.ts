@@ -185,12 +185,17 @@ export class LocalService {
       local.latitud = data.latitud;
       local.longitud = data.longitud;
     }
+
+    if (data.Habilitar !== undefined) {
+      console.log("asdasd")
+      local.Habilitar = data.Habilitar
+    }
     await local.save();
     return await this.getOne(local.id);
   }
 
   async getAll(user: User, admin: boolean, data: FiltroPaguinadorDto) {
-    console.log({user,admin,data})
+    console.log({ user, admin, data })
     const Query = await this.LocalRepository.createQueryBuilder('local')
       .leftJoinAndSelect('local.etiquetas', 'Etiquetas')
       .leftJoinAndSelect('local.ciudad', 'Ciudad')

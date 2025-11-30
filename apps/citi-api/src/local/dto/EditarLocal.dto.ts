@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsNumber,
@@ -31,4 +32,9 @@ export class EditarLocalDto {
   @IsString()
   @IsOptional()
   latitud: string;
+
+
+  @IsBoolean()
+  @IsOptional()
+  Habilitar: boolean;
 }

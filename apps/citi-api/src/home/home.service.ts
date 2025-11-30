@@ -82,8 +82,9 @@ export class HomeService {
     }
     local.andWhere(
       `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat)) <= :maxDistance`,
-    );
-    local.andWhere('Local.necro = :necro', { necro: necro });
+    )
+      .andWhere("Local.Habilitar = TRUE")
+      .andWhere('Local.necro = :necro', { necro: necro });
     if (Preferencias.length > 0) {
       local.andWhere('Etiquetas.id IN (:...preferencias)', {
         preferencias: Preferencias,
