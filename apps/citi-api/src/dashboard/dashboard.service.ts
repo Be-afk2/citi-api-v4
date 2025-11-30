@@ -63,8 +63,7 @@ export class DashboardService {
 
         var etiquetas: { id: number; cantidad: number; nombre: string }[] = []
         for (let item of locales) {
-            console.log(item)
-            console.log(item.id)
+
             const local = await this.LocalRepository
                 .createQueryBuilder("local")
                 .leftJoinAndSelect('local.etiquetas', 'Etiquetas')

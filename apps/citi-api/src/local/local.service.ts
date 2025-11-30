@@ -187,7 +187,6 @@ export class LocalService {
     }
 
     if (data.Habilitar !== undefined) {
-      console.log("asdasd")
       local.Habilitar = data.Habilitar
     }
     await local.save();
@@ -195,7 +194,6 @@ export class LocalService {
   }
 
   async getAll(user: User, admin: boolean, data: FiltroPaguinadorDto) {
-    console.log({ user, admin, data })
     const Query = await this.LocalRepository.createQueryBuilder('local')
       .leftJoinAndSelect('local.etiquetas', 'Etiquetas')
       .leftJoinAndSelect('local.ciudad', 'Ciudad')
@@ -237,7 +235,6 @@ export class LocalService {
         idEtiqueta: data.Etiqueta,
       });
     }
-    console.log(Query.getQuery())
     Query.skip((data.Paguina - 1) * data.Cantidad);
     Query.take(data.Cantidad);
     const [result, total] = await Query.getManyAndCount();
