@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   Length,
   IsOptional,
+  IsBoolean,
 } from 'class-validator';
 
 export class EditarEventoDto {
@@ -42,4 +43,8 @@ export class EditarEventoDto {
   @IsDate()
   @IsOptional()
   FechaFin: Date;
+
+  @IsBoolean()
+  @IsOptional()
+  Activo: boolean
 }

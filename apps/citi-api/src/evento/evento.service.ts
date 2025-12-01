@@ -153,14 +153,14 @@ export class EventoService {
     if (!evento) {
       throw new NotFoundException('Registro con este id no encontrado');
     }
-    if (data.Nombre) {
+    if (data.Nombre !== undefined) {
       evento.nombre = data.Nombre;
     }
-    if (data.Descripcion) {
+    if (data.Descripcion !== undefined) {
       evento.descripcion = data.Descripcion;
     }
 
-    if (data.Latitud && data.Longitud) {
+    if (data.Latitud && data.Longitud !== undefined) {
       evento.latitud = data.Latitud;
       evento.longitud = data.Longitud;
       const GeoData = new GeoDataDto();
@@ -169,21 +169,26 @@ export class EventoService {
       const geodata = await this.geoService.GetData(GeoData);
       evento.ciudad = geodata.ciudad;
     }
-    if (data.Organizador) {
+    if (data.Organizador !== undefined) {
       evento.Organizador = data.Organizador;
     }
-    if (data.FechaInicio) {
+    if (data.FechaInicio !== undefined) {
       evento.fechaInicio = data.FechaInicio;
       if (fechaHoy.isAfter(moment(data.FechaInicio))) {
         evento.activo = true;
       }
     }
-    if (data.FechaFin) {
+    if (data.FechaFin !== undefined) {
       evento.fechaFin = data.FechaFin;
       if (moment(data.FechaFin).isBefore(fechaHoy)) {
         evento.activo = false;
       }
     }
+
+    if (data.Activo !== undefined) {
+      evento.activo = data.Activo
+    }
+
     await evento.save();
     return await this.GetEvento({ id: evento.id });
   }

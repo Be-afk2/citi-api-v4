@@ -167,16 +167,16 @@ export class LocalService {
       throw new NotFoundException('Registro con este id no encontrado');
     }
 
-    if (data.nombre) {
+    if (data.nombre !== undefined) {
       local.nombre = data.nombre;
     }
-    if (data.descripcion) {
+    if (data.descripcion !== undefined) {
       local.descripcion = data.descripcion;
     }
-    if (data.contacto) {
+    if (data.contacto !== undefined) {
       local.contacto = data.contacto;
     }
-    if (data.longitud && data.latitud) {
+    if (data.longitud && data.latitud ) {
       const GeoData = new GeoDataDto();
       GeoData.Longitud = data.longitud;
       GeoData.Latitud = data.latitud;
