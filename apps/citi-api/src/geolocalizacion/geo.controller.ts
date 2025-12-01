@@ -11,11 +11,12 @@ import { UseAuthUser } from '../auth/decorators/use-auth-user.decorator';
 import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { GetOneDto } from '../local/dto/GetOneDto.dto';
+import { GeoRaData } from './dto/geoRaData.dto';
 
 @Controller('Geo')
 @UseGuards(JwtAuthGuard)
 export class GeoController {
-  constructor(private geoService: GeoService) {}
+  constructor(private geoService: GeoService) { }
 
   @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario)
   @Get()
@@ -46,6 +47,12 @@ export class GeoController {
   @Get('noTocar')
   async SetRancagua() {
     return this.geoService.SetRancagua();
+  }
+
+  @UseAuthUser(ValidRoles.SuperAdmin)
+  @Post('noTocar2')
+  async SetPuntosRa(@Body() data: GeoRaData, @GetUser() user: User) {
+    return this.geoService.SetPuntosRa(data, user);
   }
 
 }

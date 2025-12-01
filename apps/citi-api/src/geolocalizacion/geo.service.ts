@@ -15,6 +15,7 @@ import { GeoDataDto } from './dto/geoData.dto';
 import { User } from 'apps/citi-back/src/entities/user.entity';
 import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
 import { GetOneDto } from '../local/dto/GetOneDto.dto';
+import { GeoRaData } from './dto/geoRaData.dto';
 
 @Injectable()
 export class GeoService {
@@ -173,10 +174,22 @@ export class GeoService {
 
   async SetRancagua() {
     const geodata = await this.GeoDataRepository.findBy({ ciudad: null })
-    const ciudad = await this.CiudadRepository.findOneBy({id:1})
-    for(let item of geodata){
+    const ciudad = await this.CiudadRepository.findOneBy({ id: 1 })
+    for (let item of geodata) {
       item.ciudad = ciudad
       item.save()
+    }
+
+  }
+
+  async SetPuntosRa(data: GeoRaData,user:User) {
+    for (let item of data.Cordenadas) {
+      const geo = await this.GeoDataRepository.create()
+      geo.latitud = item.latitud
+      geo.longitud = item.longitud
+      geo.user=user
+      geo.ciudad = user.ciudad
+      geo.save()
     }
 
   }
