@@ -45,9 +45,7 @@ export class UserController {
   @UseAuthUser(
     ValidRoles.SuperAdmin,
     ValidRoles.Usuario,
-    ValidRoles.Guest,
 
-    //rol de invitado sin token
   )
   @Get('preferencia')
   async GetPreferencia(@GetUser() user: User) {

@@ -230,7 +230,7 @@ export class HomeService {
       });
     }
     Evento.setParameters({ lon, lat, maxDistance })
-      .orderBy('RAND()')
+      .orderBy('RAND()') 
       .select([
         'Evento.id',
         'Evento.Nombre',
@@ -238,6 +238,8 @@ export class HomeService {
         'Evento.compartidos',
         'Evento.vistos',
         'Evento.longitud',
+        'Evento.fechaFin',
+        'Evento.fechaInicio',
         'Evento.latitud',
         'Etiquetas.id',
         'Etiquetas.nombre',
