@@ -33,7 +33,7 @@ export class GeoService {
 
     @InjectRepository(User)
     private UserRepository: Repository<User>,
-  ) {}
+  ) { }
 
   // peticion a la api para obtener la geolocalizacion del lugar
   async GetGeoData(data: GeoDataDto) {
@@ -145,6 +145,7 @@ export class GeoService {
     Geodata.longitud = data.Longitud;
     Geodata.latitud = data.Latitud;
     Geodata.user = User;
+    Geodata.ciudad = User.ciudad
     await Geodata.save();
   }
 
@@ -168,5 +169,15 @@ export class GeoService {
     geo.Latitud = data.latitud;
     geo.Longitud = data.longitud;
     return geo;
+  }
+
+  async SetRancagua() {
+    const geodata = await this.GeoDataRepository.findBy({ ciudad: null })
+    const ciudad = await this.CiudadRepository.findOneBy({id:1})
+    for(let item of geodata){
+      item.ciudad = ciudad
+      item.save()
+    }
+
   }
 }

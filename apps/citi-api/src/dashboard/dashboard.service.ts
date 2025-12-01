@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { GeoData } from 'apps/citi-back/src/entities/geoData.entity';
 import { interaccion } from 'apps/citi-back/src/entities/interaccion.entity';
 import { Local } from 'apps/citi-back/src/entities/local.entity';
-import { Repository } from 'typeorm';
+import { Double, Repository } from 'typeorm';
 import { GetOneDto } from '../local/dto/GetOneDto.dto';
 
 @Injectable()
@@ -73,6 +73,7 @@ export class DashboardService {
                     'Etiquetas.id',
                     'Etiquetas.nombre',
                 ])
+
                 .getOne()
             for (let etiquetaItem of local.etiquetas) {
                 const existente = etiquetas.find(e => e.id === etiquetaItem.id);
@@ -91,33 +92,48 @@ export class DashboardService {
         return etiquetas.slice(0, 5)
 
     }
-    async GetMapaCalor(ciudad: GetOneDto, maxDistance: number = 5000) {
+    async GetMapaCalor(ciudad: GetOneDto, maxDistance: number = 20) {
 
         const data = await this.GeoDataRepository
             .createQueryBuilder("geo")
+            .leftJoinAndSelect('geo.ciudad', 'ciudad')
+            .where("geo.ciudad = :id", { id: ciudad.id })
             .select("geo.latitud", "latitud")
             .addSelect("geo.longitud", "longitud")
-            .addSelect("COUNT(*)", "cantidad")
-            .where("geo.ciudad = :id", {id:ciudad})
+            .addSelect("geo.id", "id")
+            .addSelect("geo.ciudad", "ciudad")
             .groupBy("geo.latitud")
             .addGroupBy("geo.longitud")
             .getRawMany();
 
-return data
-        var items: { latitud : string ; longitud:string ; peso : Float32Array}[] = []
+        var items: { latitud: string; longitud: string; peso: number }[] = []
 
         for (let item of data) {
-
-            const Elementos = await this.GeoDataRepository.createQueryBuilder
-
-            /*
-                        .andWhere(
-            `ST_Distance_Sphere(point(GeoData.longitud, GeoData.latitud), point(:lon, :lat)) <= :maxDistance`,
-        )
-            */
+            const elementos = await this.GeoDataRepository.createQueryBuilder("geo")
+                .where("geo.id != :idelemento", { idelemento: item.id })
+                .andWhere("geo.ciudad = :idciti", { idciti: item.ciudad })
+                .andWhere(`
+            ST_Distance_Sphere(
+                point(geo.longitud, geo.latitud),
+                point(:lon, :lat)
+            ) <= :maxDistance
+        `).addSelect("COUNT(*)", "cantidad")
+                .setParameters({
+                    lon: item.longitud,
+                    lat: item.latitud,
+                    maxDistance: maxDistance // en metros
+                })
+                .groupBy("geo.latitud")
+                .addGroupBy("geo.longitud")
+                .getRawMany()
+            items.push({
+                latitud: item.latitud,
+                longitud: item.longitud,
+                peso: (elementos.length * 0.1) + 0.1
+            })
         }
 
-        return data
+        return items
 
     }
 

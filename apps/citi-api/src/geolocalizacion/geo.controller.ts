@@ -41,4 +41,11 @@ export class GeoController {
   async GetUserDataGeo(@Body() data: GetOneDto) {
     return this.geoService.GetUserDataGeo(data);
   }
+
+  @UseAuthUser(ValidRoles.SuperAdmin)
+  @Get('noTocar')
+  async SetRancagua() {
+    return this.geoService.SetRancagua();
+  }
+
 }
