@@ -268,8 +268,8 @@ export class HomeService {
           vistos: item.Evento_vistos,
           longitud: item.Evento_longitud,
           latitud: item.Evento_latitud,
-          fechaFin: item.fechaFin,
-          fechaInicio: item.fechaInicio,
+          fechaFin: item.Evento_fechaFin,
+          fechaInicio: item.Evento_fechaInicio,
           foto: item.fotoAleatoria,
           etiquetas: [],
         });
