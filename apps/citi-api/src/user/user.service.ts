@@ -11,7 +11,7 @@ export class UserService {
   constructor(
     @InjectRepository(Etiquetas)
     private EtiquetasRepository: Repository<Etiquetas>,
-  ) {}
+  ) { }
 
   async update(data: UpdateUserDto, user: User) {
     user.apellido = data.apellido ? data.apellido : user.apellido;
@@ -33,6 +33,24 @@ export class UserService {
   }
 
   async updatePreferencia(data: PreferenciasUser, user: User) {
+    const resu = await this.agregarEtiqueta(data, user)
+    const resu2 = await this.eliminarEtiqueta(data, user)
+
+    return { resu, resu2 }
+  }
+
+
+  async eliminarEtiqueta(data: PreferenciasUser, user: User) {
+
+    const idsAEliminar = new Set(data.EtiquetaEliminar.map(e => e.id));
+
+    user.Preferencias = user.Preferencias.filter(et =>
+      !idsAEliminar.has(et.id)
+    );
+    user.save()
+    return user.Preferencias;
+  }
+  async agregarEtiqueta(data: PreferenciasUser, user: User) {
     const result = {
       newetiq: 0,
       oldetiq: 0,
