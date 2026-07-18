@@ -33,7 +33,6 @@ export class EditarLocalDto {
   @IsOptional()
   latitud: string;
 
-
   @IsBoolean()
   @IsOptional()
   Habilitar: boolean;

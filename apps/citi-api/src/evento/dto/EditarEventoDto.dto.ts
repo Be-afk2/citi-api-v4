@@ -46,5 +46,5 @@ export class EditarEventoDto {
 
   @IsBoolean()
   @IsOptional()
-  Activo: boolean
+  Activo: boolean;
 }

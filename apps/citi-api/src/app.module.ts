@@ -30,8 +30,6 @@ import { LocalTipo } from 'apps/citi-back/src/entities/localTipo.entity';
 
 @Module({
   imports: [
-
-
     ConfigModule.forRoot({ envFilePath: '.env' }),
 
     TypeOrmModule.forRoot({
@@ -75,4 +73,4 @@ import { LocalTipo } from 'apps/citi-back/src/entities/localTipo.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

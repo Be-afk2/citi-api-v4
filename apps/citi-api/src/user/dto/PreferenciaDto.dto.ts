@@ -25,5 +25,4 @@ class EtiquetaEliminar {
   @IsNumber()
   @IsNotEmpty()
   id: number;
-
 }

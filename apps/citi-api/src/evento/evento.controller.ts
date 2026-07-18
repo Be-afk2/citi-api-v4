@@ -51,9 +51,12 @@ export class EventoController {
     const evento = await this.eventoService.GetEvento(query);
 
     await this.InteraccionService.switchInte(3, dto, user, false);
-    const interaccion = await this.InteraccionService.GetInte(query.id,user,false)
-    return {...evento,interaccion}
-
+    const interaccion = await this.InteraccionService.GetInte(
+      query.id,
+      user,
+      false,
+    );
+    return { ...evento, interaccion };
   }
 
   @UseAuthUser(ValidRoles.SuperAdmin)

@@ -38,7 +38,7 @@ export class LocalService {
     private FotosLocalRepository: Repository<FotosLocal>,
 
     private geoService: GeoService,
-  ) { }
+  ) {}
 
   async CreateLocal(data: CreateLocalDto, necro: boolean = false) {
     const comprobacion = await this.ComprobarCrearLocal(data);
@@ -176,7 +176,7 @@ export class LocalService {
     if (data.contacto !== undefined) {
       local.contacto = data.contacto;
     }
-    if (data.longitud && data.latitud ) {
+    if (data.longitud && data.latitud) {
       const GeoData = new GeoDataDto();
       GeoData.Longitud = data.longitud;
       GeoData.Latitud = data.latitud;
@@ -187,7 +187,7 @@ export class LocalService {
     }
 
     if (data.Habilitar !== undefined) {
-      local.Habilitar = data.Habilitar
+      local.Habilitar = data.Habilitar;
     }
     await local.save();
     return await this.getOne(local.id);
@@ -212,7 +212,7 @@ export class LocalService {
         'FotosLocal.path',
         'Ciudad.nombre',
         'Region.nombre',
-        'Pais.nombre'
+        'Pais.nombre',
       ]);
 
     if (data.Nombre) {
@@ -266,7 +266,7 @@ export class LocalService {
 
     const local = await this.LocalRepository.findOne({
       where: { id: data.idLocal },
-      relations: ['etiquetas'],
+      relations: { etiquetas: true },
     });
 
     if (!local) {
@@ -329,8 +329,8 @@ export class LocalService {
   }
 
   async GetFavoritos(user) {
-    var Locales = [];
-    for (let item of user.Favoritos) {
+    const Locales = [];
+    for (const item of user.Favoritos) {
       Locales.push(await this.getOneMini(item.id));
     }
     return Locales;

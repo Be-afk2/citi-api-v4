@@ -39,7 +39,7 @@ export class HomeService {
 
     @InjectRepository(Evento)
     private EventoRepository: Repository<Evento>,
-  ) { }
+  ) {}
 
   async GetLocal() {
     const local = await this.LocalRepository
@@ -80,10 +80,11 @@ export class HomeService {
     if (user.tipoUser.id != 3) {
       local.where('Local.ciudad = :ciudad', { ciudad: user.ciudad.id });
     }
-    local.andWhere(
-      `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat)) <= :maxDistance`,
-    )
-      .andWhere("Local.Habilitar = TRUE")
+    local
+      .andWhere(
+        `ST_Distance_Sphere(point(Local.longitud, Local.latitud), point(:lon, :lat)) <= :maxDistance`,
+      )
+      .andWhere('Local.Habilitar = TRUE')
       .andWhere('Local.necro = :necro', { necro: necro });
     if (Preferencias.length > 0) {
       local.andWhere('Etiquetas.id IN (:...preferencias)', {
@@ -230,7 +231,7 @@ export class HomeService {
       });
     }
     Evento.setParameters({ lon, lat, maxDistance })
-      .orderBy('RAND()') 
+      .orderBy('RAND()')
       .select([
         'Evento.id',
         'Evento.Nombre',

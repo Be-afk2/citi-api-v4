@@ -16,14 +16,14 @@ import { UserModule } from '../user/user.module';
 import { InteraccionService } from '../interacciones/interaccion.service';
 
 @Module({
-    imports: [
+  imports: [
     GeoModule,
     LocalModule,
     EventoModule,
     InteraccionModule,
     UserModule,
-    ],
-    controllers: [DashboardController,],
-    providers: [DashboardService, GeoService, LocalService, InteraccionService ],
+  ],
+  controllers: [DashboardController],
+  providers: [DashboardService, GeoService, LocalService, InteraccionService],
 })
-export class DashboardModule { }
+export class DashboardModule {}

@@ -16,7 +16,7 @@ import { GeoRaData } from './dto/geoRaData.dto';
 @Controller('Geo')
 @UseGuards(JwtAuthGuard)
 export class GeoController {
-  constructor(private geoService: GeoService) { }
+  constructor(private geoService: GeoService) {}
 
   @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario)
   @Get()
@@ -54,5 +54,4 @@ export class GeoController {
   async SetPuntosRa(@Body() data: GeoRaData, @GetUser() user: User) {
     return this.geoService.SetPuntosRa(data, user);
   }
-
 }

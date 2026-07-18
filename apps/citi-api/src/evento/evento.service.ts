@@ -31,7 +31,7 @@ export class EventoService {
     private FotosEventoRepository: Repository<FotosEvento>,
 
     private readonly geoService: GeoService,
-  ) { }
+  ) {}
 
   async GetEventos(paguinador: PaguinadorDto) {
     const [data, total] = await this.EventoRepository.findAndCount({
@@ -70,7 +70,6 @@ export class EventoService {
         'Ciudad.nombre',
       ])
       .getOne();
-
 
     if (!evento) {
       throw new NotFoundException(`Evento con ID ${data.id} no encontrado`);
@@ -186,7 +185,7 @@ export class EventoService {
     }
 
     if (data.Activo !== undefined) {
-      evento.activo = data.Activo
+      evento.activo = data.Activo;
     }
 
     await evento.save();
@@ -207,7 +206,7 @@ export class EventoService {
 
     const evento = await this.EventoRepository.findOne({
       where: { id: data.idEvento },
-      relations: ['etiquetas'],
+      relations: { etiquetas: true },
     });
 
     if (!evento) {

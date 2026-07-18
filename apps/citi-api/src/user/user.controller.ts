@@ -42,11 +42,7 @@ export class UserController {
     return await this.userService.update(data, user);
   }
 
-  @UseAuthUser(
-    ValidRoles.SuperAdmin,
-    ValidRoles.Usuario,
-
-  )
+  @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario)
   @Get('preferencia')
   async GetPreferencia(@GetUser() user: User) {
     return await this.userService.getPreferences(user);

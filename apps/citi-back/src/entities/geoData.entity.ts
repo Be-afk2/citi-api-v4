@@ -5,7 +5,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  Timestamp,
   Table,
   OneToMany,
   ManyToOne,
@@ -34,7 +33,6 @@ export class GeoData extends BaseEntity {
 
   @ManyToOne(() => Ciudad, (Ciudad) => Ciudad.id)
   ciudad: Ciudad;
-
 
   @DeleteDateColumn()
   deleted_at: Date;

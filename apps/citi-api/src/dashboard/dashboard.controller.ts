@@ -9,26 +9,25 @@ import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 import { UpdateEtiquetaDto } from '../etiqueta/dto/UpdateEtiquetaDto.dto';
 import { GetOneDto } from '../local/dto/GetOneDto.dto';
 
-@Controller("dashboard")
+@Controller('dashboard')
 export class DashboardController {
-  constructor(private DashboardService: DashboardService) { }
+  constructor(private DashboardService: DashboardService) {}
 
   @UseAuthUser(ValidRoles.SuperAdmin)
-  @Get("local")
+  @Get('local')
   async GetLocales() {
     return this.DashboardService.GetLocaltop();
   }
 
   @UseAuthUser(ValidRoles.SuperAdmin)
-  @Get("etiqueta")
+  @Get('etiqueta')
   async Getetiqueta() {
     return this.DashboardService.GetEtiquetasTop();
   }
 
   @UseAuthUser(ValidRoles.SuperAdmin)
-  @Get("mapa")
+  @Get('mapa')
   async GetMapa(@Query() data: GetOneDto, @Query() radio: number) {
     return this.DashboardService.GetMapaCalor(data, radio);
   }
-
 }

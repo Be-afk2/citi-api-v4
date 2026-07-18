@@ -34,7 +34,7 @@ export class GeoService {
 
     @InjectRepository(User)
     private UserRepository: Repository<User>,
-  ) { }
+  ) {}
 
   // peticion a la api para obtener la geolocalizacion del lugar
   async GetGeoData(data: GeoDataDto) {
@@ -146,7 +146,7 @@ export class GeoService {
     Geodata.longitud = data.Longitud;
     Geodata.latitud = data.Latitud;
     Geodata.user = User;
-    Geodata.ciudad = User.ciudad
+    Geodata.ciudad = User.ciudad;
     await Geodata.save();
   }
 
@@ -173,24 +173,22 @@ export class GeoService {
   }
 
   async SetRancagua() {
-    const geodata = await this.GeoDataRepository.findBy({ ciudad: null })
-    const ciudad = await this.CiudadRepository.findOneBy({ id: 1 })
-    for (let item of geodata) {
-      item.ciudad = ciudad
-      item.save()
+    const geodata = await this.GeoDataRepository.findBy({ ciudad: null });
+    const ciudad = await this.CiudadRepository.findOneBy({ id: 1 });
+    for (const item of geodata) {
+      item.ciudad = ciudad;
+      item.save();
     }
-
   }
 
-  async SetPuntosRa(data: GeoRaData,user:User) {
-    for (let item of data.Cordenadas) {
-      const geo = await this.GeoDataRepository.create()
-      geo.latitud = item.latitud
-      geo.longitud = item.longitud
-      geo.user=user
-      geo.ciudad = user.ciudad
-      geo.save()
+  async SetPuntosRa(data: GeoRaData, user: User) {
+    for (const item of data.Cordenadas) {
+      const geo = await this.GeoDataRepository.create();
+      geo.latitud = item.latitud;
+      geo.longitud = item.longitud;
+      geo.user = user;
+      geo.ciudad = user.ciudad;
+      geo.save();
     }
-
   }
 }

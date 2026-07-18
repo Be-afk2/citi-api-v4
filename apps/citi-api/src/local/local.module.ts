@@ -36,7 +36,7 @@ import { InteraccionModule } from '../interacciones/interaccion.module';
     GeoModule,
   ],
   controllers: [LocalController],
-  providers: [LocalService,InteraccionService],
+  providers: [LocalService, InteraccionService],
   exports: [TypeOrmModule, LocalService],
 })
 export class LocalModule {}

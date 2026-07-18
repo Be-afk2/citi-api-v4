@@ -109,7 +109,7 @@ export class AuthService {
   async login(data: LoginDto) {
     const this_user = await this.UsersRepository.findOne({
       where: { correo: data.Correo },
-      relations: ['tipoUser'],
+      relations: { tipoUser: true },
     });
     if (!this_user) {
       throw new NotFoundException('Contraseña o correo no validos');

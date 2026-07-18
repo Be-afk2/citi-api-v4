@@ -25,5 +25,5 @@ export class FiltroPaguinadorDto {
 
   @IsNumber()
   @IsOptional()
-  Etiqueta:number;
+  Etiqueta: number;
 }

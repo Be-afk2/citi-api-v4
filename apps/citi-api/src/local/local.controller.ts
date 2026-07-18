@@ -33,9 +33,10 @@ import { InteraccionService } from '../interacciones/interaccion.service';
 @Controller('local')
 @UseGuards(JwtAuthGuard)
 export class LocalController {
-  constructor(private readonly localService: LocalService,
+  constructor(
+    private readonly localService: LocalService,
     private readonly InteraccionService: InteraccionService,
-  ) { }
+  ) {}
 
   @UseAuthUser(ValidRoles.SuperAdmin)
   @Post()
@@ -72,9 +73,12 @@ export class LocalController {
     const dto: GetOneDto = { id: String(data.id) };
 
     await this.InteraccionService.switchInte(3, dto, user, true);
-    const interaccion = await this.InteraccionService.GetInte(data.id,user,true)
-    return {...local,interaccion}
-
+    const interaccion = await this.InteraccionService.GetInte(
+      data.id,
+      user,
+      true,
+    );
+    return { ...local, interaccion };
   }
 
   @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario, ValidRoles.Guest)
@@ -82,8 +86,6 @@ export class LocalController {
   async GetAll(@GetUser() user: User, @Query() data: FiltroPaguinadorDto) {
     return await this.localService.getAll(user, user.tipoUser.id == 1, data);
   }
-
-
 
   @Put('editar')
   @UseAuthUser(ValidRoles.SuperAdmin)
