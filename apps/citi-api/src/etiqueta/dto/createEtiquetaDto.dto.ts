@@ -1,13 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsNotEmpty,
-  IsNumber,
-  IsObject,
-  IsString,
-  Validate,
-  ValidateNested,
-} from 'class-validator';
+import { IsArray, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 
 export class CrearEtiquetaDto {
   @IsArray()

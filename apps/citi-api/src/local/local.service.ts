@@ -17,14 +17,11 @@ import { FotosLocal } from 'apps/citi-back/src/entities/fotoslocal.entity';
 import { User } from 'apps/citi-back/src/entities/user.entity';
 import { AsignarEtiquetaDto } from './dto/AsignarEtiquetaDto.dto';
 import { Etiquetas } from 'apps/citi-back/src/entities/etiquetas.entiy';
-import { PaguinadorDto } from '../etiqueta/dto/paguinadorDto.dto';
-import { query } from 'express';
 import { FiltroPaguinadorDto } from './dto/FiltroPaguinadorDto.dto';
 import * as fs from 'fs';
 import * as path from 'path';
 import { EditarLocalDto } from './dto/EditarLocal.dto';
 import { FavoritoDto } from './dto/FavoritoDto.dto';
-import { skip } from 'rxjs';
 @Injectable()
 export class LocalService {
   constructor(

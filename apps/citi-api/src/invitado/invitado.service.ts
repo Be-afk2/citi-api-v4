@@ -2,15 +2,13 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { ConflictException, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TipoUser } from 'apps/citi-back/src/entities/TipoUser.entity';
 import { User } from 'apps/citi-back/src/entities/user.entity';
-import { hash, compare } from 'bcrypt';
+import { hash } from 'bcrypt';
 
 import { Repository } from 'typeorm';
-import { CreateUserDto } from '../auth/dto/CreateUser.dto';
 import { AuthService } from '../auth/auth.service';
 
 const UserInvitado = {

@@ -5,14 +5,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  Table,
-  OneToMany,
   ManyToOne,
 } from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
-import { v4 as uuidv4 } from 'uuid';
-import { Pais } from './pais.entity';
-import { Ciudad } from './ciudad.entity';
 import { User } from './user.entity';
 import { Local } from './local.entity';
 import { Evento } from './evento.entity';

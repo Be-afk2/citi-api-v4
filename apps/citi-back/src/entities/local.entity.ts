@@ -5,15 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  Table,
   OneToMany,
   ManyToOne,
   ManyToMany,
   JoinTable,
 } from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
-import { v4 as uuidv4 } from 'uuid';
-import { Region } from './region.entity';
 import { User } from './user.entity';
 import { Ciudad } from './ciudad.entity';
 import { interaccion } from './interaccion.entity';

@@ -6,7 +6,6 @@ https://docs.nestjs.com/modules
 
 import { Module } from '@nestjs/common';
 import { LocalModule } from '../local/local.module';
-import { EtiquetaModule } from '../etiqueta/etiqueta.module';
 import { LocalService } from '../local/local.service';
 import { GeoModule } from '../geolocalizacion/geo.module';
 import { EventoModule } from '../evento/evento.module';

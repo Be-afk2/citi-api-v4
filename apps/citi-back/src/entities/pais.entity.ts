@@ -5,11 +5,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  Table,
   OneToMany,
 } from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
-import { v4 as uuidv4 } from 'uuid';
 import { Region } from './region.entity';
 
 @Entity()
@@ -20,7 +18,7 @@ export class Pais extends BaseEntity {
   @Column({ nullable: false })
   nombre: string;
 
-  @OneToMany((type) => Region, (Region) => Region.Ciudad)
+  @OneToMany(() => Region, (Region) => Region.Ciudad)
   Region: Region[];
 
   @DeleteDateColumn()

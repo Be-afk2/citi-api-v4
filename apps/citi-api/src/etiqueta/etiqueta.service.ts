@@ -30,12 +30,12 @@ export class EtiquetaService {
       old: 0,
     };
     for (const item of data.Etiquetas) {
-      let etiqueta = await this.EtiquetasRepository.findOneBy({
+      const etiqueta = await this.EtiquetasRepository.findOneBy({
         nombre: item.nombre,
       });
       if (!etiqueta) {
         result.new++;
-        etiqueta = await this.EtiquetasRepository.create({
+        await this.EtiquetasRepository.create({
           nombre: item.nombre,
         }).save();
       } else {

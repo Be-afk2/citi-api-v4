@@ -20,9 +20,3 @@ class Etiqueta {
   @IsNotEmpty()
   id: number;
 }
-
-class EtiquetaEliminar {
-  @IsNumber()
-  @IsNotEmpty()
-  id: number;
-}

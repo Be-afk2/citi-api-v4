@@ -1,13 +1,4 @@
-import {
-  IsBoolean,
-  IsDate,
-  IsEmail,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  MinLength,
-} from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 export class PaguinadorDto {
   @IsNumber()

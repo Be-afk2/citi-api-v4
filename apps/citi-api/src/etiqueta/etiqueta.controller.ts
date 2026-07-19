@@ -5,12 +5,9 @@ https://docs.nestjs.com/controllers#controllers
 import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
 import { EtiquetaService } from './etiqueta.service';
 import { PaguinadorDto } from './dto/paguinadorDto.dto';
-import { User } from 'apps/citi-back/src/entities/user.entity';
-import { GetUser } from '../auth/decorators/get-user.decorator';
 import { UseAuthUser } from '../auth/decorators/use-auth-user.decorator';
 import { ValidRoles } from '../auth/interfaces/valid-roles.enum';
 import { CrearEtiquetaDto } from './dto/createEtiquetaDto.dto';
-import { GetOneDto } from '../local/dto/GetOneDto.dto';
 import { UpdateEtiquetaDto } from './dto/UpdateEtiquetaDto.dto';
 
 @Controller('etiqueta')
@@ -19,7 +16,7 @@ export class EtiquetaController {
 
   @UseAuthUser(ValidRoles.SuperAdmin, ValidRoles.Usuario)
   @Get()
-  async GetEtiqueta(@Query() data: PaguinadorDto, @GetUser() user: User) {
+  async GetEtiqueta(@Query() data: PaguinadorDto) {
     return this.EtiquetaService.GetEtiquetas(data);
   }
 

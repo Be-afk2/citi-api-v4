@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import * as path from 'path';
 import * as serveStatic from 'serve-static';
-const cors = require('cors');
+import cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

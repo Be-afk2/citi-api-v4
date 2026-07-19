@@ -42,7 +42,7 @@ export class HomeService {
   ) {}
 
   async GetLocal() {
-    const local = await this.LocalRepository
+    await this.LocalRepository
       .find
       // cosas que se pueden hacer con el find
       ();

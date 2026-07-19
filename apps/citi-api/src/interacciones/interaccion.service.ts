@@ -85,17 +85,25 @@ export class InteraccionService {
     switch (type) {
       case 1:
         //like
-        interaccion.like ? lugar.likes-- : lugar.likes++;
+        if (interaccion.like) {
+          lugar.likes--;
+        } else {
+          lugar.likes++;
+        }
         interaccion.like = !interaccion.like;
         break;
       case 2:
         // compartidos, no tiene sentido quitar compartidos
-        interaccion.compartido ? null : lugar.compartidos++;
+        if (!interaccion.compartido) {
+          lugar.compartidos++;
+        }
         interaccion.compartido = true;
         break;
       case 3:
         // vistos, una vez visto no se puede "no ver"
-        interaccion.visto ? null : lugar.vistos++;
+        if (!interaccion.visto) {
+          lugar.vistos++;
+        }
         interaccion.visto = true;
         break;
     }

@@ -5,9 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  Table,
   OneToMany,
-  ManyToOne,
 } from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
 import { User } from './user.entity';
@@ -20,7 +18,7 @@ export class TipoUser extends BaseEntity {
   @Column({ nullable: false })
   tipo: string;
 
-  @OneToMany((type) => User, (user) => user.tipoUser)
+  @OneToMany(() => User, (user) => user.tipoUser)
   users: User[];
 
   @DeleteDateColumn()

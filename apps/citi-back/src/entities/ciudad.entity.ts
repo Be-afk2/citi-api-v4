@@ -5,12 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  Table,
   OneToMany,
   ManyToOne,
 } from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
-import { v4 as uuidv4 } from 'uuid';
 import { Region } from './region.entity';
 import { User } from './user.entity';
 import { Local } from './local.entity';
@@ -25,7 +23,7 @@ export class Ciudad extends BaseEntity {
   @Column({ nullable: false })
   nombre: string;
 
-  @ManyToOne((type) => Region, (Region) => Region.id)
+  @ManyToOne(() => Region, (Region) => Region.id)
   region: Region;
 
   @OneToMany(() => User, (user) => user.ciudad)
